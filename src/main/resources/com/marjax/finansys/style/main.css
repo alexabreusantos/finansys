@@ -1,0 +1,48 @@
+/*
+Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+Click nbfs://nbhost/SystemFileSystem/Templates/Other/CascadeStyleSheet.css to edit this template
+*/
+/* 
+    Created on : 26 de jul. de 2024, 21:41:24
+    Author     : Alex de Abreu dos Santos <alexdeabreudossantos@gmail.com>
+*/
+
+.nome{
+    -fx-padding: 0 0 0 15px;
+}
+
+.table-row-cell:odd {
+    -fx-background-color: #e7e7e7; /* Cor para linhas ímpares */
+}
+
+.table-row-cell:even {
+    -fx-background-color: #ffffff; /* Cor para linhas pares */
+}
+/* Estilo da linha selecionada */
+.table-row-cell:filled:focused:selected {
+    -fx-background-color: #007BFF; /* Cor da linha selecionada */
+    -fx-text-fill: white; /* Cor do texto na linha selecionada */
+}
+
+.table-view {
+    -fx-background-color: #d3d3d3;
+}
+
+.text-field {
+    -fx-border-color: transparent; /* Green border */
+    -fx-background-color: transparent; /* Light gray background */
+    -fx-text-fill: black; /* Dark text color */
+}
+
+.texto-centro{
+    -fx-alignment: CENTER;
+}
+.campo-nome {
+    -fx-border-color: d3d3d3; /* Green border */
+    -fx-background-color: transparent; /* Light gray background */
+    -fx-text-fill: black; /* Dark text color */
+}
+.borda-pane{
+    -fx-border-color: d3d3d3;
+    -fx-background-color: white;
+}
