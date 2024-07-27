@@ -19,7 +19,7 @@ import java.util.List;
  * @author Alex de Abreu dos Santos <alexdeabreudossantos@gmail.com>
  */
 public class CartaoDAO {
-    //metodo para listar todos os cartões
+    //metodo para listar os cartões
     public List<Cartao> getAllResponsaveis() throws SQLException {
         String sql = "SELECT * FROM cartao order by nome asc";
         List<Cartao> cartoes = new ArrayList<>();       
@@ -30,9 +30,9 @@ public class CartaoDAO {
             while (resultSet.next()) {
                int codigo = resultSet.getInt("codigo");
                String nome = resultSet.getString("nome"); 
-               double limite = resultSet.getDouble("limte");
-               double limiteDisponivel = resultSet.getDouble("limteDisponivel");
-               double limiteUsado = resultSet.getDouble("limteUsado");
+               double limite = resultSet.getDouble("limite");
+               double limiteDisponivel = resultSet.getDouble("limiteDisponivel");
+               double limiteUsado = resultSet.getDouble("limiteUsado");
                int fechamento = resultSet.getInt("fechamento");
                int vencimento = resultSet.getInt("vencimento");
                cartoes.add(new Cartao(codigo, nome, limite, limiteDisponivel, limiteUsado, fechamento, vencimento));

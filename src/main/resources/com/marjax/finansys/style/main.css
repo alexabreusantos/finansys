@@ -37,6 +37,11 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Other/CascadeStyleSheet.css to ed
 .texto-centro{
     -fx-alignment: CENTER;
 }
+
+.espaco-coluna{
+  -fx-padding: 0 0 0 15px;  
+}
+
 .campo-nome {
     -fx-border-color: d3d3d3; /* Green border */
     -fx-background-color: transparent; /* Light gray background */

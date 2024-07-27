@@ -77,7 +77,7 @@ public class MainController implements Initializable {
     public void AbrirJanelaCartaoAction() {
 
         try {
-            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("Cartao.fxml"));
+            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("view/cartao.fxml"));
             Parent root = fxmlLoader.load();
             Stage stage = new Stage();
             root.getStylesheets().add(css);

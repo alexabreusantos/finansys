@@ -19,6 +19,8 @@ import java.util.List;
  * @author Alex de Abreu dos Santos <alexdeabreudossantos@gmail.com>
  */
 public class ResponsavelDAO {
+    
+    //metodo para listar os responsaveis
     public List<Responsavel> getAllResponsaveis() throws SQLException {
         String sql = "SELECT * FROM responsavel order by nome asc";
         List<Responsavel> responsaveis = new ArrayList<>();       
