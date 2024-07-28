@@ -4,43 +4,29 @@
  */
 package com.marjax.finansys.model;
 
-import javafx.beans.property.IntegerProperty;
-import javafx.beans.property.SimpleIntegerProperty;
-import javafx.beans.property.SimpleStringProperty;
-import javafx.beans.property.StringProperty;
-
 /**
  *
  * @author Alex de Abreu dos Santos <alexdeabreudossantos@gmail.com>
  */
 public class Responsavel {
-    private final IntegerProperty codigo;
-    private final StringProperty nome;
-    
-    public Responsavel(int _codigo, String _nome) {
-        this.codigo = new SimpleIntegerProperty(_codigo);
-        this.nome = new SimpleStringProperty(_nome);               
-    }
-    
+
+    private Integer codigo;
+    private String nome;
+
     public int getCodigo() {
-        return codigo.get();
+        return codigo;
     }
 
     public void setCodigo(int codigo) {
-        this.codigo.set(codigo);
+        this.codigo = codigo;
     }
-    public IntegerProperty codigoProperty() {
-        return codigo;
-    }
+
     public String getNome() {
-        return nome.get();
+        return nome;
     }
 
     public void setNome(String nome) {
-        this.nome.set(nome);
+        this.nome = nome;
     }
 
-    public StringProperty nomeProperty() {
-        return nome;
-    }       
 }

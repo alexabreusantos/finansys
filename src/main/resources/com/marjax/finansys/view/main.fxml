@@ -32,7 +32,7 @@
             <Menu mnemonicParsing="false" text="Responsável">
                <items>
                   <MenuItem fx:id="menuItemResponsavel" mnemonicParsing="false" onAction="#AbrirJanelaResponsavelAction" text="Lista de Responsáveis" />
-                  <MenuItem fx:id="menuItemCategoria11" mnemonicParsing="false" onAction="#AbrirJanelaCategoriaAction" text="Cadastrar Responsavel" />
+                  <MenuItem fx:id="menuItemCadastrarResponsavel" mnemonicParsing="false" onAction="#AbrirJanelaCadastrarCategoriaAction" text="Cadastrar Responsavel" />
                </items>
             </Menu>
         </menus>         

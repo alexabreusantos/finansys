@@ -25,6 +25,9 @@ public class MainController implements Initializable {
     
     @FXML
     private MenuItem menuItemCartao;
+    
+    @FXML
+    private MenuItem menuItemCadastrarResponsavel;
 
     @FXML
     private Button btn;
@@ -61,6 +64,27 @@ public class MainController implements Initializable {
             Stage stage = new Stage();
             root.getStylesheets().add(css);
             stage.setTitle("Responsáveis");
+            stage.setScene(new Scene(root));
+            stage.setMaximized(false);
+            stage.setResizable(false);
+            // Define o estágio secundário como modal e bloqueia a interação com outras janelas
+            stage.initModality(Modality.WINDOW_MODAL);
+            stage.initOwner(menuItemResponsavel.getParentPopup().getOwnerWindow());
+            stage.showAndWait();            
+        } catch (Exception e) {
+                e.printStackTrace();
+            }		
+        }  
+    
+    @FXML
+    public void AbrirJanelaCadastrarResponsavelAction() {
+
+        try {
+            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("view/responsavelCadastrar.fxml"));
+            Parent root = fxmlLoader.load();
+            Stage stage = new Stage();
+            root.getStylesheets().add(css);
+            stage.setTitle("Cadastrar Responsável");
             stage.setScene(new Scene(root));
             stage.setMaximized(false);
             stage.setResizable(false);
@@ -120,6 +144,6 @@ public class MainController implements Initializable {
         menuItemCategoria.setOnAction(event -> AbrirJanelaCategoriaAction());
         menuItemResponsavel.setOnAction(event -> AbrirJanelaResponsavelAction());
         menuItemCartao.setOnAction(event -> AbrirJanelaCartaoAction());
-        menuItemCadastrarCategoria.setOnAction(event -> AbrirJanelaCadastrarCategoriaAction());
+        menuItemCadastrarResponsavel.setOnAction(event -> AbrirJanelaCadastrarResponsavelAction());
     }
 }

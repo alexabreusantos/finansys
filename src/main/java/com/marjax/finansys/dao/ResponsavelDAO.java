@@ -11,30 +11,30 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.List;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 
 /**
  *
  * @author Alex de Abreu dos Santos <alexdeabreudossantos@gmail.com>
  */
 public class ResponsavelDAO {
-    
+
     //metodo para listar os responsaveis
-    public List<Responsavel> getAllResponsaveis() throws SQLException {
+    public ObservableList<Responsavel> getAllResponsaveis() {
         String sql = "SELECT * FROM responsavel order by nome asc";
-        List<Responsavel> responsaveis = new ArrayList<>();       
-        try {          	
+        ObservableList<Responsavel> responsaveis = FXCollections.observableArrayList();
+        try {
             Connection connection = MySQLConnection.getConnection();
-            PreparedStatement preparedStatement = connection.prepareStatement(sql); 
-            ResultSet resultSet = preparedStatement.executeQuery();
-            while (resultSet.next()) {
-               int codigo = resultSet.getInt("codigo");
-               String nome = resultSet.getString("nome");               
-               responsaveis.add(new Responsavel(codigo, nome));
-           }          
-        }
-        catch (SQLException e) {
+            PreparedStatement preparedStatement = connection.prepareStatement(sql);
+            ResultSet rs = preparedStatement.executeQuery();
+            while (rs.next()) {
+                Responsavel responsavel = new Responsavel();
+                responsavel.setCodigo(rs.getInt("codigo"));
+                responsavel.setNome(rs.getString("nome"));
+                responsaveis.add(responsavel);
+            }
+        } catch (SQLException e) {
             AlertUtil.showErrorAlert("Erro", "Erro de SQL", "Erro: " + e);
         }
         return responsaveis;

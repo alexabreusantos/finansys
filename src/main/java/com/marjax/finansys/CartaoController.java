@@ -55,8 +55,8 @@ public class CartaoController implements Initializable {
 
     @FXML
     private TableColumn<Cartao, Integer> vencimentoColuna;
-
-    private final ObservableList<Cartao> cartoes = FXCollections.observableArrayList();
+    
+    private CartaoDAO dao = new CartaoDAO();
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
@@ -70,18 +70,6 @@ public class CartaoController implements Initializable {
         LocaleUtil.MoedaBrazil(limiteUsadoColuna);
         fechamentoColuna.setCellValueFactory(new PropertyValueFactory<>("fechamento"));
         vencimentoColuna.setCellValueFactory(new PropertyValueFactory<>("vencimento"));
-        tabelaCartoes.setItems(cartoes);
-
-        loadData();
-    }
-
-    private void loadData() {
-        CartaoDAO responsavelDAO = new CartaoDAO();
-        try {
-            List<Cartao> listaCartoes = responsavelDAO.getAllResponsaveis();
-            cartoes.setAll(listaCartoes);
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
+        tabelaCartoes.setItems(dao.getAllCartoes());
     }
 }

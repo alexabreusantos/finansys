@@ -24,7 +24,7 @@
       <TableView id="tabelaCategorias" fx:id="tabelaResponsaveis" layoutX="12.0" layoutY="95.0" prefHeight="350.0" prefWidth="585.0">
          <columns>
             <TableColumn id="codigoColuna" fx:id="codigoColuna" editable="false" prefWidth="59.0" resizable="false" sortable="false" style="-fx-alignment: CENTER;" text="Cód." />
-            <TableColumn id="nomeColuna" fx:id="nomeColuna" editable="false" prefWidth="455.0" resizable="false" sortable="false" styleClass="nome" text="Nome" />    
+            <TableColumn id="nomeColuna" fx:id="nomeColuna" editable="false" prefWidth="525.599984741211" resizable="false" sortable="false" styleClass="nome" text="Nome" />    
          </columns>         
       </TableView>
    </children>

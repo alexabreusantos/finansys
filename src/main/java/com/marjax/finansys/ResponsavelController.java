@@ -7,11 +7,7 @@ package com.marjax.finansys;
 import com.marjax.finansys.dao.ResponsavelDAO;
 import com.marjax.finansys.model.Responsavel;
 import java.net.URL;
-import java.sql.SQLException;
-import java.util.List;
 import java.util.ResourceBundle;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.TableColumn;
@@ -29,35 +25,22 @@ public class ResponsavelController implements Initializable {
     /**
      * Initializes the controller class.
      */
-    TextField txtPesquisar;    
-        
+    TextField txtPesquisar;
+
     @FXML
     private TableView<Responsavel> tabelaResponsaveis;
-
     @FXML
     private TableColumn<Responsavel, Integer> codigoColuna;
-
     @FXML
     private TableColumn<Responsavel, String> nomeColuna;
 
-    private final ObservableList<Responsavel> responsaveis = FXCollections.observableArrayList();
-    
+    private ResponsavelDAO dao = new ResponsavelDAO();
+
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        codigoColuna.setCellValueFactory(new PropertyValueFactory<>("codigo"));		
+        codigoColuna.setCellValueFactory(new PropertyValueFactory<>("codigo"));
         nomeColuna.setCellValueFactory(new PropertyValueFactory<>("nome"));
-        tabelaResponsaveis.setItems(responsaveis);
-        loadData();
-    }   
-    
-    private void loadData() {
-        ResponsavelDAO responsavelDAO = new ResponsavelDAO();
-        try {
-            List<Responsavel> listaResponsaveis = responsavelDAO.getAllResponsaveis();
-            responsaveis.setAll(listaResponsaveis);            
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-    }
-    
+        tabelaResponsaveis.setItems(dao.getAllResponsaveis());
+    } 
+
 }

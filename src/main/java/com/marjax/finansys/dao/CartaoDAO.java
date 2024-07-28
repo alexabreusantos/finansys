@@ -13,6 +13,8 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 
 /**
  *
@@ -20,22 +22,23 @@ import java.util.List;
  */
 public class CartaoDAO {
     //metodo para listar os cartões
-    public List<Cartao> getAllResponsaveis() throws SQLException {
+    public ObservableList<Cartao> getAllCartoes() {
         String sql = "SELECT * FROM cartao order by nome asc";
-        List<Cartao> cartoes = new ArrayList<>();       
+        ObservableList<Cartao> cartoes = FXCollections.observableArrayList();       
         try {          	
             Connection connection = MySQLConnection.getConnection();
             PreparedStatement preparedStatement = connection.prepareStatement(sql); 
-            ResultSet resultSet = preparedStatement.executeQuery();
-            while (resultSet.next()) {
-               int codigo = resultSet.getInt("codigo");
-               String nome = resultSet.getString("nome"); 
-               double limite = resultSet.getDouble("limite");
-               double limiteDisponivel = resultSet.getDouble("limiteDisponivel");
-               double limiteUsado = resultSet.getDouble("limiteUsado");
-               int fechamento = resultSet.getInt("fechamento");
-               int vencimento = resultSet.getInt("vencimento");
-               cartoes.add(new Cartao(codigo, nome, limite, limiteDisponivel, limiteUsado, fechamento, vencimento));
+            ResultSet rs = preparedStatement.executeQuery();
+            while (rs.next()) {
+               Cartao cartao = new Cartao();
+               cartao.setCodigo(rs.getInt("codigo"));
+               cartao.setNome(rs.getString("nome"));
+               cartao.setLimite(rs.getDouble("limite"));
+               cartao.setLimiteDisponivel(rs.getDouble("limiteDisponivel"));
+               cartao.setLimiteUsado(rs.getDouble("limiteUsado"));
+               cartao.setFechamento(rs.getInt("fechamento"));
+               cartao.setVencimento(rs.getInt("vencimento"));
+               cartoes.add(cartao);
            }          
         }
         catch (SQLException e) {

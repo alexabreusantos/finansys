@@ -4,98 +4,73 @@
  */
 package com.marjax.finansys.model;
 
-import javafx.beans.property.DoubleProperty;
-import javafx.beans.property.IntegerProperty;
-import javafx.beans.property.SimpleDoubleProperty;
-import javafx.beans.property.SimpleIntegerProperty;
-import javafx.beans.property.SimpleStringProperty;
-import javafx.beans.property.StringProperty;
-
 /**
  *
  * @author Alex de Abreu dos Santos <alexdeabreudossantos@gmail.com>
  */
 public class Cartao {
 
-    private final IntegerProperty codigo;
-    private final StringProperty nome;
-    private final DoubleProperty limite;
-    private final DoubleProperty limiteDisponivel;
-    private final DoubleProperty limiteUsado;
-    private final IntegerProperty fechamento;
-    private final IntegerProperty vencimento;
+    private Integer codigo;
+    private String nome;
+    private Double limite;
+    private Double limiteDisponivel;
+    private Double limiteUsado;
+    private Integer fechamento;
+    private Integer vencimento;
 
-    public Cartao(int _codigo, String _nome, double _limite, double _limiteDisponivel, double _limiteUsado, int _fechamento, int _vencimento) {
-        this.codigo = new SimpleIntegerProperty(_codigo);
-        this.nome = new SimpleStringProperty(_nome);
-        this.limite = new SimpleDoubleProperty(_limite);
-        this.limiteDisponivel = new SimpleDoubleProperty(_limiteDisponivel);
-        this.limiteUsado = new SimpleDoubleProperty(_limiteUsado);
-        this.fechamento = new SimpleIntegerProperty(_fechamento);
-        this.vencimento = new SimpleIntegerProperty(_vencimento);
-    }
-
-    public int getCodigo() {
-        return codigo.get();
-    }
-    public void setCodigo(int codigo) {
-        this.codigo.set(codigo);
-    }
-    public IntegerProperty codigoProperty() {
+    public Integer getCodigo() {
         return codigo;
     }
+
+    public void setCodigo(Integer codigo) {
+        this.codigo = codigo;
+    }
+
     public String getNome() {
-        return nome.get();
-    }
-    public void setNome(String nome) {
-        this.nome.set(nome);
-    }
-    public StringProperty nomeProperty() {
         return nome;
-    }       
-    public double getLimite(){
-        return limite.get();
     }
-    public void setLimite(double limite){
-        this.limite.set(limite);
+
+    public void setNome(String nome) {
+        this.nome = nome;
     }
-    public DoubleProperty limiteProperty(){
+
+    public Double getLimite() {
         return limite;
     }
-    public double getLimiteDisponivel(){
-        return limiteDisponivel.get();
+
+    public void setLimite(Double limite) {
+        this.limite = limite;
     }
-    public void setLimiteDisponivel(double limiteDisponivel){
-        this.limiteDisponivel.set(limiteDisponivel);
-    }
-    public DoubleProperty limiteDisponivelProperty(){
+
+    public Double getLimiteDisponivel() {
         return limiteDisponivel;
     }
-    public double getLimiteusado(){
-        return limiteUsado.get();
+
+    public void setLimiteDisponivel(Double limiteDisponivel) {
+        this.limiteDisponivel = limiteDisponivel;
     }
-    public void setLimiteUsado(double limiteUsado){
-        this.limiteUsado.set(limiteUsado);
-    }
-    public DoubleProperty limiteUsadoProperty(){
+
+    public Double getLimiteUsado() {
         return limiteUsado;
     }
-    public int getFechamento() {
-        return fechamento.get();
+
+    public void setLimiteUsado(Double limiteUsado) {
+        this.limiteUsado = limiteUsado;
     }
-    public void setFechamento(int fechamento) {
-        this.fechamento.set(fechamento);
-    }
-    public IntegerProperty fechamentoProperty() {
+
+    public Integer getFechamento() {
         return fechamento;
     }
-    public int getVencimento() {
-        return vencimento.get();
+
+    public void setFechamento(Integer fechamento) {
+        this.fechamento = fechamento;
     }
-    public void setVencimento(int vencimento) {
-        this.vencimento.set(vencimento);
-    }
-    public IntegerProperty vencimentoProperty() {
+
+    public Integer getVencimento() {
         return vencimento;
+    }
+
+    public void setVencimento(Integer vencimento) {
+        this.vencimento = vencimento;
     }
 }
