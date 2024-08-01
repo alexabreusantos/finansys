@@ -7,6 +7,7 @@ module com.marjax.finansys {
     requires java.validation;
     
     opens com.marjax.finansys to javafx.fxml;
-    opens com.marjax.finansys.model to javafx.base;
-    exports com.marjax.finansys;    
+    opens com.marjax.finansys.model; 
+        
+    exports com.marjax.finansys;        
 }

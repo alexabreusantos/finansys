@@ -12,7 +12,7 @@ import javax.validation.constraints.Size;
  *
  * @author Alex de Abreu dos Santos <alexdeabreudossantos@gmail.com>
  */
-public class Responsavel {
+public class Categoria {
     
     private Integer codigo;
     

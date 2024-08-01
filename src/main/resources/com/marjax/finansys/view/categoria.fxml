@@ -8,7 +8,7 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.Pane?>
 
-<AnchorPane prefHeight="460.0" prefWidth="610.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.marjax.finansys.ResponsavelController">
+<AnchorPane prefHeight="460.0" prefWidth="610.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.marjax.finansys.CategoriaController">
    
     <children>
       <Pane layoutX="14.0" layoutY="14.0" prefHeight="59.0" prefWidth="585.0" styleClass="borda-pane">
@@ -20,7 +20,7 @@
                   <FontAwesomeIcon glyphName="PLUS" />
                </graphic>
             </Button>
-            <Button fx:id="btnAlterar" disable="true" focusTraversable="false" layoutX="430.0" layoutY="15.0" mnemonicParsing="false" onAction="#editarResponsavel" text="Alterar">
+            <Button fx:id="btnAlterar" disable="true" focusTraversable="false" layoutX="430.0" layoutY="15.0" mnemonicParsing="false" text="Alterar">
                <graphic>
                   <FontAwesomeIcon glyphName="EDIT" />
                </graphic>
@@ -31,7 +31,7 @@
                </graphic>
             </Button>
          </children></Pane>
-      <TableView id="tabelaCategorias" fx:id="tabelaResponsaveis" layoutX="12.0" layoutY="95.0" prefHeight="350.0" prefWidth="585.0">
+      <TableView id="tabelaCategorias" fx:id="tabelaCategorias" layoutX="12.0" layoutY="95.0" prefHeight="350.0" prefWidth="585.0">
          <columns>
             <TableColumn id="codigoColuna" fx:id="codigoColuna" editable="false" prefWidth="59.0" resizable="false" sortable="false" style="-fx-alignment: CENTER;" text="Cód." />
             <TableColumn id="nomeColuna" fx:id="nomeColuna" editable="false" prefWidth="521.0" resizable="false" sortable="false" styleClass="nome" text="Nome" />    

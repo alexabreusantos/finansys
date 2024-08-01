@@ -5,7 +5,7 @@
 package com.marjax.finansys.dao;
 
 import com.marjax.finansys.connection.MySQLConnection;
-import com.marjax.finansys.model.Responsavel;
+import com.marjax.finansys.model.Categoria;
 import com.marjax.finansys.util.AlertUtil;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -23,18 +23,18 @@ import javax.validation.ValidatorFactory;
  *
  * @author Alex de Abreu dos Santos <alexdeabreudossantos@gmail.com>
  */
-public class ResponsavelDAO {
+public class CategoriaDAO {
 
     private Validator validator;
 
-    public ResponsavelDAO() {
+    public CategoriaDAO() {
         ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
         validator = factory.getValidator();
     }
 
     // Método para verificar se um responsável já existe
-    public boolean existsResponsavel(String nome) {
-        String sql = "SELECT COUNT(*) FROM responsavel WHERE nome = ?";
+    public boolean existsCategoria(String nome) {
+        String sql = "SELECT COUNT(*) FROM categoria WHERE nome = ?";
         try (Connection connection = MySQLConnection.getConnection(); PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
 
             preparedStatement.setString(1, nome);
@@ -50,31 +50,31 @@ public class ResponsavelDAO {
     }
 
     //metodo para salvar responsavel
-    public void salvar(Responsavel responsavel) {
-        Set<ConstraintViolation<Responsavel>> violations = validator.validate(responsavel);
+    public void salvar(Categoria categoria) {
+        Set<ConstraintViolation<Categoria>> violations = validator.validate(categoria);
 
         if (!violations.isEmpty()) {
             StringBuilder sb = new StringBuilder();
-            for (ConstraintViolation<Responsavel> violation : violations) {
+            for (ConstraintViolation<Categoria> violation : violations) {
                 sb.append(violation.getMessage()).append("\n");
             }
             AlertUtil.showErrorAlert("Atenção", "Campo não preenchido", sb.toString());
             return;
         }
 
-        if (existsResponsavel(responsavel.getNome())) {
-            AlertUtil.showErrorAlert("Erro", "Responsável já cadastrado", "O responsável já está cadastrado no sistema.");
+        if (existsCategoria(categoria.getNome())) {
+            AlertUtil.showErrorAlert("Erro", "Categoria já cadastrada", "A categoria já está cadastrada no sistema.");
             return;
         }
 
-        String sql = "INSERT INTO responsavel (nome) VALUES (?)";
+        String sql = "INSERT INTO categoria (nome) VALUES (?)";
         try (Connection connection = MySQLConnection.getConnection(); PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
 
-            preparedStatement.setString(1, responsavel.getNome());
+            preparedStatement.setString(1, categoria.getNome());
             int rowsAffected = preparedStatement.executeUpdate();
 
             if (rowsAffected > 0) {
-                AlertUtil.showInformationAlert("Sucesso", "Responsável já cadastrado", "O responsável já está cadastrado no sistema.");
+                AlertUtil.showInformationAlert("Sucesso", "Categoria já cadastrada", "A categoria já está cadastrada no sistema.");
             }
         } catch (SQLException e) {
             AlertUtil.showErrorAlert("Erro", "Erro de SQL", "Erro: " + e.getMessage());
@@ -82,26 +82,25 @@ public class ResponsavelDAO {
     }
 
     //metodo para listar responsaveis
-    public ObservableList<Responsavel> getAllResponsaveis() {
-        String sql = "SELECT * FROM responsavel ORDER BY nome ASC";
-        ObservableList<Responsavel> responsaveis = FXCollections.observableArrayList();
+    public ObservableList<Categoria> getAllCategorias() {
+        String sql = "SELECT * FROM categoria ORDER BY nome ASC";
+        ObservableList<Categoria> categorias = FXCollections.observableArrayList();
         try (Connection connection = MySQLConnection.getConnection(); PreparedStatement preparedStatement = connection.prepareStatement(sql); ResultSet rs = preparedStatement.executeQuery()) {
-
             while (rs.next()) {
-                Responsavel responsavel = new Responsavel();
-                responsavel.setCodigo(rs.getInt("codigo"));
-                responsavel.setNome(rs.getString("nome"));
-                responsaveis.add(responsavel);
+                Categoria categoria = new Categoria();
+                categoria.setCodigo(rs.getInt("codigo"));
+                categoria.setNome(rs.getString("nome"));
+                categorias.add(categoria);
             }
         } catch (SQLException e) {
             AlertUtil.showErrorAlert("Erro", "Erro de SQL", "Erro: " + e.getMessage());
         }
-        return responsaveis;
+        return categorias;
     }
 
     // Método para excluir um responsável
-    public boolean excluirResponsavel(int codigo) {
-        String sql = "DELETE FROM responsavel WHERE codigo = ?";
+    public boolean excluirCategoria(int codigo) {
+        String sql = "DELETE FROM categoria WHERE codigo = ?";
 
         try (Connection conn = MySQLConnection.getConnection(); PreparedStatement pstmt = conn.prepareStatement(sql)) {
             pstmt.setInt(1, codigo);
@@ -114,27 +113,27 @@ public class ResponsavelDAO {
     }
 
     // Método para atualizar o responsável
-    public boolean atualizarResponsavel(Responsavel responsavel) {
+    public boolean atualizarCategoria(Categoria categoria) {
 
-        Set<ConstraintViolation<Responsavel>> violations = validator.validate(responsavel);
+        Set<ConstraintViolation<Categoria>> violations = validator.validate(categoria);
 
         if (!violations.isEmpty()) {
             StringBuilder sb = new StringBuilder();
-            for (ConstraintViolation<Responsavel> violation : violations) {
+            for (ConstraintViolation<Categoria> violation : violations) {
                 sb.append(violation.getMessage()).append("\n");
             }
             AlertUtil.showErrorAlert("Atenção", "Campo não preenchido", sb.toString());
             return false;
         }
 
-        if (existsResponsavel(responsavel.getNome())) {
+        if (existsCategoria(categoria.getNome())) {
             return false; // Nome já existe no banco de dados
         }
 
-        String sql = "UPDATE responsavel SET nome = ? WHERE codigo = ?";
+        String sql = "UPDATE categoria SET nome = ? WHERE codigo = ?";
         try (Connection connection = MySQLConnection.getConnection(); PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
-            preparedStatement.setString(1, responsavel.getNome());
-            preparedStatement.setInt(2, responsavel.getCodigo());
+            preparedStatement.setString(1, categoria.getNome());
+            preparedStatement.setInt(2, categoria.getCodigo());
             int rowsAffected = preparedStatement.executeUpdate();
             return rowsAffected > 0;
         } catch (SQLException e) {

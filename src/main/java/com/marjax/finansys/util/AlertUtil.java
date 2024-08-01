@@ -4,8 +4,10 @@
  */
 package com.marjax.finansys.util;
 
+import java.util.Optional;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
+import javafx.scene.control.ButtonType;
 
 /**
  *
@@ -23,9 +25,13 @@ public class AlertUtil {
     public static void showErrorAlert(String title, String header, String content) {
         showAlert(AlertType.ERROR, title, header, content);
     }
-
-    public static void showConfirmationAlert(String title, String header, String content) {
-        showAlert(AlertType.CONFIRMATION, title, header, content);
+    
+    public static Optional<ButtonType> showConfirmationAlert(String title, String header, String content) {
+        Alert alert = new Alert(AlertType.CONFIRMATION);
+        alert.setTitle(title);
+        alert.setHeaderText(header);
+        alert.setContentText(content);
+        return alert.showAndWait();
     }
 
     private static void showAlert(AlertType alertType, String title, String header, String content) {

@@ -25,10 +25,9 @@ public class CartaoDAO {
     public ObservableList<Cartao> getAllCartoes() {
         String sql = "SELECT * FROM cartao order by nome asc";
         ObservableList<Cartao> cartoes = FXCollections.observableArrayList();       
-        try {          	
-            Connection connection = MySQLConnection.getConnection();
-            PreparedStatement preparedStatement = connection.prepareStatement(sql); 
-            ResultSet rs = preparedStatement.executeQuery();
+        try (Connection connection = MySQLConnection.getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(sql);
+             ResultSet rs = preparedStatement.executeQuery()) { 
             while (rs.next()) {
                Cartao cartao = new Cartao();
                cartao.setCodigo(rs.getInt("codigo"));

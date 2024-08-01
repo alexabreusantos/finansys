@@ -8,97 +8,34 @@ import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.Menu;
+import javafx.scene.control.MenuButton;
 import javafx.scene.control.MenuItem;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 
 public class MainController implements Initializable {
 
-   @FXML
-    private MenuItem menuItemCategoria;
-    
     @FXML
-    private MenuItem menuItemCadastrarCategoria;
+    private Button btnCartao;
 
     @FXML
-    private MenuItem menuItemResponsavel;
-    
-    @FXML
-    private MenuItem menuItemCartao;
-    
-    @FXML
-    private MenuItem menuItemCadastrarResponsavel;
+    private Button btnCategoria;
 
     @FXML
-    private Button btn;
+    private Button btnResponsavel;
 
     private String css = "/com/marjax/finansys/style/main.css";
-    
-    @FXML
-    public void AbrirJanelaCategoriaAction() {
 
-        try {
-            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("Categoria.fxml"));
-            Parent root = fxmlLoader.load();
-            Stage stage = new Stage();
-            root.getStylesheets().add(css);
-            stage.setTitle("Categorias");
-            stage.setScene(new Scene(root));
-            stage.setMaximized(false);
-            stage.setResizable(false);
-            // Define o estágio secundário como modal e bloqueia a interação com outras janelas
-            stage.initModality(Modality.WINDOW_MODAL);
-            stage.initOwner(menuItemCategoria.getParentPopup().getOwnerWindow());
-            stage.showAndWait();            
-        } catch (Exception e) {
-            e.printStackTrace();
-        }		
+    @Override
+    public void initialize(URL arg0, ResourceBundle arg1) {
+        btnCartao.setOnAction(event -> AbrirCartaoAction());
+        btnCategoria.setOnAction(event -> AbrirCategoriaAction());
+        btnResponsavel.setOnAction(event -> AbrirResponsavelAction());
     }
-        
-    @FXML
-    public void AbrirJanelaResponsavelAction() {
 
-        try {
-            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("view/responsavel.fxml"));
-            Parent root = fxmlLoader.load();
-            Stage stage = new Stage();
-            root.getStylesheets().add(css);
-            stage.setTitle("Responsáveis");
-            stage.setScene(new Scene(root));
-            stage.setMaximized(false);
-            stage.setResizable(false);
-            // Define o estágio secundário como modal e bloqueia a interação com outras janelas
-            stage.initModality(Modality.WINDOW_MODAL);
-            stage.initOwner(menuItemResponsavel.getParentPopup().getOwnerWindow());
-            stage.showAndWait();            
-        } catch (Exception e) {
-                e.printStackTrace();
-            }		
-        }  
-    
     @FXML
-    public void AbrirJanelaCadastrarResponsavelAction() {
-
-        try {
-            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("view/responsavelCadastrar.fxml"));
-            Parent root = fxmlLoader.load();
-            Stage stage = new Stage();
-            root.getStylesheets().add(css);
-            stage.setTitle("Cadastrar Responsável");
-            stage.setScene(new Scene(root));
-            stage.setMaximized(false);
-            stage.setResizable(false);
-            // Define o estágio secundário como modal e bloqueia a interação com outras janelas
-            stage.initModality(Modality.WINDOW_MODAL);
-            stage.initOwner(menuItemResponsavel.getParentPopup().getOwnerWindow());
-            stage.showAndWait();            
-        } catch (Exception e) {
-                e.printStackTrace();
-            }		
-        }  
-    
-    @FXML
-    public void AbrirJanelaCartaoAction() {
+    public void AbrirCartaoAction() {
 
         try {
             FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("view/cartao.fxml"));
@@ -111,39 +48,52 @@ public class MainController implements Initializable {
             stage.setResizable(false);
             // Define o estágio secundário como modal e bloqueia a interação com outras janelas
             stage.initModality(Modality.WINDOW_MODAL);
-            stage.initOwner(menuItemCartao.getParentPopup().getOwnerWindow());
-            stage.showAndWait();            
+            stage.initOwner(btnCartao.getScene().getWindow());
+            stage.showAndWait();
         } catch (Exception e) {
-                e.printStackTrace();
-            }		
-        }      
+            e.printStackTrace();
+        }
+    }
 
     @FXML
-    public void AbrirJanelaCadastrarCategoriaAction() {
+    public void AbrirCategoriaAction() {
 
         try {
-            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("CategoriaCadastrar.fxml"));
+            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("view/categoria.fxml"));
             Parent root = fxmlLoader.load();
             Stage stage = new Stage();
             root.getStylesheets().add(css);
-            stage.setTitle("Cadastrar Categoria");
+            stage.setTitle("Categorias");
             stage.setScene(new Scene(root));
             stage.setMaximized(false);
             stage.setResizable(false);
             // Define o estágio secundário como modal e bloqueia a interação com outras janelas
             stage.initModality(Modality.WINDOW_MODAL);
-            stage.initOwner(menuItemCadastrarCategoria.getParentPopup().getOwnerWindow());
-            stage.showAndWait();            
+            stage.initOwner(btnCategoria.getScene().getWindow());
+            stage.showAndWait();
         } catch (Exception e) {
-                e.printStackTrace();
-            }		
-        }  
-    
-    @Override
-    public void initialize(URL arg0, ResourceBundle arg1) {
-        menuItemCategoria.setOnAction(event -> AbrirJanelaCategoriaAction());
-        menuItemResponsavel.setOnAction(event -> AbrirJanelaResponsavelAction());
-        menuItemCartao.setOnAction(event -> AbrirJanelaCartaoAction());
-        menuItemCadastrarResponsavel.setOnAction(event -> AbrirJanelaCadastrarResponsavelAction());
+            e.printStackTrace();
+        }
+    }
+
+    @FXML
+    public void AbrirResponsavelAction() {
+
+        try {
+            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("view/responsavel.fxml"));
+            Parent root = fxmlLoader.load();
+            Stage stage = new Stage();
+            root.getStylesheets().add(css);
+            stage.setTitle("Responsáveis");
+            stage.setScene(new Scene(root));
+            stage.setMaximized(false);
+            stage.setResizable(false);
+            // Define o estágio secundário como modal e bloqueia a interação com outras janelas
+            stage.initModality(Modality.WINDOW_MODAL);
+            stage.initOwner(btnResponsavel.getScene().getWindow());
+            stage.showAndWait();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 }

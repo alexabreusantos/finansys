@@ -70,6 +70,12 @@ public class CartaoController implements Initializable {
         LocaleUtil.MoedaBrazil(limiteUsadoColuna);
         fechamentoColuna.setCellValueFactory(new PropertyValueFactory<>("fechamento"));
         vencimentoColuna.setCellValueFactory(new PropertyValueFactory<>("vencimento"));
-        tabelaCartoes.setItems(dao.getAllCartoes());
+        
+        atualizarTableView();
+    }
+    
+    public void atualizarTableView() {
+        ObservableList<Cartao> listaCartoes = FXCollections.observableArrayList(dao.getAllCartoes());
+        tabelaCartoes.setItems(listaCartoes);
     }
 }
