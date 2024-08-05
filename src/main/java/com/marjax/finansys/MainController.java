@@ -17,21 +17,21 @@ import javafx.stage.Stage;
 public class MainController implements Initializable {
 
     @FXML
-    private Button btnCartao;
+    private Button cartaoButton;
 
     @FXML
-    private Button btnCategoria;
+    private Button categoriaButton;
 
     @FXML
-    private Button btnResponsavel;
+    private Button responsavelButton;
 
     private String css = "/com/marjax/finansys/style/main.css";
 
     @Override
     public void initialize(URL arg0, ResourceBundle arg1) {
-        btnCartao.setOnAction(event -> AbrirCartaoAction());
-        btnCategoria.setOnAction(event -> AbrirCategoriaAction());
-        btnResponsavel.setOnAction(event -> AbrirResponsavelAction());
+        cartaoButton.setOnAction(event -> AbrirCartaoAction());
+        categoriaButton.setOnAction(event -> AbrirCategoriaAction());
+        responsavelButton.setOnAction(event -> AbrirResponsavelAction());
     }
 
     @FXML
@@ -48,7 +48,7 @@ public class MainController implements Initializable {
             stage.setResizable(false);
             // Define o estágio secundário como modal e bloqueia a interação com outras janelas
             stage.initModality(Modality.WINDOW_MODAL);
-            stage.initOwner(btnCartao.getScene().getWindow());
+            stage.initOwner(cartaoButton.getScene().getWindow());
             stage.showAndWait();
         } catch (Exception e) {
             e.printStackTrace();
@@ -69,7 +69,7 @@ public class MainController implements Initializable {
             stage.setResizable(false);
             // Define o estágio secundário como modal e bloqueia a interação com outras janelas
             stage.initModality(Modality.WINDOW_MODAL);
-            stage.initOwner(btnCategoria.getScene().getWindow());
+            stage.initOwner(categoriaButton.getScene().getWindow());
             stage.showAndWait();
         } catch (Exception e) {
             e.printStackTrace();
@@ -90,7 +90,7 @@ public class MainController implements Initializable {
             stage.setResizable(false);
             // Define o estágio secundário como modal e bloqueia a interação com outras janelas
             stage.initModality(Modality.WINDOW_MODAL);
-            stage.initOwner(btnResponsavel.getScene().getWindow());
+            stage.initOwner(responsavelButton.getScene().getWindow());
             stage.showAndWait();
         } catch (Exception e) {
             e.printStackTrace();

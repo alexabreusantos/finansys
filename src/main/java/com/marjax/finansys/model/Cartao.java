@@ -8,10 +8,11 @@ package com.marjax.finansys.model;
  *
  * @author Alex de Abreu dos Santos <alexdeabreudossantos@gmail.com>
  */
+
 public class Cartao {
 
-    private Integer codigo;
-    private String nome;
+    private Integer codigo;        
+    private String nome; 
     private Double limite;
     private Double limiteDisponivel;
     private Double limiteUsado;

@@ -10,17 +10,17 @@
    <children>
       <HBox prefHeight="36.0" prefWidth="1366.0" spacing="10.0" styleClass="hbox" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <children>
-            <Button fx:id="btnCartao" mnemonicParsing="false" styleClass="btn-menu" text="Cartões de Crédito">
+            <Button fx:id="cartaoButton" mnemonicParsing="false" styleClass="btn-menu" text="Cartões de Crédito">
                <graphic>
                   <FontAwesomeIcon glyphName="CREDIT_CARD" />
                </graphic>
             </Button>
-            <Button fx:id="btnCategoria" layoutX="25.0" layoutY="15.0" mnemonicParsing="false" styleClass="btn-menu" text="Categorias">
+            <Button fx:id="categoriaButton" layoutX="25.0" layoutY="15.0" mnemonicParsing="false" styleClass="btn-menu" text="Categorias">
                <graphic>
                   <FontAwesomeIcon glyphName="PIE_CHART" />
                </graphic>
             </Button>
-            <Button fx:id="btnResponsavel" layoutX="177.0" layoutY="15.0" mnemonicParsing="false" styleClass="btn-menu" text="Responsáveis">
+            <Button fx:id="responsavelButton" layoutX="177.0" layoutY="15.0" mnemonicParsing="false" styleClass="btn-menu" text="Responsáveis">
                <graphic>
                   <FontAwesomeIcon glyphName="USER" />
                </graphic>

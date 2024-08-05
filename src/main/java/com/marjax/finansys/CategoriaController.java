@@ -5,7 +5,6 @@
 package com.marjax.finansys;
 
 import com.marjax.finansys.dao.CategoriaDAO;
-import com.marjax.finansys.dao.ResponsavelDAO;
 import com.marjax.finansys.model.Categoria;
 import com.marjax.finansys.util.AlertUtil;
 import java.net.URL;
@@ -15,6 +14,7 @@ import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.collections.transformation.FilteredList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -22,6 +22,7 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
+import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
@@ -36,10 +37,14 @@ import javafx.stage.Stage;
  */
 public class CategoriaController implements Initializable {
 
-    TextField txtPesquisar;
+    @FXML
+    TextField pesquisarTextField;
 
     @FXML
-    private TableView<Categoria> tabelaCategorias;
+    Label totalCadastroLabel;
+
+    @FXML
+    private TableView<Categoria> categoriaTableView;
 
     @FXML
     private TableColumn<Categoria, Integer> codigoColuna;
@@ -48,15 +53,17 @@ public class CategoriaController implements Initializable {
     private TableColumn<Categoria, String> nomeColuna;
 
     @FXML
-    private Button btnAdicionar;
+    private Button adicionarButton;
 
     @FXML
-    private Button btnAlterar;
+    private Button alterarButton;
 
     @FXML
-    private Button btnExcluir;
+    private Button excluirButton;
 
     private CategoriaDAO dao;
+    
+    private ObservableList<Categoria> listaCategorias;
 
     private String css = "/com/marjax/finansys/style/main.css";
 
@@ -67,18 +74,45 @@ public class CategoriaController implements Initializable {
 
         dao = new CategoriaDAO();
         atualizarTableView();
-        btnAdicionar.setOnAction(event -> AbrirCadastrarCategoriaAction());        
-        AtivarBotaoExcluir();
-        btnExcluir.setOnAction(event -> excluirCategoriaSelecionada());
+        adicionarButton.setOnAction(event -> AbrirCadastrarCategoriaAction());
+        AtivarBotoes();
+        excluirButton.setOnAction(event -> excluirCategoriaSelecionada());
+        alterarButton.setOnAction(event -> editar());
+
+        atualizarTotalCategorias();
+    }
+    
+    public void atualizarTotalCategorias() {
+        int total = dao.getTotalCategorias();
+        totalCadastroLabel.setText(total +" categorias cadastradas!");
     }
 
+
     public void atualizarTableView() {
-        ObservableList<Categoria> listaCategorias = FXCollections.observableArrayList(dao.getAllCategorias());
-        tabelaCategorias.setItems(listaCategorias);
+        listaCategorias = FXCollections.observableArrayList(dao.getAllCategorias());
+
+        // Usar FilteredList para permitir a pesquisa
+        FilteredList<Categoria> filteredData = new FilteredList<>(listaCategorias, p -> true);
+
+        // Adicionar um listener ao campo de pesquisa
+        pesquisarTextField.textProperty().addListener((observable, oldValue, newValue) -> {
+            filteredData.setPredicate(categoria -> {
+                // Se o campo de pesquisa estiver vazio, exibir todas as categorias
+                if (newValue == null || newValue.isEmpty()) {
+                    return true;
+                }
+
+                // Comparar o nome da categoria com o texto da pesquisa para uma correspondência exata, ignorando maiúsculas/minúsculas
+                String filter = newValue.toLowerCase();
+                return categoria.getNome().toLowerCase().equals(filter);
+            });
+        });
+
+        categoriaTableView.setItems(filteredData);
     }
 
     private void excluirCategoriaSelecionada() {
-        Categoria categoria = tabelaCategorias.getSelectionModel().getSelectedItem();
+        Categoria categoria = categoriaTableView.getSelectionModel().getSelectedItem();
         if (categoria != null) {
             // Mostrar popup de confirmação
             Optional<ButtonType> result = AlertUtil.showConfirmationAlert(
@@ -88,30 +122,34 @@ public class CategoriaController implements Initializable {
             );
 
             if (result.isPresent() && result.get() == ButtonType.OK) {
-                // Se o usuário confirmar, excluir o responsável
+                // Se o usuário confirmar, excluir a categoria
                 boolean success = dao.excluirCategoria(categoria.getCodigo());
                 if (success) {
-                    tabelaCategorias.getItems().remove(categoria);
-                    AlertUtil.showInformationAlert("Sucesso", null, "Responsável excluído com sucesso.");
+                    listaCategorias.remove(categoria); // Remover da lista original
+                    AlertUtil.showInformationAlert("Sucesso", null, "Categoria excluída com sucesso.");
+                    atualizarTableView(); // Atualizar a TableView
+                    atualizarTotalCategorias();
                 } else {
-                    AlertUtil.showErrorAlert("Erro", null, "Erro ao excluir o responsável.");
+                    AlertUtil.showErrorAlert("Erro", null, "Erro ao excluir a categoria.");
                 }
             }
+        } else {
+            AlertUtil.showWarningAlert("Aviso", null, "Nenhuma categoria selecionada.");
         }
     }
 
-    public void AtivarBotaoExcluir() {
+    private void AtivarBotoes() {
         // Adicionar listener para ativar/desativar botão Excluir
-        tabelaCategorias.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<Categoria>() {
+        categoriaTableView.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<Categoria>() {
             @Override
             public void changed(ObservableValue<? extends Categoria> observable, Categoria oldValue, Categoria newValue) {
-                btnExcluir.setDisable(newValue == null);
-                btnAlterar.setDisable(newValue == null);
+                excluirButton.setDisable(newValue == null);
+                alterarButton.setDisable(newValue == null);
             }
         }
         );
     }
-    
+
     @FXML
     public void AbrirCadastrarCategoriaAction() {
 
@@ -121,21 +159,56 @@ public class CategoriaController implements Initializable {
             Stage stage = new Stage();
             root.getStylesheets().add(css);
             stage.setTitle("Cadastrar Responsável");
-            stage.setScene(new Scene(root)); 
+            stage.setScene(new Scene(root));
             stage.setMaximized(false);
             stage.setResizable(false);
-            
+
             CategoriaCadastrarController controller = fxmlLoader.getController();
             controller.setCategoriaDAO(dao);
             controller.setCategoriaController(this);
-            
+
             // Define o estágio secundário como modal e bloqueia a interação com outras janelas
             stage.initModality(Modality.WINDOW_MODAL);
-            stage.initOwner(btnAdicionar.getScene().getWindow());
+            stage.initOwner(adicionarButton.getScene().getWindow());
             stage.showAndWait();
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
+    @FXML
+    private void editar() {
+        Categoria categoriaSelecionada = categoriaTableView.getSelectionModel().getSelectedItem();
+        if (categoriaSelecionada != null) {
+            abrirTelaEdicao(categoriaSelecionada);
+        } else {
+            AlertUtil.showWarningAlert("Seleção Inválida", "Nenhuma categoria selecionada", "Por favor, selecione uma categoria para editar.");
+        }
+    }
+
+    private void abrirTelaEdicao(Categoria categoria) {
+
+        try {
+            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("view/categoriaEditar.fxml"));
+            Parent root = fxmlLoader.load();
+            Stage stage = new Stage();
+            root.getStylesheets().add(css);
+            stage.setTitle("Editar " + categoria.getNome());
+            stage.setScene(new Scene(root));
+            stage.setMaximized(false);
+            stage.setResizable(false);
+
+            CategoriaEditarController controller = fxmlLoader.getController();
+            controller.setCategoriaDAO(dao);
+            controller.setCategoriaController(this);
+            controller.setCategoria(categoria);
+
+            // Define o estágio secundário como modal e bloqueia a interação com outras janelas
+            stage.initModality(Modality.WINDOW_MODAL);
+            stage.initOwner(alterarButton.getScene().getWindow());
+            stage.showAndWait();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }  
 }

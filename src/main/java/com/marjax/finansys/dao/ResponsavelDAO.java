@@ -14,24 +14,13 @@ import java.sql.SQLException;
 import java.util.Set;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javax.validation.ConstraintViolation;
-import javax.validation.Validation;
-import javax.validation.Validator;
-import javax.validation.ValidatorFactory;
 
 /**
  *
  * @author Alex de Abreu dos Santos <alexdeabreudossantos@gmail.com>
  */
 public class ResponsavelDAO {
-
-    private Validator validator;
-
-    public ResponsavelDAO() {
-        ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
-        validator = factory.getValidator();
-    }
-
+    
     // Método para verificar se um responsável já existe
     public boolean existsResponsavel(String nome) {
         String sql = "SELECT COUNT(*) FROM responsavel WHERE nome = ?";
@@ -51,17 +40,7 @@ public class ResponsavelDAO {
 
     //metodo para salvar responsavel
     public void salvar(Responsavel responsavel) {
-        Set<ConstraintViolation<Responsavel>> violations = validator.validate(responsavel);
-
-        if (!violations.isEmpty()) {
-            StringBuilder sb = new StringBuilder();
-            for (ConstraintViolation<Responsavel> violation : violations) {
-                sb.append(violation.getMessage()).append("\n");
-            }
-            AlertUtil.showErrorAlert("Atenção", "Campo não preenchido", sb.toString());
-            return;
-        }
-
+        
         if (existsResponsavel(responsavel.getNome())) {
             AlertUtil.showErrorAlert("Erro", "Responsável já cadastrado", "O responsável já está cadastrado no sistema.");
             return;
@@ -74,7 +53,7 @@ public class ResponsavelDAO {
             int rowsAffected = preparedStatement.executeUpdate();
 
             if (rowsAffected > 0) {
-                AlertUtil.showInformationAlert("Sucesso", "Responsável já cadastrado", "O responsável já está cadastrado no sistema.");
+                AlertUtil.showInformationAlert("Sucesso", "Responsável cadastrado!", "O responsável foi cadastrado com sucesso.");
             }
         } catch (SQLException e) {
             AlertUtil.showErrorAlert("Erro", "Erro de SQL", "Erro: " + e.getMessage());
@@ -115,19 +94,9 @@ public class ResponsavelDAO {
 
     // Método para atualizar o responsável
     public boolean atualizarResponsavel(Responsavel responsavel) {
-
-        Set<ConstraintViolation<Responsavel>> violations = validator.validate(responsavel);
-
-        if (!violations.isEmpty()) {
-            StringBuilder sb = new StringBuilder();
-            for (ConstraintViolation<Responsavel> violation : violations) {
-                sb.append(violation.getMessage()).append("\n");
-            }
-            AlertUtil.showErrorAlert("Atenção", "Campo não preenchido", sb.toString());
-            return false;
-        }
-
+        
         if (existsResponsavel(responsavel.getNome())) {
+            AlertUtil.showErrorAlert("Erro", "Responsável já cadastrado", "O responsável já está cadastrado no sistema.");
             return false; // Nome já existe no banco de dados
         }
 
@@ -141,5 +110,23 @@ public class ResponsavelDAO {
             e.printStackTrace();
         }
         return false;
+    }
+    
+    // Método para saber a quantidade de categorias cadastradas 
+    public int getTotalResponsaveis() {
+        int total = 0;
+        String sql = "SELECT COUNT(*) AS total FROM responsavel";
+        
+        try (Connection conn = MySQLConnection.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql);
+             ResultSet rs = stmt.executeQuery()) {
+            
+            if (rs.next()) {
+                total = rs.getInt("total");
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }        
+        return total;
     }
 }

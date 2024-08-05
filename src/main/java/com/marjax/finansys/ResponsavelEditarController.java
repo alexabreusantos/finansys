@@ -12,7 +12,9 @@ import java.util.ResourceBundle;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
+import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 
 /**
@@ -23,35 +25,39 @@ import javafx.stage.Stage;
 public class ResponsavelEditarController implements Initializable {
 
     @FXML
-    private Button btnSalvar;
+    private Button salvarButton;
+    
+    @FXML
+    private Label codigoLabel;
+    
+    @FXML
+    private Label nomeLabel;
+    
+    @FXML
+    private Pane editarPane;
 
     @FXML
-    private Button btnCancelar;
+    private Button editarButton;    
 
     @FXML
-    private TextField txtCodigo;
-
-    @FXML
-    private TextField txtNome;
+    private TextField nomeTextField;
 
     private Responsavel responsavel;
 
     private ResponsavelController responsavelController;
 
-    private ResponsavelDAO responsavelDAO;
-
-    private ResponsavelDAO dao = new ResponsavelDAO();
+    private ResponsavelDAO responsavelDAO;    
 
     @Override
-    public void initialize(URL url, ResourceBundle rb) {
-        btnCancelar.setOnAction(event -> cancelarCadastro());
-        btnSalvar.setOnAction(event -> salvarEdicao());
+    public void initialize(URL url, ResourceBundle rb) {        
+        salvarButton.setOnAction(event -> salvarEdicao());
+        editarButton.setOnAction(event -> editarPaneVisivel());
     }
 
     public void setResponsavel(Responsavel responsavel) {
         this.responsavel = responsavel;
-        txtCodigo.setText(String.valueOf(responsavel.getCodigo()));
-        txtNome.setText(responsavel.getNome());
+        codigoLabel.setText(String.valueOf(responsavel.getCodigo()));
+        nomeLabel.setText(responsavel.getNome());
     }
 
     public void setResponsavelDAO(ResponsavelDAO responsavelDAO) {
@@ -61,20 +67,12 @@ public class ResponsavelEditarController implements Initializable {
     public void setResponsavelController(ResponsavelController responsavelController) {
         this.responsavelController = responsavelController;
     }
-
-    @FXML
-    private void cancelarCadastro() {
-        // get a handle to the stage
-        Stage stage = (Stage) btnCancelar.getScene().getWindow();
-        // do what you have to do
-        stage.close();
-    }
-
+ 
     @FXML
     private void salvarEdicao() {
         if (responsavel != null) {
-            String novoNome = txtNome.getText();
-            String codigoTexto = txtCodigo.getText();
+            String novoNome = nomeTextField.getText();
+            String codigoTexto = codigoLabel.getText();
 
             // Verificar se o nome já existe no banco de dados
             if (responsavelDAO.existsResponsavel(novoNome) && !novoNome.equals(responsavel.getNome())) {
@@ -111,8 +109,13 @@ public class ResponsavelEditarController implements Initializable {
     }
 
     private void fecharJanela() {
-        Stage stage = (Stage) btnSalvar.getScene().getWindow();
+        Stage stage = (Stage) salvarButton.getScene().getWindow();
         stage.close();
+    }
+    
+    private void editarPaneVisivel() {
+        editarPane.setDisable(false);
+        nomeTextField.requestFocus();
     }
 
 }

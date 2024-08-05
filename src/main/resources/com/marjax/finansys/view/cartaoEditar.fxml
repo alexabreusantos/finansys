@@ -7,10 +7,11 @@
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.AnchorPane?>
 
-<AnchorPane id="AnchorPane" prefHeight="220.0" prefWidth="418.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.marjax.finansys.CartaoCadastrarController">
+<AnchorPane id="AnchorPane" prefHeight="220.0" prefWidth="418.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.marjax.finansys.CartaoEditarController">
    <children>
-      <Label layoutX="14.0" layoutY="14.0" text="Nome" />
-      <TextField fx:id="nomeTextField" focusTraversable="false" layoutX="14.0" layoutY="41.0" prefHeight="25.0" prefWidth="386.0" promptText="Digite o nome do cartão" styleClass="campo-nome" />
+      <Label fx:id="codigo" layoutX="14.0" layoutY="14.0" text="Código" />
+      <Label layoutX="164.0" layoutY="14.0" text="Nome" />
+      <TextField fx:id="nomeTextField" focusTraversable="false" layoutX="164.0" layoutY="41.0" prefHeight="25.0" prefWidth="236.0" promptText="Digite o nome do cartão" styleClass="campo-nome" />
       <Label layoutX="14.0" layoutY="80.0" text="Limite" />
       <TextField fx:id="limiteTextField" focusTraversable="false" layoutX="14.0" layoutY="109.0" prefHeight="25.0" prefWidth="147.0" promptText="Digite o liimite do cartão" styleClass="campo-nome" />
       <Button fx:id="salvarButton" layoutX="135.0" layoutY="168.0" mnemonicParsing="false" text="Salvar">
@@ -27,5 +28,6 @@
       <ComboBox fx:id="fechamentoComboBox" layoutX="170.0" layoutY="109.0" prefHeight="25.0" prefWidth="111.0" promptText="Selecione" />
       <Label layoutX="290.0" layoutY="80.0" text="Dia de Vencimento" />
       <ComboBox fx:id="vencimentoComboBox" layoutX="290.0" layoutY="109.0" prefHeight="25.0" prefWidth="111.0" promptText="Selecione" />
+      <TextField fx:id="codigoTextField" editable="false" focusTraversable="false" layoutX="14.0" layoutY="41.0" prefHeight="25.0" prefWidth="147.0" styleClass="campo-nome" />
    </children>
 </AnchorPane>

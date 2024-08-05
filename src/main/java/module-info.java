@@ -4,10 +4,10 @@ module com.marjax.finansys {
     requires java.sql;
     requires java.base;
     requires fontawesomefx;
-    requires java.validation;
     
     opens com.marjax.finansys to javafx.fxml;
     opens com.marjax.finansys.model; 
         
-    exports com.marjax.finansys;        
+    exports com.marjax.finansys;  
+    exports com.marjax.finansys.util;
 }

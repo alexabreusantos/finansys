@@ -4,9 +4,6 @@
  */
 package com.marjax.finansys.model;
 
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotEmpty;
-import javax.validation.constraints.Size;
 
 /**
  *
@@ -14,9 +11,7 @@ import javax.validation.constraints.Size;
  */
 public class Responsavel {
     
-    private Integer codigo;
-    
-    @NotEmpty(message = "O nome não pode estar vazio")        
+    private Integer codigo;    
     private String nome;
 
     public int getCodigo() {

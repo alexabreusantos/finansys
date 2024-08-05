@@ -4,19 +4,14 @@
  */
 package com.marjax.finansys.model;
 
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotEmpty;
-import javax.validation.constraints.Size;
-
 /**
  *
  * @author Alex de Abreu dos Santos <alexdeabreudossantos@gmail.com>
  */
 public class Categoria {
     
-    private Integer codigo;
+    private Integer codigo;    
     
-    @NotEmpty(message = "O nome não pode estar vazio")        
     private String nome;
 
     public int getCodigo() {

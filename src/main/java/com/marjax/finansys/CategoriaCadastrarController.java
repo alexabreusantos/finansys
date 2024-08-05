@@ -6,6 +6,7 @@ package com.marjax.finansys;
 
 import com.marjax.finansys.dao.CategoriaDAO;
 import com.marjax.finansys.model.Categoria;
+import com.marjax.finansys.util.ValidationUtil;
 import java.net.URL;
 import java.util.ResourceBundle;
 import javafx.fxml.FXML;
@@ -22,13 +23,13 @@ import javafx.stage.Stage;
 public class CategoriaCadastrarController implements Initializable {
 
     @FXML
-    private Button btnSalvar;
+    private Button salvarButton;
 
     @FXML
-    private Button btnCancelar;
+    private Button cancelarButton;
 
     @FXML
-    private TextField txtNome;
+    private TextField nomeTextField;
 
     private CategoriaDAO dao;
 
@@ -36,8 +37,8 @@ public class CategoriaCadastrarController implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        btnCancelar.setOnAction(event -> cancelarCadastro());
-        btnSalvar.setOnAction(event -> Salvar());
+        cancelarButton.setOnAction(event -> cancelarCadastro());
+        salvarButton.setOnAction(event -> Salvar());
     }
 
     public void setCategoriaDAO(CategoriaDAO dao) {
@@ -51,28 +52,34 @@ public class CategoriaCadastrarController implements Initializable {
     @FXML
     private void cancelarCadastro() {
         // get a handle to the stage
-        Stage stage = (Stage) btnCancelar.getScene().getWindow();
+        Stage stage = (Stage) cancelarButton.getScene().getWindow();
         // do what you have to do
         stage.close();
     }
 
     @FXML
     private void Salvar() {
-        String nome = txtNome.getText().trim();
+        String nome = nomeTextField.getText().trim();
+        boolean[] hasError = { false };        
+        boolean nomePreechido = ValidationUtil.validateNonEmpty(nomeTextField, "Nome", hasError);        
+        
+        if (nomePreechido && !hasError[0]) {
 
-        // Criar um objeto Responsavel
-        Categoria categoria = new Categoria();
-        categoria.setNome(nome);
+            // Criar um objeto Responsavel
+            Categoria categoria = new Categoria();
+            categoria.setNome(nome);
+            // Tentar salvar o responsável
+            dao.salvar(categoria);
 
-        // Tentar salvar o responsável
-        dao.salvar(categoria);
+            // Atualize o TableView na janela principal
+            if (controller != null) {
+                controller.atualizarTableView();
+                controller.atualizarTotalCategorias();
+            }
 
-        // Atualize o TableView na janela principal
-        if (controller != null) {
-            controller.atualizarTableView();
+            ((Stage) salvarButton.getScene().getWindow()).close();
         }
 
-        ((Stage) btnSalvar.getScene().getWindow()).close();
     }
 
 }

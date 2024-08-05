@@ -14,23 +14,13 @@ import java.sql.SQLException;
 import java.util.Set;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javax.validation.ConstraintViolation;
-import javax.validation.Validation;
-import javax.validation.Validator;
-import javax.validation.ValidatorFactory;
+
 
 /**
  *
  * @author Alex de Abreu dos Santos <alexdeabreudossantos@gmail.com>
  */
-public class CategoriaDAO {
-
-    private Validator validator;
-
-    public CategoriaDAO() {
-        ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
-        validator = factory.getValidator();
-    }
+public class CategoriaDAO {    
 
     // Método para verificar se um responsável já existe
     public boolean existsCategoria(String nome) {
@@ -50,17 +40,7 @@ public class CategoriaDAO {
     }
 
     //metodo para salvar responsavel
-    public void salvar(Categoria categoria) {
-        Set<ConstraintViolation<Categoria>> violations = validator.validate(categoria);
-
-        if (!violations.isEmpty()) {
-            StringBuilder sb = new StringBuilder();
-            for (ConstraintViolation<Categoria> violation : violations) {
-                sb.append(violation.getMessage()).append("\n");
-            }
-            AlertUtil.showErrorAlert("Atenção", "Campo não preenchido", sb.toString());
-            return;
-        }
+    public void salvar(Categoria categoria) {        
 
         if (existsCategoria(categoria.getNome())) {
             AlertUtil.showErrorAlert("Erro", "Categoria já cadastrada", "A categoria já está cadastrada no sistema.");
@@ -74,7 +54,7 @@ public class CategoriaDAO {
             int rowsAffected = preparedStatement.executeUpdate();
 
             if (rowsAffected > 0) {
-                AlertUtil.showInformationAlert("Sucesso", "Categoria já cadastrada", "A categoria já está cadastrada no sistema.");
+                AlertUtil.showInformationAlert("Sucesso", "Categoria Cadastrada", "Categoria cadastrada com sucesso.");
             }
         } catch (SQLException e) {
             AlertUtil.showErrorAlert("Erro", "Erro de SQL", "Erro: " + e.getMessage());
@@ -113,20 +93,10 @@ public class CategoriaDAO {
     }
 
     // Método para atualizar o responsável
-    public boolean atualizarCategoria(Categoria categoria) {
-
-        Set<ConstraintViolation<Categoria>> violations = validator.validate(categoria);
-
-        if (!violations.isEmpty()) {
-            StringBuilder sb = new StringBuilder();
-            for (ConstraintViolation<Categoria> violation : violations) {
-                sb.append(violation.getMessage()).append("\n");
-            }
-            AlertUtil.showErrorAlert("Atenção", "Campo não preenchido", sb.toString());
-            return false;
-        }
-
+    public boolean atualizar(Categoria categoria) {
+        
         if (existsCategoria(categoria.getNome())) {
+            AlertUtil.showErrorAlert("Erro", "Categoria já cadastrada", "A categoria já está cadastrada no sistema.");
             return false; // Nome já existe no banco de dados
         }
 
@@ -140,5 +110,23 @@ public class CategoriaDAO {
             e.printStackTrace();
         }
         return false;
+    }
+    
+    // Método para saber a quantidade de categorias cadastradas 
+    public int getTotalCategorias() {
+        int total = 0;
+        String sql = "SELECT COUNT(*) AS total FROM categoria";
+        
+        try (Connection conn = MySQLConnection.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql);
+             ResultSet rs = stmt.executeQuery()) {
+            
+            if (rs.next()) {
+                total = rs.getInt("total");
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }        
+        return total;
     }
 }
