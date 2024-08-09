@@ -20,7 +20,12 @@
                   <FontAwesomeIcon glyphName="PIE_CHART" />
                </graphic>
             </Button>
-            <Button fx:id="responsavelButton" layoutX="177.0" layoutY="15.0" mnemonicParsing="false" styleClass="btn-menu" text="Responsáveis">
+            <Button fx:id="faturaButton" layoutX="177.0" layoutY="15.0" mnemonicParsing="false" styleClass="btn-menu" text="Faturas">
+               <graphic>
+                  <FontAwesomeIcon glyphName="FILE_TEXT" />
+               </graphic>
+            </Button>
+            <Button fx:id="responsavelButton" layoutX="266.0" layoutY="15.0" mnemonicParsing="false" styleClass="btn-menu" text="Responsáveis">
                <graphic>
                   <FontAwesomeIcon glyphName="USER" />
                </graphic>

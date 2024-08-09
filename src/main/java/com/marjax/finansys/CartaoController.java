@@ -8,12 +8,7 @@ import com.marjax.finansys.dao.CartaoDAO;
 import com.marjax.finansys.model.Cartao;
 import com.marjax.finansys.util.AlertUtil;
 import com.marjax.finansys.util.LocaleUtil;
-import com.marjax.finansys.util.MaskFieldUtil;
 import java.net.URL;
-import java.sql.SQLException;
-import java.text.NumberFormat;
-import java.util.List;
-import java.util.Locale;
 import java.util.Optional;
 import java.util.ResourceBundle;
 import javafx.beans.value.ChangeListener;
@@ -29,7 +24,6 @@ import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.Label;
-import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
@@ -78,14 +72,11 @@ public class CartaoController implements Initializable {
     private Button adicionarButton;
 
     @FXML
-    private Button alterarButton;
-
-    @FXML
     private Button excluirButton;
 
-    private CartaoDAO dao = new CartaoDAO();
+    private final CartaoDAO dao = new CartaoDAO();
 
-    private String css = "/com/marjax/finansys/style/main.css";
+    private final String css = "/com/marjax/finansys/style/main.css";
 
     private ObservableList<Cartao> listaCartoes;
 
@@ -94,21 +85,29 @@ public class CartaoController implements Initializable {
         codigoColuna.setCellValueFactory(new PropertyValueFactory<>("codigo"));
         nomeColuna.setCellValueFactory(new PropertyValueFactory<>("nome"));
         limiteColuna.setCellValueFactory(new PropertyValueFactory<>("limite"));
-        LocaleUtil.MoedaBrazil(limiteColuna);
+        LocaleUtil.moedaBrasilColuna(limiteColuna);
         limiteDisponivelColuna.setCellValueFactory(new PropertyValueFactory<>("limiteDisponivel"));
-        LocaleUtil.MoedaBrazil(limiteDisponivelColuna);
+        LocaleUtil.moedaBrasilColuna(limiteDisponivelColuna);
         limiteUsadoColuna.setCellValueFactory(new PropertyValueFactory<>("limiteUsado"));
-        LocaleUtil.MoedaBrazil(limiteUsadoColuna);
+        LocaleUtil.moedaBrasilColuna(limiteUsadoColuna);
         fechamentoColuna.setCellValueFactory(new PropertyValueFactory<>("fechamento"));
         vencimentoColuna.setCellValueFactory(new PropertyValueFactory<>("vencimento"));
+
+        cartaoTableView.setOnMouseClicked(event -> {
+            if (event.getClickCount() == 2) { // Duplo clique
+                Cartao selectedCartao = cartaoTableView.getSelectionModel().getSelectedItem();
+                if (selectedCartao != null) {
+                    abrirTelaEdicao(selectedCartao);
+                }
+            }
+        });
 
         AtivarBotoes();
 
         adicionarButton.setOnAction(event -> AbrirCadastrarAction());
-        alterarButton.setOnAction(event -> editar());
 
         atualizarTableView();
-        atualizarTotalCartoes();        
+        atualizarTotalCartoes();
     }
 
     public void atualizarTableView() {
@@ -140,7 +139,6 @@ public class CartaoController implements Initializable {
             @Override
             public void changed(ObservableValue<? extends Cartao> observable, Cartao oldValue, Cartao newValue) {
                 excluirButton.setDisable(newValue == null);
-                alterarButton.setDisable(newValue == null);
             }
         }
         );
@@ -204,16 +202,6 @@ public class CartaoController implements Initializable {
         totalCadastroLabel.setText(total + " cartões cadastrados!");
     }
 
-    @FXML
-    private void editar() {
-        Cartao cartaoSelecionado = cartaoTableView.getSelectionModel().getSelectedItem();
-        if (cartaoSelecionado != null) {
-            abrirTelaEdicao(cartaoSelecionado);
-        } else {
-            AlertUtil.showWarningAlert("Seleção Inválida", "Nenhum cartão selecionado", "Por favor, selecione um cartão para editar.");
-        }
-    }
-
     private void abrirTelaEdicao(Cartao cartao) {
 
         try {
@@ -228,14 +216,14 @@ public class CartaoController implements Initializable {
 
             CartaoEditarController controller = fxmlLoader.getController();
             controller.setCartaoDAO(dao);
-            controller.setCartaoController(this);            
+            controller.setCartaoController(this);
             controller.setCartao(cartao);
 
             // Define o estágio secundário como modal e bloqueia a interação com outras janelas
             stage.initModality(Modality.WINDOW_MODAL);
-            stage.initOwner(alterarButton.getScene().getWindow());
+            stage.initOwner(cartaoTableView.getScene().getWindow());
             stage.showAndWait();
-            
+
         } catch (Exception e) {
             e.printStackTrace();
         }

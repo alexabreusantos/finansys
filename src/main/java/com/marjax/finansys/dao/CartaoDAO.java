@@ -68,12 +68,7 @@ public class CartaoDAO {
     // Método para atualizar o cartao
     public boolean atualizar(Cartao cartao) {
         
-        if (existeCartao(cartao.getNome())) {
-            AlertUtil.showErrorAlert("Erro", "Cartao já cadastrado", "O cartão já está cadastrado no sistema.");
-            return false; // Nome já existe no banco de dados
-        }
-
-        String sql = "UPDATE cartao SET nome = ?, limite = ?, limite_disponivel = ?, limite_usado = ?, fechamento = ?, vencimento = ? WHERE codigo = ?";
+        String sql = "UPDATE cartao SET nome = ?, limite = ?, limiteDisponivel = ?, limiteUsado = ?, fechamento = ?, vencimento = ? WHERE codigo = ?";
         try (Connection connection = MySQLConnection.getConnection(); PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
             preparedStatement.setString(1, cartao.getNome());
             preparedStatement.setDouble(2, cartao.getLimite());
@@ -82,10 +77,14 @@ public class CartaoDAO {
             preparedStatement.setInt(5, cartao.getFechamento());
             preparedStatement.setInt(6, cartao.getVencimento());
             preparedStatement.setInt(7, cartao.getCodigo());
+            
             int rowsAffected = preparedStatement.executeUpdate();
+            if (rowsAffected > 0) {
+                AlertUtil.showInformationAlert("Sucesso", "Cartão alterado!", "O cartão foi alterado com sucesso.");
+            }
             return rowsAffected > 0;
         } catch (SQLException e) {
-            e.printStackTrace();
+            AlertUtil.showErrorAlert("Erro", "Erro de SQL", "Erro: " + e.getMessage());
         }
         return false;
     }

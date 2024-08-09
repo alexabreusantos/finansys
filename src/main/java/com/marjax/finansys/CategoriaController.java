@@ -54,15 +54,12 @@ public class CategoriaController implements Initializable {
 
     @FXML
     private Button adicionarButton;
-
-    @FXML
-    private Button alterarButton;
-
+    
     @FXML
     private Button excluirButton;
 
     private CategoriaDAO dao;
-    
+
     private ObservableList<Categoria> listaCategorias;
 
     private String css = "/com/marjax/finansys/style/main.css";
@@ -77,16 +74,23 @@ public class CategoriaController implements Initializable {
         adicionarButton.setOnAction(event -> AbrirCadastrarCategoriaAction());
         AtivarBotoes();
         excluirButton.setOnAction(event -> excluirCategoriaSelecionada());
-        alterarButton.setOnAction(event -> editar());
+        
+        categoriaTableView.setOnMouseClicked(event -> {
+            if (event.getClickCount() == 2) { // Duplo clique
+                Categoria selectedCategoria = categoriaTableView.getSelectionModel().getSelectedItem();
+                if (selectedCategoria != null) {
+                    abrirTelaEdicao(selectedCategoria);
+                }
+            }
+        });
 
         atualizarTotalCategorias();
     }
-    
+
     public void atualizarTotalCategorias() {
         int total = dao.getTotalCategorias();
-        totalCadastroLabel.setText(total +" categorias cadastradas!");
+        totalCadastroLabel.setText(total + " categorias cadastradas!");
     }
-
 
     public void atualizarTableView() {
         listaCategorias = FXCollections.observableArrayList(dao.getAllCategorias());
@@ -143,8 +147,7 @@ public class CategoriaController implements Initializable {
         categoriaTableView.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<Categoria>() {
             @Override
             public void changed(ObservableValue<? extends Categoria> observable, Categoria oldValue, Categoria newValue) {
-                excluirButton.setDisable(newValue == null);
-                alterarButton.setDisable(newValue == null);
+                excluirButton.setDisable(newValue == null);                
             }
         }
         );
@@ -175,17 +178,7 @@ public class CategoriaController implements Initializable {
             e.printStackTrace();
         }
     }
-
-    @FXML
-    private void editar() {
-        Categoria categoriaSelecionada = categoriaTableView.getSelectionModel().getSelectedItem();
-        if (categoriaSelecionada != null) {
-            abrirTelaEdicao(categoriaSelecionada);
-        } else {
-            AlertUtil.showWarningAlert("Seleção Inválida", "Nenhuma categoria selecionada", "Por favor, selecione uma categoria para editar.");
-        }
-    }
-
+    
     private void abrirTelaEdicao(Categoria categoria) {
 
         try {
@@ -205,10 +198,10 @@ public class CategoriaController implements Initializable {
 
             // Define o estágio secundário como modal e bloqueia a interação com outras janelas
             stage.initModality(Modality.WINDOW_MODAL);
-            stage.initOwner(alterarButton.getScene().getWindow());
+            stage.initOwner(categoriaTableView.getScene().getWindow());
             stage.showAndWait();
         } catch (Exception e) {
             e.printStackTrace();
         }
-    }  
+    }
 }

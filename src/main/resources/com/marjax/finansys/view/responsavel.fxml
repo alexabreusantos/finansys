@@ -39,12 +39,7 @@
                   <FontAwesomeIcon glyphName="PLUS" />
                </graphic>
             </Button>
-            <Button fx:id="alterarButton" disable="true" focusTraversable="false" layoutX="96.0" layoutY="17.0" mnemonicParsing="false" onAction="#editarResponsavel" text="Alterar">
-               <graphic>
-                  <FontAwesomeIcon glyphName="EDIT" />
-               </graphic>
-            </Button>
-            <Button fx:id="excluirButton" disable="true" focusTraversable="false" layoutX="173.0" layoutY="17.0" mnemonicParsing="false" text="Excluir">
+            <Button fx:id="excluirButton" disable="true" focusTraversable="false" layoutX="95.0" layoutY="17.0" mnemonicParsing="false" text="Excluir">
                <graphic>
                   <FontAwesomeIcon glyphName="TRASH" />
                </graphic>

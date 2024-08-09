@@ -52,12 +52,7 @@
                   <FontAwesomeIcon glyphName="PLUS" />
                </graphic>
             </Button>
-            <Button fx:id="alterarButton" disable="true" focusTraversable="false" layoutX="104.0" layoutY="17.0" mnemonicParsing="false" text="Alterar">
-               <graphic>
-                  <FontAwesomeIcon glyphName="EDIT" />
-               </graphic>
-            </Button>
-            <Button fx:id="excluirButton" disable="true" focusTraversable="false" layoutX="180.0" layoutY="17.0" mnemonicParsing="false" text="Excluir">
+            <Button fx:id="excluirButton" disable="true" focusTraversable="false" layoutX="103.0" layoutY="17.0" mnemonicParsing="false" text="Excluir">
                <graphic>
                   <FontAwesomeIcon glyphName="TRASH" />
                </graphic>

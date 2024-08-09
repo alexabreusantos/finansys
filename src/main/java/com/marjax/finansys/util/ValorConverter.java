@@ -11,17 +11,27 @@ import javafx.scene.control.TextField;
  * @author Alex de Abreu dos Santos <alexdeabreudossantos@gmail.com>
  */
 public class ValorConverter {
-    
+
     public Double valor(TextField valor) {
-        
         String valorBrasileiro = valor.getText();
 
-        // Remove o prefixo "R$" e os espaços
-        String valorLimpo = valorBrasileiro.replace(".", "").replace(",", ".");
+        // Remove o prefixo "R$" e quaisquer espaços extras
+        String valorLimpo = valorBrasileiro.replace("R$", "").trim();
+
+        // Remove qualquer outro caractere não numérico, exceto a vírgula
+        valorLimpo = valorLimpo.replaceAll("[^\\d,]", "");
+
+        // Substitui a vírgula por ponto
+        valorLimpo = valorLimpo.replace(",", ".");
 
         // Converte para Double
-        double valorParaMySQL = Double.parseDouble(valorLimpo);  
-        
+        Double valorParaMySQL = null;
+        try {
+            valorParaMySQL = Double.parseDouble(valorLimpo);
+        } catch (NumberFormatException e) {
+            e.printStackTrace();
+        }
+
         return valorParaMySQL;
     }
 }

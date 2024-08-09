@@ -12,7 +12,6 @@ import com.marjax.finansys.util.PreencherComboBox;
 import com.marjax.finansys.util.ValidationUtil;
 import com.marjax.finansys.util.ValorConverter;
 import java.net.URL;
-import java.util.Locale;
 import java.util.ResourceBundle;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -44,7 +43,7 @@ public class CartaoCadastrarController implements Initializable {
     private ComboBox fechamentoComboBox;
 
     @FXML
-    private ComboBox vencimentoComboBox; 
+    private ComboBox vencimentoComboBox;
 
     private CartaoDAO dao;
 
@@ -55,7 +54,9 @@ public class CartaoCadastrarController implements Initializable {
         cancelarButton.setOnAction(event -> cancelarCadastro());
         PreencherComboBox.ComboBoxDias(fechamentoComboBox);
         PreencherComboBox.ComboBoxDias(vencimentoComboBox);
-        MaskFieldUtil.monetaryField(limiteTextField);
+
+        LocaleUtil.applyBrazilianCurrencyFormat(limiteTextField);
+        
         salvarButton.setOnAction(event -> salvar());
     }
 
@@ -77,39 +78,43 @@ public class CartaoCadastrarController implements Initializable {
 
     @FXML
     private void salvar() {
-        
+
         ValorConverter converter = new ValorConverter();
-        String nome = nomeTextField.getText().trim();
-        String limite = limiteTextField.getText().trim();       
-        boolean[] hasError = { false };
+        String nome = nomeTextField.getText().trim();        
+        boolean[] hasError = {false};
 
         // Valida o nome primeiro
         boolean validNome = ValidationUtil.validateNonEmpty(nomeTextField, "Nome", hasError);
-        if (!validNome) return; // Interrompe a validação se o nome for inválido
-        
+        if (!validNome) {
+            return; // Interrompe a validação se o nome for inválido
+        }
         // Valida o limite após o nome
         boolean validLimite = ValidationUtil.validateNonEmpty(limiteTextField, "Limite", hasError);
-        if (!validLimite) return; // Interrompe a validação se o limite for inválido
-
+        if (!validLimite) {
+            return; // Interrompe a validação se o limite for inválido
+        }
         // Valida os ComboBoxes na ordem desejada
         boolean validFechamento = ValidationUtil.validateComboBoxSelection(fechamentoComboBox, "Fechamento", hasError);
-        if (!validFechamento) return; // Interrompe a validação se o fechamento for inválido
-
+        if (!validFechamento) {
+            return; // Interrompe a validação se o fechamento for inválido
+        }
         boolean validVencimento = ValidationUtil.validateComboBoxSelection(vencimentoComboBox, "Vencimento", hasError);
-        if (!validVencimento) return; // Interrompe a validação se o vencimento for inválido
-
+        if (!validVencimento) {
+            return; // Interrompe a validação se o vencimento for inválido
+        }
         // Valida se o fechamento é menor que o vencimento
         boolean validFechamentoMenorQueVencimento = ValidationUtil.validateFechamentoMenorQueVencimento(fechamentoComboBox, vencimentoComboBox, hasError);
-        if (!validFechamentoMenorQueVencimento) return; // Interrompe a validação se a relação entre fechamento e vencimento for inválida
-
+        if (!validFechamentoMenorQueVencimento) {
+            return; // Interrompe a validação se a relação entre fechamento e vencimento for inválida
+        }
 
         if (!hasError[0]) {
             // Criar um objeto Responsavel
             Cartao cartao = new Cartao();
             Double valorConvertido = converter.valor(limiteTextField);
-            int fechamento = Integer.valueOf(fechamentoComboBox.getValue().toString());
-            int vencimento = Integer.valueOf(vencimentoComboBox.getValue().toString());
-                        
+            int fechamento = Integer.parseInt(fechamentoComboBox.getValue().toString());
+            int vencimento = Integer.parseInt(vencimentoComboBox.getValue().toString());
+
             cartao.setNome(nome);
             cartao.setLimite(valorConvertido);
             cartao.setLimiteDisponivel(valorConvertido);
@@ -119,7 +124,6 @@ public class CartaoCadastrarController implements Initializable {
 
             //sout + tab
             //System.out.println(fechamento);
-
             // Tentar salvar o responsável
             dao.salvar(cartao);
             // Atualize o TableView na janela principal
@@ -127,7 +131,7 @@ public class CartaoCadastrarController implements Initializable {
                 controller.atualizarTableView();
                 controller.atualizarTotalCartoes();
             }
-            ((Stage) salvarButton.getScene().getWindow()).close();  
+            ((Stage) salvarButton.getScene().getWindow()).close();
         }
     }
 

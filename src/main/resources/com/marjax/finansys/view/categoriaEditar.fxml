@@ -6,36 +6,16 @@
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.Pane?>
-<?import javafx.scene.text.Font?>
 
-<AnchorPane id="AnchorPane" prefHeight="208.0" prefWidth="320.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.marjax.finansys.CategoriaEditarController">
+<AnchorPane id="AnchorPane" prefHeight="142.0" prefWidth="321.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.marjax.finansys.CategoriaEditarController">
    <children>
-      <Pane layoutX="7.0" layoutY="8.0" prefHeight="59.0" prefWidth="302.0" styleClass="borda-pane">
+      <Pane fx:id="editarPane" layoutX="10.0" layoutY="10.0" prefHeight="122.0" prefWidth="302.0" styleClass="borda-pane">
          <children>
-            <Label layoutX="9.0" layoutY="6.0" text="Código:" />
-            <Label fx:id="codigoLabel" layoutX="52.0" layoutY="6.0" text="Código">
-               <font>
-                  <Font name="System Bold" size="12.0" />
-               </font>
-            </Label>
-            <Label layoutX="12.0" layoutY="33.0" text="Nome:" />
-            <Label fx:id="nomeLabel" layoutX="52.0" layoutY="33.0" text="Nome">
-               <font>
-                  <Font name="System Bold" size="12.0" />
-               </font>
-            </Label>
-            <Button fx:id="editarButton" focusTraversable="false" layoutX="226.0" layoutY="17.0" mnemonicParsing="false" text="Editar">
-               <graphic>
-                  <FontAwesomeIcon glyphName="EDIT" />
-               </graphic>
-            </Button>
-         </children>
-      </Pane>
-      <Pane fx:id="editarPane" disable="true" layoutX="9.0" layoutY="85.0" prefHeight="113.0" prefWidth="302.0" styleClass="borda-pane">
-         <children>
-            <Label layoutX="7.0" layoutY="6.0" text="Nome" />
-            <TextField fx:id="nomeTextField" focusTraversable="false" layoutX="7.0" layoutY="30.0" prefHeight="25.0" prefWidth="288.0" promptText="Nome da categoria" styleClass="campo-nome" />
-            <Button fx:id="salvarButton" layoutX="120.0" layoutY="72.0" mnemonicParsing="false" text="Salvar">
+            <Label layoutX="11.0" layoutY="14.0" text="Código" />
+            <TextField fx:id="codigoTextField" disable="true" editable="false" focusTraversable="false" layoutX="11.0" layoutY="38.0" prefHeight="25.0" prefWidth="71.0" styleClass="campo-nome" />
+            <Label layoutX="94.0" layoutY="14.0" text="Nome" />
+            <TextField fx:id="nomeTextField" focusTraversable="false" layoutX="94.0" layoutY="38.0" prefHeight="25.0" prefWidth="198.0" promptText="Nome da categoria" styleClass="campo-nome" />
+            <Button fx:id="salvarButton" layoutX="120.0" layoutY="83.0" mnemonicParsing="false" text="Salvar">
                <graphic>
                   <FontAwesomeIcon glyphName="SAVE" />
                </graphic>

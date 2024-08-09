@@ -23,6 +23,9 @@ public class MainController implements Initializable {
     private Button categoriaButton;
 
     @FXML
+    private Button faturaButton;
+    
+    @FXML
     private Button responsavelButton;
 
     private String css = "/com/marjax/finansys/style/main.css";
@@ -31,6 +34,7 @@ public class MainController implements Initializable {
     public void initialize(URL arg0, ResourceBundle arg1) {
         cartaoButton.setOnAction(event -> AbrirCartaoAction());
         categoriaButton.setOnAction(event -> AbrirCategoriaAction());
+        faturaButton.setOnAction(event -> AbrirFaturaAction());
         responsavelButton.setOnAction(event -> AbrirResponsavelAction());
     }
 
@@ -70,6 +74,27 @@ public class MainController implements Initializable {
             // Define o estágio secundário como modal e bloqueia a interação com outras janelas
             stage.initModality(Modality.WINDOW_MODAL);
             stage.initOwner(categoriaButton.getScene().getWindow());
+            stage.showAndWait();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+    
+    @FXML
+    public void AbrirFaturaAction() {
+
+        try {
+            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("view/fatura.fxml"));
+            Parent root = fxmlLoader.load();
+            Stage stage = new Stage();
+            root.getStylesheets().add(css);
+            stage.setTitle("Faturas");
+            stage.setScene(new Scene(root));
+            stage.setMaximized(false);
+            stage.setResizable(false);
+            // Define o estágio secundário como modal e bloqueia a interação com outras janelas
+            stage.initModality(Modality.WINDOW_MODAL);
+            stage.initOwner(faturaButton.getScene().getWindow());
             stage.showAndWait();
         } catch (Exception e) {
             e.printStackTrace();

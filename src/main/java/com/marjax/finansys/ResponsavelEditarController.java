@@ -25,20 +25,11 @@ import javafx.stage.Stage;
 public class ResponsavelEditarController implements Initializable {
 
     @FXML
-    private Button salvarButton;
-    
-    @FXML
-    private Label codigoLabel;
-    
-    @FXML
-    private Label nomeLabel;
-    
-    @FXML
-    private Pane editarPane;
+    private Button salvarButton;  
 
     @FXML
-    private Button editarButton;    
-
+    private TextField codigoTextField;
+    
     @FXML
     private TextField nomeTextField;
 
@@ -50,14 +41,13 @@ public class ResponsavelEditarController implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {        
-        salvarButton.setOnAction(event -> salvarEdicao());
-        editarButton.setOnAction(event -> editarPaneVisivel());
+        salvarButton.setOnAction(event -> salvarEdicao());        
     }
 
     public void setResponsavel(Responsavel responsavel) {
         this.responsavel = responsavel;
-        codigoLabel.setText(String.valueOf(responsavel.getCodigo()));
-        nomeLabel.setText(responsavel.getNome());
+        codigoTextField.setText(String.valueOf(responsavel.getCodigo()));
+        nomeTextField.setText(responsavel.getNome());
     }
 
     public void setResponsavelDAO(ResponsavelDAO responsavelDAO) {
@@ -72,7 +62,7 @@ public class ResponsavelEditarController implements Initializable {
     private void salvarEdicao() {
         if (responsavel != null) {
             String novoNome = nomeTextField.getText();
-            String codigoTexto = codigoLabel.getText();
+            String codigoTexto = codigoTextField.getText();
 
             // Verificar se o nome já existe no banco de dados
             if (responsavelDAO.existsResponsavel(novoNome) && !novoNome.equals(responsavel.getNome())) {
@@ -112,10 +102,4 @@ public class ResponsavelEditarController implements Initializable {
         Stage stage = (Stage) salvarButton.getScene().getWindow();
         stage.close();
     }
-    
-    private void editarPaneVisivel() {
-        editarPane.setDisable(false);
-        nomeTextField.requestFocus();
-    }
-
 }

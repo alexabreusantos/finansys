@@ -13,9 +13,7 @@ import java.util.ResourceBundle;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
-import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
-import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 
 /**
@@ -27,22 +25,13 @@ public class CategoriaEditarController implements Initializable {
 
     @FXML
     private Button salvarButton;
+      
+    @FXML
+    private TextField codigoTextField;  
     
     @FXML
-    private Button editarButton;   
-
-    @FXML
-    private Label codigoLabel;
+    private TextField nomeTextField;    
     
-    @FXML
-    private Label nomeLabel;
-
-    @FXML
-    private TextField nomeTextField;
-    
-    @FXML
-    private Pane editarPane;
-
     private Categoria categoria;
 
     private CategoriaController categoriaController;
@@ -51,8 +40,8 @@ public class CategoriaEditarController implements Initializable {
 
     public void setCategoria(Categoria categoria) {
         this.categoria = categoria;
-        codigoLabel.setText(String.valueOf(categoria.getCodigo()));
-        nomeLabel.setText(categoria.getNome());
+        codigoTextField.setText(String.valueOf(categoria.getCodigo()));
+        nomeTextField.setText(categoria.getNome());
     }
 
     public void setCategoriaDAO(CategoriaDAO categoriaDAO) {
@@ -65,15 +54,14 @@ public class CategoriaEditarController implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {        
-        salvarButton.setOnAction(event -> salvarEdicao());
-        editarButton.setOnAction(event -> editarPaneVisivel());
+        salvarButton.setOnAction(event -> salvarEdicao());        
     }    
 
     @FXML
     private void salvarEdicao() {
         if (categoria != null) {
             String novoNome = nomeTextField.getText().trim();
-            String codigoTexto = codigoLabel.getText();
+            String codigoTexto = codigoTextField.getText();
 
             boolean[] hasError = {false};
             boolean nomePreechido = ValidationUtil.validateNonEmpty(nomeTextField, "Nome", hasError);
@@ -117,10 +105,5 @@ public class CategoriaEditarController implements Initializable {
     private void fecharJanela() {
         Stage stage = (Stage) salvarButton.getScene().getWindow();
         stage.close();
-    }
-    
-    private void editarPaneVisivel() {
-        editarPane.setDisable(false);
-        nomeTextField.requestFocus();
     }
 }

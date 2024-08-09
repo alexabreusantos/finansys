@@ -37,11 +37,11 @@ import javafx.stage.Stage;
  * @author Alex de Abreu dos Santos <alexdeabreudossantos@gmail.com>
  */
 public class ResponsavelController implements Initializable {
-    
+
     @FXML
     private TextField pesquisarTextField;
-    
-     @FXML
+
+    @FXML
     private Label totalCadastroLabel;
 
     @FXML
@@ -57,13 +57,10 @@ public class ResponsavelController implements Initializable {
     private Button adicionarButton;
     
     @FXML
-    private Button alterarButton;
-    
-    @FXML
     private Button excluirButton;
 
     private ResponsavelDAO dao;
-    
+
     private ObservableList<Responsavel> listaResponsaveis;
 
     private String css = "/com/marjax/finansys/style/main.css";
@@ -72,35 +69,42 @@ public class ResponsavelController implements Initializable {
     public void initialize(URL url, ResourceBundle rb) {
         codigoColuna.setCellValueFactory(new PropertyValueFactory<>("codigo"));
         nomeColuna.setCellValueFactory(new PropertyValueFactory<>("nome"));
-        
-        dao = new ResponsavelDAO();         
-        atualizarTableView();
-        adicionarButton.setOnAction(event -> AbrirJanelaCadastrarResponsavelAction());        
-        AtivarBotaoExcluir();        
-        excluirButton.setOnAction(event -> excluirResponsavelSelecionado());        
-        alterarButton.setOnAction(event -> editarResponsavel());
-        
-        atualizarTotalResponsavel();
-    }  
 
-    private void AtivarBotaoExcluir(){
-        // Adicionar listener para ativar/desativar botão Excluir
-        responsavelTableView.getSelectionModel().selectedItemProperty().addListener(
-            new ChangeListener<Responsavel>() {
-                @Override
-                public void changed(ObservableValue<? extends Responsavel> observable, Responsavel oldValue, Responsavel newValue) {
-                    excluirButton.setDisable(newValue == null);
-                    alterarButton.setDisable(newValue == null);
+        dao = new ResponsavelDAO();
+        atualizarTableView();
+        adicionarButton.setOnAction(event -> AbrirJanelaCadastrarResponsavelAction());
+        AtivarBotaoExcluir();
+        excluirButton.setOnAction(event -> excluirResponsavelSelecionado());
+
+        responsavelTableView.setOnMouseClicked(event -> {
+            if (event.getClickCount() == 2) { // Duplo clique
+                Responsavel selectedResponsavel = responsavelTableView.getSelectionModel().getSelectedItem();
+                if (selectedResponsavel != null) {
+                    abrirTelaEdicao(selectedResponsavel);
                 }
             }
+        });
+
+        atualizarTotalResponsavel();
+    }
+
+    private void AtivarBotaoExcluir() {
+        // Adicionar listener para ativar/desativar botão Excluir
+        responsavelTableView.getSelectionModel().selectedItemProperty().addListener(
+                new ChangeListener<Responsavel>() {
+            @Override
+            public void changed(ObservableValue<? extends Responsavel> observable, Responsavel oldValue, Responsavel newValue) {
+                excluirButton.setDisable(newValue == null);
+            }
+        }
         );
     }
-    
+
     public void atualizarTotalResponsavel() {
         int total = dao.getTotalResponsaveis();
         totalCadastroLabel.setText(total + " responsáveis cadastrados!");
     }
-    
+
     @FXML
     public void AbrirJanelaCadastrarResponsavelAction() {
 
@@ -110,24 +114,24 @@ public class ResponsavelController implements Initializable {
             Stage stage = new Stage();
             root.getStylesheets().add(css);
             stage.setTitle("Cadastrar Responsável");
-            stage.setScene(new Scene(root)); 
+            stage.setScene(new Scene(root));
             stage.setMaximized(false);
             stage.setResizable(false);
-            
+
             ResponsavelCadastrarController controller = fxmlLoader.getController();
             controller.setResponsavelDAO(dao);
             controller.setResponsavelController(this);
-            
+
             // Define o estágio secundário como modal e bloqueia a interação com outras janelas
             stage.initModality(Modality.WINDOW_MODAL);
-            stage.initOwner(adicionarButton.getScene().getWindow());
+            stage.initOwner(responsavelTableView.getScene().getWindow());
             stage.showAndWait();
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
-    
-    public void atualizarTableView() {        
+
+    public void atualizarTableView() {
         listaResponsaveis = FXCollections.observableArrayList(dao.getAllResponsaveis());
 
         // Usar FilteredList para permitir a pesquisa
@@ -147,16 +151,6 @@ public class ResponsavelController implements Initializable {
         });
 
         responsavelTableView.setItems(filteredData);
-    } 
-    
-    @FXML
-    private void editarResponsavel() {
-        Responsavel responsavelSelecionado = responsavelTableView.getSelectionModel().getSelectedItem();
-        if (responsavelSelecionado != null) {
-            abrirTelaEdicao(responsavelSelecionado);
-        } else {
-            AlertUtil.showWarningAlert("Seleção Inválida", "Nenhum responsável selecionado", "Por favor, selecione um responsável para editar.");
-        }
     }
     
     private void abrirTelaEdicao(Responsavel responsavel) {
@@ -167,24 +161,24 @@ public class ResponsavelController implements Initializable {
             Stage stage = new Stage();
             root.getStylesheets().add(css);
             stage.setTitle("Editar " + responsavel.getNome());
-            stage.setScene(new Scene(root)); 
+            stage.setScene(new Scene(root));
             stage.setMaximized(false);
             stage.setResizable(false);
-            
+
             ResponsavelEditarController controller = fxmlLoader.getController();
             controller.setResponsavelDAO(dao);
             controller.setResponsavelController(this);
             controller.setResponsavel(responsavel);
-            
+
             // Define o estágio secundário como modal e bloqueia a interação com outras janelas
             stage.initModality(Modality.WINDOW_MODAL);
-            stage.initOwner(alterarButton.getScene().getWindow());
+            stage.initOwner(responsavelTableView.getScene().getWindow());
             stage.showAndWait();
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
-    
+
     private void excluirResponsavelSelecionado() {
         Responsavel responsavel = responsavelTableView.getSelectionModel().getSelectedItem();
         if (responsavel != null) {
