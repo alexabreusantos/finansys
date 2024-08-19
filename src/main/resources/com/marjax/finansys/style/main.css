@@ -67,12 +67,12 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Other/CascadeStyleSheet.css to ed
 }
 
 .campo-nome {
-    -fx-border-color: black; /* Green border */
+    -fx-border-color: d3d3d3; /* Green border */
     -fx-background-color: transparent; /* Light gray background */
     -fx-text-fill: black; /* Dark text color */
 }
 .borda-pane{
-    -fx-border-color: d3d3d3;
+    -fx-border-color: black;
     -fx-background-color: white;
 }
 

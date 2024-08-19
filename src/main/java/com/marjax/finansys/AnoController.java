@@ -7,19 +7,23 @@ package com.marjax.finansys;
 import com.marjax.finansys.dao.AnoDAO;
 import com.marjax.finansys.dao.CategoriaDAO;
 import com.marjax.finansys.model.Ano;
+import com.marjax.finansys.util.AlertUtil;
 import java.net.URL;
+import java.util.Optional;
 import java.util.ResourceBundle;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
+import javafx.event.EventType;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
@@ -71,6 +75,17 @@ public class AnoController implements Initializable {
         ativarBotoes();
         atualizarTotal();
         adicionarButton.setOnAction(event -> abrirCadastrar());
+        excluirButton.setOnAction(event -> excluir());
+        
+        anoTableView.setOnMouseClicked(event -> {
+            if (event.getClickCount() == 2) { // Duplo clique
+                Ano selected = anoTableView.getSelectionModel().getSelectedItem();
+                if (selected != null) {
+                    abrirEdicao(selected);
+                }
+            }
+        });
+
     }
 
     public void atualizarTableView() {
@@ -111,7 +126,7 @@ public class AnoController implements Initializable {
         int total = dao.getTotal();
         totalCadastroLabel.setText(total + " anos cadastrados!");
     }
-    
+
     @FXML
     public void abrirCadastrar() {
 
@@ -132,6 +147,59 @@ public class AnoController implements Initializable {
             // Define o estágio secundário como modal e bloqueia a interação com outras janelas
             stage.initModality(Modality.WINDOW_MODAL);
             stage.initOwner(adicionarButton.getScene().getWindow());
+            stage.showAndWait();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void excluir() {
+        Ano ano = anoTableView.getSelectionModel().getSelectedItem();
+        if (ano != null) {
+            // Mostrar popup de confirmação
+            Optional<ButtonType> result = AlertUtil.showConfirmationAlert(
+                    "Confirmação de Exclusão",
+                    "Excluir Ano",
+                    "Tem certeza que deseja excluir o ano " + ano.getValor() + "?"
+            );
+
+            if (result.isPresent() && result.get() == ButtonType.OK) {
+                // Se o usuário confirmar, excluir o ano
+                boolean success = dao.excluir(ano.getCodigo());
+                if (success) {
+                    listaAnos.remove(ano); // Remover da lista original
+                    AlertUtil.showInformationAlert("Sucesso", null, "Ano excluído com sucesso.");
+                    atualizarTableView(); // Atualizar a TableView
+                    atualizarTotal();
+                } else {
+                    AlertUtil.showErrorAlert("Erro", null, "Erro ao excluir o ano.");
+                }
+            }
+        } else {
+            AlertUtil.showWarningAlert("Aviso", null, "Nenhuma ano selecionado.");
+        }
+    }
+
+    private void abrirEdicao(Ano ano) {
+
+        try {
+            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("view/anoEditar.fxml"));
+            Parent root = fxmlLoader.load();
+            Stage stage = new Stage();
+            root.getStylesheets().add(css);
+            stage.setTitle("Editar " + ano.getValor());
+            stage.setScene(new Scene(root));
+            stage.setMaximized(false);
+            stage.setResizable(false);
+
+            AnoEditarController controller = fxmlLoader.getController();
+            controller.setAnoDAO(dao);
+            controller.setAnoController(this);
+            controller.setAno(ano);
+
+            // Define o estágio secundário como modal e bloqueia a interação com outras janelas
+            stage.initModality(Modality.WINDOW_MODAL);
+            stage.initOwner(anoTableView.getScene().getWindow());
             stage.showAndWait();
         } catch (Exception e) {
             e.printStackTrace();

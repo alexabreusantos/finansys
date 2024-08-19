@@ -40,7 +40,7 @@ public class AnoCadastrarController implements Initializable {
 
             // Limita o tamanho do texto a 4 caracteres
             if (newValue.length() > 4) {
-                newValue = newValue.substring(0, 2);
+                newValue = newValue.substring(0, 4);
             }
 
             anoTextField.setText(newValue);

@@ -10,39 +10,39 @@
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane prefHeight="528.0" prefWidth="370.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.marjax.finansys.AnoController">
+<AnchorPane prefHeight="219.0" prefWidth="550.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.marjax.finansys.AnoController">
    
     <children>
-      <Pane layoutX="14.0" layoutY="14.0" prefHeight="59.0" prefWidth="344.0" styleClass="borda-pane">
+      <Pane layoutX="14.0" layoutY="14.0" prefHeight="72.0" prefWidth="344.0" styleClass="borda-pane">
          <children>
-            <FontAwesomeIcon glyphName="SEARCH" layoutX="14.0" layoutY="34.0" size="1.5em" />
-            <TextField id="pesquisarTextField" fx:id="pesquisarTextField" focusTraversable="false" layoutX="31.0" layoutY="17.0" prefHeight="25.0" prefWidth="141.0" promptText="Pesquisar..." styleClass="text-field" />
-            <Label id="totalCadastroLabel" fx:id="totalCadastroLabel" layoutX="180.0" layoutY="19.0" text="Total">
-               <graphic>
-                  <FontAwesomeIcon glyphName="CUBES" />
-               </graphic>
-               <font>
-                  <Font name="System Bold" size="12.0" />
-               </font></Label>
+            <FontAwesomeIcon fill="LIGHTGRAY" glyphName="SEARCH" layoutX="14.0" layoutY="41.0" size="1.5em" />
+            <TextField id="pesquisarTextField" fx:id="pesquisarTextField" focusTraversable="false" layoutX="41.0" layoutY="24.0" prefHeight="25.0" prefWidth="290.0" promptText="Pesquisar..." styleClass="campo-nome" />
          </children></Pane>
-      <TableView id="categoriaTableView" fx:id="anoTableView" layoutX="12.0" layoutY="95.0" prefHeight="350.0" prefWidth="344.0">
+      <TableView id="categoriaTableView" fx:id="anoTableView" focusTraversable="false" layoutX="373.0" layoutY="14.0" prefHeight="174.0" prefWidth="163.0" style="-fx-border-color: BLACK;">
          <columns>
             <TableColumn id="codigoColuna" fx:id="codigoColuna" editable="false" prefWidth="59.0" resizable="false" sortable="false" style="-fx-alignment: CENTER;" text="Cód." />
-            <TableColumn id="valorColuna" fx:id="anoColuna" editable="false" prefWidth="276.0" resizable="false" sortable="false" styleClass="nome" text="Ano" />    
+            <TableColumn id="valorColuna" fx:id="anoColuna" editable="false" prefWidth="100.0" resizable="false" sortable="false" styleClass="texto-centro" text="Ano" />    
          </columns>         
       </TableView>
-      <Pane layoutX="14.0" layoutY="460.0" prefHeight="59.0" prefWidth="344.0" styleClass="borda-pane">
+      <Pane layoutX="14.0" layoutY="129.0" prefHeight="59.0" prefWidth="344.0" styleClass="borda-pane">
          <children>
-            <Button fx:id="adicionarButton" focusTraversable="false" layoutX="14.0" layoutY="17.0" mnemonicParsing="false" text="Adicionar">
+            <Button fx:id="adicionarButton" focusTraversable="false" layoutX="178.0" layoutY="17.0" mnemonicParsing="false" text="Adicionar">
                <graphic>
                   <FontAwesomeIcon glyphName="PLUS" />
                </graphic>
             </Button>
-            <Button fx:id="excluirButton" disable="true" focusTraversable="false" layoutX="102.0" layoutY="17.0" mnemonicParsing="false" text="Excluir">
+            <Button fx:id="excluirButton" disable="true" focusTraversable="false" layoutX="266.0" layoutY="17.0" mnemonicParsing="false" text="Excluir">
                <graphic>
                   <FontAwesomeIcon glyphName="TRASH" />
                </graphic>
             </Button>
+            <Label id="totalCadastroLabel" fx:id="totalCadastroLabel" layoutX="14.0" layoutY="22.0" text="Total">
+               <graphic>
+                  <FontAwesomeIcon glyphName="CUBES" />
+               </graphic>
+               <font>
+                  <Font size="11.0" />
+               </font></Label>
          </children>
       </Pane>
    </children>
