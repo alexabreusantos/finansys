@@ -5,7 +5,7 @@
 package com.marjax.finansys.dao;
 
 import com.marjax.finansys.connection.MySQLConnection;
-import com.marjax.finansys.model.Categoria;
+import com.marjax.finansys.model.Ano;
 import com.marjax.finansys.util.AlertUtil;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -14,16 +14,14 @@ import java.sql.SQLException;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
-
 /**
  *
  * @author Alex de Abreu dos Santos <alexdeabreudossantos@gmail.com>
  */
-public class CategoriaDAO {    
-
-    // Método para verificar se um responsável já existe
-    public boolean existsCategoria(String nome) {
-        String sql = "SELECT COUNT(*) FROM categoria WHERE nome = ?";
+public class AnoDAO {
+    // Método para verificar se um ano já existe
+    public boolean existe(String nome) {
+        String sql = "SELECT COUNT(*) FROM ano WHERE valor = ?";
         try (Connection connection = MySQLConnection.getConnection(); PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
 
             preparedStatement.setString(1, nome);
@@ -37,23 +35,22 @@ public class CategoriaDAO {
         }
         return false;
     }
-
     //metodo para salvar responsavel
-    public void salvar(Categoria categoria) {        
+    public void salvar(Ano ano) {        
 
-        if (existsCategoria(categoria.getNome())) {
-            AlertUtil.showErrorAlert("Erro", "Categoria já cadastrada", "A categoria já está cadastrada no sistema.");
+        if (existe(ano.getValor())) {
+            AlertUtil.showErrorAlert("Erro", "Ano já cadastrado", "O ano já está cadastrado no sistema.");
             return;
         }
 
-        String sql = "INSERT INTO categoria (nome) VALUES (?)";
+        String sql = "INSERT INTO ano (valor) VALUES (?)";
         try (Connection connection = MySQLConnection.getConnection(); PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
 
-            preparedStatement.setString(1, categoria.getNome());
+            preparedStatement.setString(1, ano.getValor());
             int rowsAffected = preparedStatement.executeUpdate();
 
             if (rowsAffected > 0) {
-                AlertUtil.showInformationAlert("Sucesso", "Categoria Cadastrada", "Categoria cadastrada com sucesso.");
+                AlertUtil.showInformationAlert("Sucesso", "Ano Cadastrado", "Ano cadastrado com sucesso.");
             }
         } catch (SQLException e) {
             AlertUtil.showErrorAlert("Erro", "Erro de SQL", "Erro: " + e.getMessage());
@@ -61,25 +58,25 @@ public class CategoriaDAO {
     }
 
     //metodo para listar responsaveis
-    public ObservableList<Categoria> getAllCategorias() {
-        String sql = "SELECT * FROM categoria ORDER BY nome ASC";
-        ObservableList<Categoria> categorias = FXCollections.observableArrayList();
+    public ObservableList<Ano> getAll() {
+        String sql = "SELECT * FROM ano ORDER BY valor ASC";
+        ObservableList<Ano> anos = FXCollections.observableArrayList();
         try (Connection connection = MySQLConnection.getConnection(); PreparedStatement preparedStatement = connection.prepareStatement(sql); ResultSet rs = preparedStatement.executeQuery()) {
             while (rs.next()) {
-                Categoria categoria = new Categoria();
-                categoria.setCodigo(rs.getInt("codigo"));
-                categoria.setNome(rs.getString("nome"));
-                categorias.add(categoria);
+                Ano ano = new Ano();
+                ano.setCodigo(rs.getInt("codigo"));
+                ano.setValor(rs.getString("valor"));
+                anos.add(ano);
             }
         } catch (SQLException e) {
             AlertUtil.showErrorAlert("Erro", "Erro de SQL", "Erro: " + e.getMessage());
         }
-        return categorias;
+        return anos;
     }
 
-    // Método para excluir um responsável
-    public boolean excluirCategoria(int codigo) {
-        String sql = "DELETE FROM categoria WHERE codigo = ?";
+    // Método para excluir 
+    public boolean excluir(int codigo) {
+        String sql = "DELETE FROM ano WHERE codigo = ?";
 
         try (Connection conn = MySQLConnection.getConnection(); PreparedStatement pstmt = conn.prepareStatement(sql)) {
             pstmt.setInt(1, codigo);
@@ -91,18 +88,18 @@ public class CategoriaDAO {
         }
     }
 
-    // Método para atualizar o responsável
-    public boolean atualizar(Categoria categoria) {
+    // Método para atualizar o ano
+    public boolean atualizar(Ano ano) {
         
-        if (existsCategoria(categoria.getNome())) {
-            AlertUtil.showErrorAlert("Erro", "Categoria já cadastrada", "A categoria já está cadastrada no sistema.");
-            return false; // Nome já existe no banco de dados
+        if (existe(ano.getValor())) {
+            AlertUtil.showErrorAlert("Erro", "Ano já cadastrado", "O ano já está cadastrado no sistema.");
+            return false; // 
         }
 
-        String sql = "UPDATE categoria SET nome = ? WHERE codigo = ?";
+        String sql = "UPDATE ano SET valor = ? WHERE codigo = ?";
         try (Connection connection = MySQLConnection.getConnection(); PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
-            preparedStatement.setString(1, categoria.getNome());
-            preparedStatement.setInt(2, categoria.getCodigo());
+            preparedStatement.setString(1, ano.getValor());
+            preparedStatement.setInt(2, ano.getCodigo());
             int rowsAffected = preparedStatement.executeUpdate();
             return rowsAffected > 0;
         } catch (SQLException e) {
@@ -111,10 +108,10 @@ public class CategoriaDAO {
         return false;
     }
     
-    // Método para saber a quantidade de categorias cadastradas 
-    public int getTotalCategorias() {
+    // Método para saber a quantidade de anos cadastrados
+    public int getTotal() {
         int total = 0;
-        String sql = "SELECT COUNT(*) AS total FROM categoria";
+        String sql = "SELECT COUNT(*) AS total FROM ano";
         
         try (Connection conn = MySQLConnection.getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql);

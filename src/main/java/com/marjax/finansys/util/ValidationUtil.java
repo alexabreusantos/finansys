@@ -29,6 +29,33 @@ public class ValidationUtil {
         return true;
     }
     
+    // Valida a quantidade de caracteres do campo
+    public static boolean validateSizeTextMes(TextField textField, String fieldName, boolean[] hasError) {
+        if (textField.getText().length()< 2 ) {
+            if (!hasError[0]) {
+                textField.requestFocus(); // Adiciona foco ao primeiro campo vazio encontrado
+            }
+            showValidationError(fieldName + " não pode ser menor 2 dígitos.");
+            hasError[0] = true;
+            return false;
+        }
+        return true;
+    }
+    
+    // Valida a quantidade de caracteres do campo
+    public static boolean validateSizeTextAno(TextField textField, String fieldName, boolean[] hasError) {
+        if (textField.getText().length()< 4 ) {
+            if (!hasError[0]) {
+                textField.requestFocus(); // Adiciona foco ao primeiro campo vazio encontrado
+            }
+            showValidationError(fieldName + " não pode ser menor 4 dígitos.");
+            hasError[0] = true;
+            return false;
+        }
+        return true;
+    }
+
+    
    // Valida se o ComboBox não está com a seleção padrão
     public static boolean validateComboBoxSelection(ComboBox<String> comboBox, String fieldName, boolean[] hasError) {
         if (comboBox.getValue() == null || "Selecione".equals(comboBox.getValue())) {
@@ -40,8 +67,8 @@ public class ValidationUtil {
             return false;
         }
         return true;
-    }
-
+    }  
+    
     // Valida se o fechamento é menor que o vencimento
     public static boolean validateFechamentoMenorQueVencimento(ComboBox<Integer> fechamentoComboBox, ComboBox<Integer> vencimentoComboBox, boolean[] hasError) {
         Integer fechamento = fechamentoComboBox.getValue();

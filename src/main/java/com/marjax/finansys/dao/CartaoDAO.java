@@ -11,6 +11,8 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
@@ -124,7 +126,6 @@ public class CartaoDAO {
             return false;
         }
     }
-
         
     // Método para saber a quantidade de cartoes cadastrados 
     public int getTotalCartoes() {
@@ -142,5 +143,49 @@ public class CartaoDAO {
             e.printStackTrace();
         }        
         return total;
+    }
+    
+    // Método para listar os nomes dos cartões no combobox
+    public List<String> buscarNomesCartoes() {
+        List<String> nomesCartoes = new ArrayList<>();
+        String sql = "SELECT nome FROM cartao ORDER BY nome";
+
+        try (Connection conn = MySQLConnection.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql);
+             ResultSet rs = stmt.executeQuery()) {
+
+            while (rs.next()) {
+                nomesCartoes.add(rs.getString("nome"));
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace(); // Aqui você pode usar uma abordagem de logging ou lançar uma exceção customizada
+        }
+
+        return nomesCartoes;
+    }
+    
+    // Método para buscar o código do cartão pelo nome
+    public Cartao buscarCartaoPorNome(String nome){
+        Cartao cartao = new Cartao();
+        String sql = "SELECT * FROM cartao WHERE nome = ?";
+        try (Connection connection = MySQLConnection.getConnection(); PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
+
+            preparedStatement.setString(1, nome);
+            try (ResultSet rs = preparedStatement.executeQuery()) {
+                if (rs.next()) {
+                    cartao.setCodigo(rs.getInt("codigo"));
+                    cartao.setNome(rs.getString("nome"));                    
+                    cartao.setLimite(rs.getDouble("limite"));
+                    cartao.setLimiteDisponivel(rs.getDouble("limiteDisponivel"));
+                    cartao.setLimiteUsado(rs.getDouble("limiteUsado"));
+                    cartao.setFechamento(rs.getInt("fechamento"));
+                    cartao.setVencimento(rs.getInt("vencimento"));
+                }
+            }
+        } catch (SQLException e) {
+            AlertUtil.showErrorAlert("Erro", "Erro de SQL CartaoDAO", "Erro: " + e.getMessage());
+        }               
+        return cartao;
     }
 }

@@ -61,7 +61,7 @@ public class CategoriaCadastrarController implements Initializable {
     private void Salvar() {
         String nome = nomeTextField.getText().trim();
         boolean[] hasError = { false };        
-        boolean nomePreechido = ValidationUtil.validateNonEmpty(nomeTextField, "Nome", hasError);        
+        boolean nomePreechido = ValidationUtil.validateNonEmpty(nomeTextField, "Nome", hasError);         
         
         if (nomePreechido && !hasError[0]) {
 
@@ -79,7 +79,6 @@ public class CategoriaCadastrarController implements Initializable {
 
             ((Stage) salvarButton.getScene().getWindow()).close();
         }
-
     }
 
 }

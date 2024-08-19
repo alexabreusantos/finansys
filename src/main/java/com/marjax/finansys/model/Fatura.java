@@ -4,7 +4,9 @@
  */
 package com.marjax.finansys.model;
 
+import java.sql.Timestamp;
 import java.time.LocalDate;
+import java.util.Date;
 
 /**
  *
@@ -12,7 +14,7 @@ import java.time.LocalDate;
  */
 public class Fatura {
     private int codigo;
-    private LocalDate periodo;
+    private Timestamp periodo;
     private Double valor;
     private String situacao;
     private Cartao cartao;
@@ -26,11 +28,11 @@ public class Fatura {
         this.codigo = codigo;
     }
 
-    public LocalDate getPeriodo() {
+    public Timestamp getPeriodo() {
         return periodo;
     }
 
-    public void setPeriodo(LocalDate periodo) {
+    public void setPeriodo(Timestamp periodo) {
         this.periodo = periodo;
     }
 
@@ -56,5 +58,6 @@ public class Fatura {
 
     public void setCartao(Cartao cartao) {
         this.cartao = cartao;
-    }
+    }    
+   
 }

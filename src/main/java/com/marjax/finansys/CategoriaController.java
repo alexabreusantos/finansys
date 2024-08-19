@@ -54,7 +54,7 @@ public class CategoriaController implements Initializable {
 
     @FXML
     private Button adicionarButton;
-    
+
     @FXML
     private Button excluirButton;
 
@@ -62,7 +62,7 @@ public class CategoriaController implements Initializable {
 
     private ObservableList<Categoria> listaCategorias;
 
-    private String css = "/com/marjax/finansys/style/main.css";
+    private final String css = "/com/marjax/finansys/style/main.css";
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
@@ -71,10 +71,10 @@ public class CategoriaController implements Initializable {
 
         dao = new CategoriaDAO();
         atualizarTableView();
-        adicionarButton.setOnAction(event -> AbrirCadastrarCategoriaAction());
-        AtivarBotoes();
+        adicionarButton.setOnAction(event -> abrirCadastrarCategoriaAction());
+        ativarBotoes();
         excluirButton.setOnAction(event -> excluirCategoriaSelecionada());
-        
+
         categoriaTableView.setOnMouseClicked(event -> {
             if (event.getClickCount() == 2) { // Duplo clique
                 Categoria selectedCategoria = categoriaTableView.getSelectionModel().getSelectedItem();
@@ -142,19 +142,19 @@ public class CategoriaController implements Initializable {
         }
     }
 
-    private void AtivarBotoes() {
+    private void ativarBotoes() {
         // Adicionar listener para ativar/desativar botão Excluir
         categoriaTableView.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<Categoria>() {
             @Override
             public void changed(ObservableValue<? extends Categoria> observable, Categoria oldValue, Categoria newValue) {
-                excluirButton.setDisable(newValue == null);                
+                excluirButton.setDisable(newValue == null);
             }
         }
         );
     }
 
     @FXML
-    public void AbrirCadastrarCategoriaAction() {
+    public void abrirCadastrarCategoriaAction() {
 
         try {
             FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("view/categoriaCadastrar.fxml"));
@@ -178,7 +178,7 @@ public class CategoriaController implements Initializable {
             e.printStackTrace();
         }
     }
-    
+
     private void abrirTelaEdicao(Categoria categoria) {
 
         try {

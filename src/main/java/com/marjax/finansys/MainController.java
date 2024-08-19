@@ -8,14 +8,18 @@ import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
-import javafx.scene.control.Menu;
-import javafx.scene.control.MenuButton;
 import javafx.scene.control.MenuItem;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 
 public class MainController implements Initializable {
 
+    @FXML
+    private MenuItem mesesMenuItem;
+    
+    @FXML
+    private MenuItem anoMenuItem;
+    
     @FXML
     private Button cartaoButton;
 
@@ -28,18 +32,62 @@ public class MainController implements Initializable {
     @FXML
     private Button responsavelButton;
 
-    private String css = "/com/marjax/finansys/style/main.css";
+    private final String css = "/com/marjax/finansys/style/main.css";
 
     @Override
     public void initialize(URL arg0, ResourceBundle arg1) {
-        cartaoButton.setOnAction(event -> AbrirCartaoAction());
-        categoriaButton.setOnAction(event -> AbrirCategoriaAction());
-        faturaButton.setOnAction(event -> AbrirFaturaAction());
-        responsavelButton.setOnAction(event -> AbrirResponsavelAction());
+        mesesMenuItem.setOnAction(event -> abrirMeses());
+        anoMenuItem.setOnAction(event -> abrirAno());
+        cartaoButton.setOnAction(event -> abrirCartaoAction());
+        categoriaButton.setOnAction(event -> abrirCategoriaAction());
+        faturaButton.setOnAction(event -> abrirFaturaAction());
+        responsavelButton.setOnAction(event -> abrirResponsavelAction());
+    }
+    
+    @FXML
+    public void abrirMeses() {
+
+        try {
+            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("view/mes.fxml"));
+            Parent root = fxmlLoader.load();
+            Stage stage = new Stage();
+            root.getStylesheets().add(css);
+            stage.setTitle("Meses");
+            stage.setScene(new Scene(root));
+            stage.setMaximized(false);
+            stage.setResizable(false);
+            // Define o estágio secundário como modal e bloqueia a interação com outras janelas
+            stage.initModality(Modality.WINDOW_MODAL);
+            stage.initOwner((Stage) mesesMenuItem.getParentPopup().getOwnerWindow());
+            stage.showAndWait();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+    
+    @FXML
+    public void abrirAno() {
+
+        try {
+            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("view/ano.fxml"));
+            Parent root = fxmlLoader.load();
+            Stage stage = new Stage();
+            root.getStylesheets().add(css);
+            stage.setTitle("Anos");
+            stage.setScene(new Scene(root));
+            stage.setMaximized(false);
+            stage.setResizable(false);
+            // Define o estágio secundário como modal e bloqueia a interação com outras janelas
+            stage.initModality(Modality.WINDOW_MODAL);
+            stage.initOwner((Stage) anoMenuItem.getParentPopup().getOwnerWindow());
+            stage.showAndWait();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     @FXML
-    public void AbrirCartaoAction() {
+    public void abrirCartaoAction() {
 
         try {
             FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("view/cartao.fxml"));
@@ -60,7 +108,7 @@ public class MainController implements Initializable {
     }
 
     @FXML
-    public void AbrirCategoriaAction() {
+    public void abrirCategoriaAction() {
 
         try {
             FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("view/categoria.fxml"));
@@ -81,7 +129,7 @@ public class MainController implements Initializable {
     }
     
     @FXML
-    public void AbrirFaturaAction() {
+    public void abrirFaturaAction() {
 
         try {
             FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("view/fatura.fxml"));
@@ -102,7 +150,7 @@ public class MainController implements Initializable {
     }
 
     @FXML
-    public void AbrirResponsavelAction() {
+    public void abrirResponsavelAction() {
 
         try {
             FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("view/responsavel.fxml"));

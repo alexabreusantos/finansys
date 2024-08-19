@@ -32,7 +32,7 @@
             <TableColumn id="periodoColuna" fx:id="periodoColuna" editable="false" prefWidth="117.0" resizable="false" sortable="false" styleClass="texto-centro" text="Período" />
             <TableColumn id="valorColuna" fx:id="valorColuna" editable="false" prefWidth="113.0" resizable="false" sortable="false" styleClass="nome" text="Valor" />
             <TableColumn id="cartaoColuna" fx:id="cartaoColuna" prefWidth="165.0" styleClass="nome" text="Cartão" />
-            <TableColumn id="cartaoColuna" fx:id="situacaoColuna" prefWidth="137.0" styleClass="nome" text="Situação" />    
+            <TableColumn id="cartaoColuna" fx:id="situacaoColuna" prefWidth="133.0" styleClass="nome" text="Situação" />    
          </columns>         
       </TableView>
       <Pane layoutX="14.0" layoutY="451.0" prefHeight="59.0" prefWidth="593.0" styleClass="borda-pane">

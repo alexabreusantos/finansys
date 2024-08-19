@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import de.jensd.fx.glyphs.fontawesome.FontAwesomeIcon?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.RadioButton?>
+<?import javafx.scene.control.Spinner?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.control.ToggleGroup?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.Pane?>
+
+
+<AnchorPane id="AnchorPane" prefHeight="221.0" prefWidth="338.0" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/21" fx:controller="com.marjax.finansys.FaturaEditarController">
+   <children>
+      <Pane layoutX="8.0" layoutY="11.0" prefHeight="200.0" prefWidth="321.0" styleClass="borda-pane">
+         <children>
+            <Label layoutX="14.0" layoutY="14.0" text="Código" />
+            <TextField fx:id="codigoTextField" disable="true" layoutX="14.0" layoutY="38.0" prefHeight="25.0" prefWidth="77.0" styleClass="campo-nome" />
+            <Label layoutX="101.0" layoutY="14.0" text="Mês" />
+            <Spinner fx:id="mesSpinner" focusTraversable="false" layoutX="101.0" layoutY="38.0" prefHeight="25.0" prefWidth="92.0" />
+            <Label layoutX="204.0" layoutY="14.0" text="Ano" />
+            <Spinner fx:id="anoSpinner" focusTraversable="false" layoutX="204.0" layoutY="38.0" prefHeight="25.0" prefWidth="104.0" />
+            <Label layoutX="14.0" layoutY="92.0" text="Situação" />
+            <RadioButton fx:id="pagaRadioButton" focusTraversable="false" layoutX="14.0" layoutY="115.0" mnemonicParsing="false" text="Paga">
+               <toggleGroup>
+                  <ToggleGroup fx:id="situacao" />
+               </toggleGroup>
+            </RadioButton>
+            <RadioButton fx:id="pendenteRadioButton" focusTraversable="false" layoutX="76.0" layoutY="115.0" mnemonicParsing="false" text="Pendente">
+               <toggleGroup>
+                  <ToggleGroup fx:id="situacao" />
+               </toggleGroup>
+            </RadioButton>
+            <Label layoutX="176.0" layoutY="92.0" text="Cartão" />
+            <ComboBox fx:id="cartaoComboBox" focusTraversable="false" layoutX="174.0" layoutY="111.0" prefHeight="25.0" prefWidth="133.0" promptText="Selecione" />
+            <Button fx:id="salvarButton" focusTraversable="false" layoutX="130.0" layoutY="161.0" mnemonicParsing="false" text="Salvar">
+               <graphic>
+                  <FontAwesomeIcon glyphName="SAVE" />
+               </graphic>
+            </Button>
+         </children>
+      </Pane>
+   </children>
+</AnchorPane>

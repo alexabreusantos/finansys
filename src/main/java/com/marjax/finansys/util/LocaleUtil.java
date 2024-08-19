@@ -48,8 +48,9 @@ public class LocaleUtil {
     }
     
     public static void applyBrazilianCurrencyFormat(TextField textField) {
-        NumberFormat currencyFormat = NumberFormat.getCurrencyInstance(new Locale("pt", "BR"));
-
+        Locale locale = Locale.forLanguageTag("pt-BR");
+        
+        NumberFormat currencyFormat = NumberFormat.getCurrencyInstance(locale);
         textField.textProperty().addListener((observable, oldValue, newValue) -> {
             // Se o novo valor estiver vazio, apenas limpe o campo
             if (newValue.isEmpty()) {

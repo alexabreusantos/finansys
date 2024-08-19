@@ -105,6 +105,7 @@ public class CartaoController implements Initializable {
         AtivarBotoes();
 
         adicionarButton.setOnAction(event -> AbrirCadastrarAction());
+        excluirButton.setOnAction(event -> excluirCategoriaSelecionada());
 
         atualizarTableView();
         atualizarTotalCartoes();
