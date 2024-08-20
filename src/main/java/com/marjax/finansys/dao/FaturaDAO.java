@@ -13,7 +13,6 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Timestamp;
-import java.util.Calendar;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.collections.FXCollections;
@@ -25,22 +24,22 @@ import javafx.collections.ObservableList;
  */
 public class FaturaDAO {
 
-    // Método para verificar se já existe uma fatura cadastrada
-    public boolean existeFatura(Timestamp periodo, int codigoCartao) {
-        String sql = "SELECT COUNT(*) FROM fatura WHERE periodo = ? and cartao = ?";
-
+    // Método para verificar se um responsável já existe
+    public boolean existe(Timestamp periodo, int cartao, int codigo) {
+        String sql = "SELECT COUNT(*) FROM fatura WHERE periodo = ? AND cartao = ? AND codigo = ?";
         try (Connection connection = MySQLConnection.getConnection(); PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
+
             preparedStatement.setTimestamp(1, periodo);
-            preparedStatement.setInt(2, codigoCartao);
+            preparedStatement.setInt(2, cartao);
+            preparedStatement.setInt(3, codigo);
 
             try (ResultSet rs = preparedStatement.executeQuery()) {
                 if (rs.next()) {
-                    int count = rs.getInt(1);
-                    return count > 0;
+                    return rs.getInt(1) > 0;
                 }
             }
         } catch (SQLException e) {
-            AlertUtil.showErrorAlert("Erro de SQL", "Erro no método existeFatura", "Erro: " + e.getMessage());
+            //AlertUtil.showErrorAlert("Erro", "Erro de SQL", "Erro: " + e.getMessage());
         }
         return false;
     }
@@ -88,30 +87,26 @@ public class FaturaDAO {
 
     // Método para salvar 
     public void salvar(Fatura fatura) {
-        try {
 
-            if (existeFatura(fatura.getPeriodo(), fatura.getCartao().getCodigo())) {
-                throw new SQLException("Já existe uma fatura para este cartão no período especificado.");
+        if (existe(fatura.getPeriodo(), fatura.getCartao().getCodigo(), fatura.getCodigo())) {
+            return;
+        }
+        
+        String sql = "INSERT INTO fatura (periodo, valor, situacao, cartao) VALUES (?, ?, ?, ?)";
+        try (Connection connection = MySQLConnection.getConnection(); PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
+
+            preparedStatement.setTimestamp(1, fatura.getPeriodo()); // Período da fatura
+            preparedStatement.setDouble(2, fatura.getValor()); // Valor da fatura
+            preparedStatement.setString(3, fatura.getSituacao()); // Situação da fatura
+            preparedStatement.setInt(4, fatura.getCartao().getCodigo()); // Código do cartão
+
+            int rowsAffected = preparedStatement.executeUpdate();
+
+            if (rowsAffected > 0) {
+                AlertUtil.showInformationAlert("Sucesso", "Fatura cadastrada!", "A fatura foi cadastrada com sucesso.");
             }
-
-            String sql = "INSERT INTO fatura (periodo, valor, situacao, cartao) VALUES (?, ?, ?, ?)";
-            try (Connection connection = MySQLConnection.getConnection(); PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
-
-                preparedStatement.setTimestamp(1, fatura.getPeriodo()); // Período da fatura
-                preparedStatement.setDouble(2, fatura.getValor()); // Valor da fatura
-                preparedStatement.setString(3, fatura.getSituacao()); // Situação da fatura
-                preparedStatement.setInt(4, fatura.getCartao().getCodigo()); // Código do cartão
-
-                int rowsAffected = preparedStatement.executeUpdate();
-
-                if (rowsAffected > 0) {
-                    AlertUtil.showInformationAlert("Sucesso", "Fatura cadastrada!", "A fatura foi cadastrada com sucesso.");
-                }
-            } catch (SQLException e) {
-                AlertUtil.showErrorAlert("Erro ao salvar", "Erro de SQL", "Erro: " + e.getMessage());
-            }
-        } catch (SQLException ex) {
-            Logger.getLogger(FaturaDAO.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (SQLException e) {
+            AlertUtil.showErrorAlert("Erro ao salvar", "Erro de SQL", "Erro: " + e.getMessage());
         }
     }
 
@@ -127,5 +122,27 @@ public class FaturaDAO {
             e.printStackTrace();
             return false;
         }
+    }
+
+    // Método para atualizar a fatura
+    public boolean atualizar(Fatura fatura) {
+
+        if (existe(fatura.getPeriodo(), fatura.getCartao().getCodigo(), fatura.getCodigo())) {
+            return false; // Nome já existe no banco de dados
+        }
+        String sql = "UPDATE fatura SET periodo = ?, valor = ?, situacao = ?, cartao = ? WHERE codigo = ?";
+        try (Connection connection = MySQLConnection.getConnection(); PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
+            preparedStatement.setTimestamp(1, fatura.getPeriodo());
+            preparedStatement.setDouble(2, fatura.getValor());
+            preparedStatement.setString(3, fatura.getSituacao());
+            preparedStatement.setInt(4, fatura.getCartao().getCodigo());
+            preparedStatement.setInt(5, fatura.getCodigo());
+            int rowsAffected = preparedStatement.executeUpdate();
+            return rowsAffected > 0;
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return false;
+
     }
 }

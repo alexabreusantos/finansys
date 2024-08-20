@@ -21,7 +21,7 @@ import javafx.collections.ObservableList;
  */
 public class CategoriaDAO {    
 
-    // Método para verificar se um responsável já existe
+    // Método para verificar se uma categoria já existe
     public boolean existsCategoria(String nome) {
         String sql = "SELECT COUNT(*) FROM categoria WHERE nome = ?";
         try (Connection connection = MySQLConnection.getConnection(); PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
@@ -38,7 +38,7 @@ public class CategoriaDAO {
         return false;
     }
 
-    //metodo para salvar responsavel
+    //metodo para salvar uma categoria
     public void salvar(Categoria categoria) {        
 
         if (existsCategoria(categoria.getNome())) {
@@ -60,7 +60,7 @@ public class CategoriaDAO {
         }
     }
 
-    //metodo para listar responsaveis
+    //metodo para listar as categorias
     public ObservableList<Categoria> getAllCategorias() {
         String sql = "SELECT * FROM categoria ORDER BY nome ASC";
         ObservableList<Categoria> categorias = FXCollections.observableArrayList();
@@ -91,7 +91,7 @@ public class CategoriaDAO {
         }
     }
 
-    // Método para atualizar o responsável
+    // Método para atualizar a categoria
     public boolean atualizar(Categoria categoria) {
         
         if (existsCategoria(categoria.getNome())) {

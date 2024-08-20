@@ -22,7 +22,7 @@ import javafx.collections.ObservableList;
  */
 public class MesDAO {
 
-    // Método para verificar se um responsável já existe
+    // Método para verificar se um mes já existe
     public boolean existe(String nome) {
         String sql = "SELECT COUNT(*) FROM mes WHERE nome = ?";
         try (Connection connection = MySQLConnection.getConnection(); PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
@@ -63,7 +63,7 @@ public class MesDAO {
         }
     }
 
-    //metodo para listar responsaveis
+    //metodo para listar os meses
     public ObservableList<Mes> getAllMeses() {
         String sql = "SELECT * FROM mes ORDER BY numero ASC";
         ObservableList<Mes> meses = FXCollections.observableArrayList();
@@ -81,7 +81,7 @@ public class MesDAO {
         return meses;
     }
 
-    // Método para excluir um responsável
+    // Método para excluir um mes
     public boolean excluir(int codigo) {
         String sql = "DELETE FROM mes WHERE codigo = ?";
 
@@ -95,7 +95,7 @@ public class MesDAO {
         }
     }
 
-    // Método para atualizar o responsável
+    // Método para atualizar o mes
     public boolean atualizar(Mes mes) {
 
         if (existe(mes.getNome())) {
@@ -131,18 +131,20 @@ public class MesDAO {
         }
         return total;
     }
-    
-    // Método para listar os nomes dos cartões no combobox
-    public List<String> buscarNomesMeses() {
-        List<String> meses = new ArrayList<>();
-        String sql = "SELECT nome FROM mes ORDER BY numero";
 
-        try (Connection conn = MySQLConnection.getConnection();
-             PreparedStatement stmt = conn.prepareStatement(sql);
-             ResultSet rs = stmt.executeQuery()) {
+    // Método para listar os nomes dos cartões no combobox
+    public List<Mes> buscarNomesMeses() {
+        List<Mes> meses = new ArrayList<>();
+        String sql = "SELECT * FROM mes ORDER BY numero";
+
+        try (Connection conn = MySQLConnection.getConnection(); PreparedStatement stmt = conn.prepareStatement(sql); ResultSet rs = stmt.executeQuery()) {
 
             while (rs.next()) {
-                meses.add(rs.getString("nome"));
+                Mes mes = new Mes();
+                mes.setCodigo(rs.getInt("codigo"));
+                mes.setNome(rs.getString("nome"));
+                mes.setNumero(rs.getString("numero"));
+                meses.add(mes);
             }
 
         } catch (Exception e) {
@@ -150,5 +152,27 @@ public class MesDAO {
         }
 
         return meses;
+    }
+
+    // Método para buscar um mês
+    public Mes buscarMes(String nome) {
+        Mes mes = null;
+        String sql = "SELECT * FROM mes WHERE nome = ?";
+
+        try (Connection conn = MySQLConnection.getConnection(); PreparedStatement stmt = conn.prepareStatement(sql)) {
+
+            stmt.setString(1, nome);
+            try (ResultSet rs = stmt.executeQuery()) {
+                if (rs.next()) {
+                    mes = new Mes();
+                    mes.setCodigo(rs.getInt("codigo"));
+                    mes.setNome(rs.getString("nome"));
+                    mes.setNumero(rs.getString("numero"));
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace(); // Aqui você pode usar uma abordagem de logging ou lançar uma exceção customizada
+        }
+        return mes;
     }
 }

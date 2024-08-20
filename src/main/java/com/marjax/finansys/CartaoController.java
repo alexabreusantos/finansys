@@ -105,7 +105,7 @@ public class CartaoController implements Initializable {
         AtivarBotoes();
 
         adicionarButton.setOnAction(event -> AbrirCadastrarAction());
-        excluirButton.setOnAction(event -> excluirCategoriaSelecionada());
+        excluirButton.setOnAction(event -> excluir());
 
         atualizarTableView();
         atualizarTotalCartoes();
@@ -171,7 +171,7 @@ public class CartaoController implements Initializable {
         }
     }
 
-    private void excluirCategoriaSelecionada() {
+    private void excluir() {
         Cartao cartao = cartaoTableView.getSelectionModel().getSelectedItem();
         if (cartao != null) {
             // Mostrar popup de confirmação
@@ -186,15 +186,15 @@ public class CartaoController implements Initializable {
                 boolean success = dao.excluirCartao(cartao.getCodigo());
                 if (success) {
                     listaCartoes.remove(cartao); // Remover da lista original
-                    AlertUtil.showInformationAlert("Sucesso", null, "Categoria excluída com sucesso.");
+                    AlertUtil.showInformationAlert("Sucesso", null, "Cartão excluído com sucesso.");
                     atualizarTableView(); // Atualizar a TableView
                     atualizarTotalCartoes();
                 } else {
-                    AlertUtil.showErrorAlert("Erro", null, "Erro ao excluir a categoria.");
+                    AlertUtil.showErrorAlert("Erro", "Este cartão não pode ser excluído","O cartão está associado a uma ou mais faturas. \nExclua a fatura primeiro.");
                 }
             }
         } else {
-            AlertUtil.showWarningAlert("Aviso", null, "Nenhuma categoria selecionada.");
+            AlertUtil.showWarningAlert("Aviso", null, "Nenhuma categorio selecionado.");
         }
     }
 

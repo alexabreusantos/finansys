@@ -58,6 +58,5 @@ public class Fatura {
 
     public void setCartao(Cartao cartao) {
         this.cartao = cartao;
-    }    
-   
+    } 
 }

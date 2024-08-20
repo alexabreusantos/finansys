@@ -4,14 +4,14 @@
  */
 package com.marjax.finansys.util;
 
+import com.marjax.finansys.dao.AnoDAO;
 import com.marjax.finansys.dao.CartaoDAO;
 import com.marjax.finansys.dao.MesDAO;
-import java.time.Month;
-import java.time.Year;
-import java.util.Locale;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
+import com.marjax.finansys.model.Ano;
+import com.marjax.finansys.model.Cartao;
+import com.marjax.finansys.model.Mes;
 import javafx.scene.control.ComboBox;
+import javafx.scene.control.ListCell;
 
 /**
  *
@@ -26,32 +26,76 @@ public class PreencherComboBox {
         }
     }
 
-    public static void ComboBoxMeses(ComboBox mesComboBox) {
+    public static void ComboBoxMeses(ComboBox<Mes> mesComboBox) {
         MesDAO dao = new MesDAO();
         mesComboBox.getItems().clear();
         mesComboBox.getItems().addAll(dao.buscarNomesMeses());
+        
+        // Define um CellFactory para exibir o nome do mês no ComboBox
+        mesComboBox.setCellFactory(lv -> new ListCell<Mes>() {
+            @Override
+            protected void updateItem(Mes item, boolean empty) {
+                super.updateItem(item, empty);
+                setText(empty ? null : item.getNome());
+            }
+        });
+
+        // Define como o nome do mês deve ser exibido quando o item é selecionado
+        mesComboBox.setButtonCell(new ListCell<Mes>() {
+            @Override
+            protected void updateItem(Mes item, boolean empty) {
+                super.updateItem(item, empty);
+                setText(empty ? null : item.getNome());
+            }
+        });
     }
-    
-    public static void ComboBoxAnos(ComboBox anoComboBox) {
-        ObservableList<Integer> anos = FXCollections.observableArrayList();
 
-        // Ano atual
-        int anoAtual = Year.now().getValue();
+    public static void ComboBoxAnos(ComboBox<Ano> anoComboBox) {
+        AnoDAO dao = new AnoDAO();
+        anoComboBox.getItems().clear();
+        anoComboBox.getItems().addAll(dao.buscarAnos());
+        
+        // Define um CellFactory para exibir o nome do mês no ComboBox
+        anoComboBox.setCellFactory(lv -> new ListCell<Ano>() {
+            @Override
+            protected void updateItem(Ano item, boolean empty) {
+                super.updateItem(item, empty);
+                setText(empty ? null : item.getValor());
+            }
+        });
 
-        // Preenche o ComboBox com os próximos 100 anos
-        for (int i = 0; i <= 100; i++) {
-            anos.add(anoAtual + i);
-        }
+        // Define como o nome do mês deve ser exibido quando o item é selecionado
+        anoComboBox.setButtonCell(new ListCell<Ano>() {
+            @Override
+            protected void updateItem(Ano item, boolean empty) {
+                super.updateItem(item, empty);
+                setText(empty ? null : item.getValor());
+            }
+        });
 
-        anoComboBox.setItems(anos);
-
-        // Seleciona o ano atual
-        anoComboBox.setValue(anoAtual);
     }
 
-    public static void ComboBoxNomesCartoes(ComboBox nomesCartoes) {
-        CartaoDAO cartaoDAO = new CartaoDAO();
-        nomesCartoes.getItems().clear();
-        nomesCartoes.getItems().addAll(cartaoDAO.buscarNomesCartoes());
+    public static void ComboBoxCartoes(ComboBox<Cartao> cartaoComboBox) {
+        CartaoDAO dao = new CartaoDAO();
+        cartaoComboBox.getItems().clear();
+        cartaoComboBox.getItems().addAll(dao.buscarCartoes());
+        
+        // Define um CellFactory para exibir o nome do mês no ComboBox
+        cartaoComboBox.setCellFactory(lv -> new ListCell<Cartao>() {
+            @Override
+            protected void updateItem(Cartao item, boolean empty) {
+                super.updateItem(item, empty);
+                setText(empty ? null : item.getNome());
+            }
+        });
+
+        // Define como o nome do mês deve ser exibido quando o item é selecionado
+        cartaoComboBox.setButtonCell(new ListCell<Cartao>() {
+            @Override
+            protected void updateItem(Cartao item, boolean empty) {
+                super.updateItem(item, empty);
+                setText(empty ? null : item.getNome());
+            }
+        });
     }
 }

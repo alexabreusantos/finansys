@@ -4,6 +4,9 @@
  */
 package com.marjax.finansys.util;
 
+import com.marjax.finansys.model.Ano;
+import com.marjax.finansys.model.Cartao;
+import com.marjax.finansys.model.Mes;
 import java.util.regex.Pattern;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
@@ -28,10 +31,10 @@ public class ValidationUtil {
         }
         return true;
     }
-    
+
     // Valida a quantidade de caracteres do campo
     public static boolean validateSizeTextMes(TextField textField, String fieldName, boolean[] hasError) {
-        if (textField.getText().length()< 2 ) {
+        if (textField.getText().length() < 2) {
             if (!hasError[0]) {
                 textField.requestFocus(); // Adiciona foco ao primeiro campo vazio encontrado
             }
@@ -41,10 +44,10 @@ public class ValidationUtil {
         }
         return true;
     }
-    
+
     // Valida a quantidade de caracteres do campo
     public static boolean validateSizeTextAno(TextField textField, String fieldName, boolean[] hasError) {
-        if (textField.getText().length()< 4 ) {
+        if (textField.getText().length() < 4) {
             if (!hasError[0]) {
                 textField.requestFocus(); // Adiciona foco ao primeiro campo vazio encontrado
             }
@@ -55,8 +58,7 @@ public class ValidationUtil {
         return true;
     }
 
-    
-   // Valida se o ComboBox não está com a seleção padrão
+    // Valida se o ComboBox não está com a seleção padrão
     public static boolean validateComboBoxSelection(ComboBox<String> comboBox, String fieldName, boolean[] hasError) {
         if (comboBox.getValue() == null || "Selecione".equals(comboBox.getValue())) {
             if (!hasError[0]) {
@@ -67,8 +69,8 @@ public class ValidationUtil {
             return false;
         }
         return true;
-    }  
-    
+    }
+
     // Valida se o fechamento é menor que o vencimento
     public static boolean validateFechamentoMenorQueVencimento(ComboBox<Integer> fechamentoComboBox, ComboBox<Integer> vencimentoComboBox, boolean[] hasError) {
         Integer fechamento = fechamentoComboBox.getValue();
@@ -90,7 +92,49 @@ public class ValidationUtil {
         }
         return true;
     }
-   
+
+    // Valida se o ComboBox Mes da Fatura não está com a seleção padrão
+    public static boolean validateComboBoxMes(ComboBox<Mes> comboBox, String fieldName, boolean[] hasError) {
+        // Verifica se o ComboBox está vazio ou se o valor selecionado é nulo
+        if (comboBox.getValue() == null) {
+            if (!hasError[0]) {
+                comboBox.requestFocus(); // Adiciona foco ao primeiro ComboBox inválido encontrado
+            }
+            showValidationError("Por favor, selecione um valor para " + fieldName + ".");
+            hasError[0] = true;
+            return false;
+        }
+        return true;
+    }
+
+    // Valida se o ComboBox Ano da Fatura não está com a seleção padrão
+    public static boolean validateComboBoxAno(ComboBox<Ano> comboBox, String fieldName, boolean[] hasError) {
+        // Verifica se o ComboBox está vazio ou se o valor selecionado é nulo
+        if (comboBox.getValue() == null) {
+            if (!hasError[0]) {
+                comboBox.requestFocus(); // Adiciona foco ao primeiro ComboBox inválido encontrado
+            }
+            showValidationError("Por favor, selecione um valor para " + fieldName + ".");
+            hasError[0] = true;
+            return false;
+        }
+        return true;
+    }
+    
+    // Valida se o ComboBox Ano da Fatura não está com a seleção padrão
+    public static boolean validateComboBoxCartao(ComboBox<Cartao> comboBox, String fieldName, boolean[] hasError) {
+        // Verifica se o ComboBox está vazio ou se o valor selecionado é nulo
+        if (comboBox.getValue() == null) {
+            if (!hasError[0]) {
+                comboBox.requestFocus(); // Adiciona foco ao primeiro ComboBox inválido encontrado
+            }
+            showValidationError("Por favor, selecione um valor para " + fieldName + ".");
+            hasError[0] = true;
+            return false;
+        }
+        return true;
+    }
+
     // Exibe um alerta de erro de validação
     private static void showValidationError(String message) {
         Alert alert = new Alert(AlertType.ERROR);

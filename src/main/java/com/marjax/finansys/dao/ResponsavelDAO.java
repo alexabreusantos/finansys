@@ -33,7 +33,7 @@ public class ResponsavelDAO {
                 }
             }
         } catch (SQLException e) {
-            AlertUtil.showErrorAlert("Erro", "Erro de SQL", "Erro: " + e.getMessage());
+            //AlertUtil.showErrorAlert("Erro", "Erro de SQL", "Erro: " + e.getMessage());
         }
         return false;
     }
@@ -41,8 +41,7 @@ public class ResponsavelDAO {
     //metodo para salvar responsavel
     public void salvar(Responsavel responsavel) {
         
-        if (existsResponsavel(responsavel.getNome())) {
-            AlertUtil.showErrorAlert("Erro", "Responsável já cadastrado", "O responsável já está cadastrado no sistema.");
+        if (existsResponsavel(responsavel.getNome())) {           
             return;
         }
 
@@ -95,8 +94,7 @@ public class ResponsavelDAO {
     // Método para atualizar o responsável
     public boolean atualizarResponsavel(Responsavel responsavel) {
         
-        if (existsResponsavel(responsavel.getNome())) {
-            AlertUtil.showErrorAlert("Erro", "Responsável já cadastrado", "O responsável já está cadastrado no sistema.");
+        if (existsResponsavel(responsavel.getNome())) {            
             return false; // Nome já existe no banco de dados
         }
 

@@ -38,10 +38,10 @@ public class CartaoDAO {
         }
         return false;
     }
-    
+
     //metodo para salvar responsavel
     public void salvar(Cartao cartao) {
-        
+
         if (existeCartao(cartao.getNome())) {
             AlertUtil.showErrorAlert("Erro", "Categoria já cadastrada", "A categoria já está cadastrada no sistema.");
             return;
@@ -56,7 +56,7 @@ public class CartaoDAO {
             preparedStatement.setDouble(4, cartao.getLimiteUsado());
             preparedStatement.setInt(5, cartao.getFechamento());
             preparedStatement.setInt(6, cartao.getVencimento());
-            
+
             int rowsAffected = preparedStatement.executeUpdate();
 
             if (rowsAffected > 0) {
@@ -66,10 +66,10 @@ public class CartaoDAO {
             AlertUtil.showErrorAlert("Erro", "Erro de SQL", "Erro: " + e.getMessage());
         }
     }
-    
+
     // Método para atualizar o cartao
     public boolean atualizar(Cartao cartao) {
-        
+
         String sql = "UPDATE cartao SET nome = ?, limite = ?, limiteDisponivel = ?, limiteUsado = ?, fechamento = ?, vencimento = ? WHERE codigo = ?";
         try (Connection connection = MySQLConnection.getConnection(); PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
             preparedStatement.setString(1, cartao.getNome());
@@ -79,7 +79,7 @@ public class CartaoDAO {
             preparedStatement.setInt(5, cartao.getFechamento());
             preparedStatement.setInt(6, cartao.getVencimento());
             preparedStatement.setInt(7, cartao.getCodigo());
-            
+
             int rowsAffected = preparedStatement.executeUpdate();
             if (rowsAffected > 0) {
                 AlertUtil.showInformationAlert("Sucesso", "Cartão alterado!", "O cartão foi alterado com sucesso.");
@@ -112,80 +112,82 @@ public class CartaoDAO {
         }
         return cartoes;
     }
-    
+
+    // Método para verificar se um cartao já existe
+    public boolean podeExcluirCartao(int codigo) {
+        String sql = "SELECT COUNT(*) FROM fatura WHERE cartao = ?";
+        try (Connection connection = MySQLConnection.getConnection(); PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
+            preparedStatement.setInt(1, codigo);
+            ResultSet rs = preparedStatement.executeQuery();
+
+            if (rs.next()) {
+                int count = rs.getInt(1);
+                System.out.println("Número de faturas associadas: " + count); // Adicionado para depuração
+                return count == 0;  // Retorna true se não há faturas associadas
+            }
+        } catch (SQLException e) {
+            AlertUtil.showErrorAlert("Erro", "Erro de SQL", "Erro: " + e.getMessage());
+        }
+        return false;
+    }
+
     // Método para excluir um cartao
     public boolean excluirCartao(int codigo) {
-        String sql = "DELETE FROM cartao WHERE codigo = ?";
 
+        if (!podeExcluirCartao(codigo)) {
+            return false;
+        }
+
+        String sql = "DELETE FROM cartao WHERE codigo = ?";
         try (Connection conn = MySQLConnection.getConnection(); PreparedStatement pstmt = conn.prepareStatement(sql)) {
             pstmt.setInt(1, codigo);
             int affectedRows = pstmt.executeUpdate();
             return affectedRows > 0;
         } catch (SQLException e) {
-            e.printStackTrace();
+            //e.printStackTrace();
             return false;
         }
     }
-        
+
     // Método para saber a quantidade de cartoes cadastrados 
     public int getTotalCartoes() {
         int total = 0;
         String sql = "SELECT COUNT(*) AS total FROM cartao";
-        
-        try (Connection conn = MySQLConnection.getConnection();
-             PreparedStatement stmt = conn.prepareStatement(sql);
-             ResultSet rs = stmt.executeQuery()) {
-            
+
+        try (Connection conn = MySQLConnection.getConnection(); PreparedStatement stmt = conn.prepareStatement(sql); ResultSet rs = stmt.executeQuery()) {
+
             if (rs.next()) {
                 total = rs.getInt("total");
             }
         } catch (SQLException e) {
             e.printStackTrace();
-        }        
+        }
         return total;
     }
-    
-    // Método para listar os nomes dos cartões no combobox
-    public List<String> buscarNomesCartoes() {
-        List<String> nomesCartoes = new ArrayList<>();
-        String sql = "SELECT nome FROM cartao ORDER BY nome";
 
-        try (Connection conn = MySQLConnection.getConnection();
-             PreparedStatement stmt = conn.prepareStatement(sql);
-             ResultSet rs = stmt.executeQuery()) {
+    // Método para listar os nomes dos cartões no combobox
+    public List<Cartao> buscarCartoes() {
+        List<Cartao> cartoes = new ArrayList<>();
+        String sql = "SELECT * FROM cartao ORDER BY nome";
+
+        try (Connection conn = MySQLConnection.getConnection(); PreparedStatement stmt = conn.prepareStatement(sql); ResultSet rs = stmt.executeQuery()) {
 
             while (rs.next()) {
-                nomesCartoes.add(rs.getString("nome"));
+                Cartao cartao = new Cartao();
+                cartao.setCodigo(rs.getInt("codigo"));
+                cartao.setNome(rs.getString("nome"));
+                cartao.setLimite(rs.getDouble("limite"));
+                cartao.setLimiteDisponivel(rs.getDouble("limiteDisponivel"));
+                cartao.setLimiteUsado(rs.getDouble("limiteUsado"));
+                cartao.setFechamento(rs.getInt("fechamento"));
+                cartao.setVencimento(rs.getInt("vencimento"));
+                cartoes.add(cartao);
             }
 
         } catch (Exception e) {
             e.printStackTrace(); // Aqui você pode usar uma abordagem de logging ou lançar uma exceção customizada
         }
 
-        return nomesCartoes;
-    }
-    
-    // Método para buscar o código do cartão pelo nome
-    public Cartao buscarCartaoPorNome(String nome){
-        Cartao cartao = new Cartao();
-        String sql = "SELECT * FROM cartao WHERE nome = ?";
-        try (Connection connection = MySQLConnection.getConnection(); PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
-
-            preparedStatement.setString(1, nome);
-            try (ResultSet rs = preparedStatement.executeQuery()) {
-                if (rs.next()) {
-                    cartao.setCodigo(rs.getInt("codigo"));
-                    cartao.setNome(rs.getString("nome"));                    
-                    cartao.setLimite(rs.getDouble("limite"));
-                    cartao.setLimiteDisponivel(rs.getDouble("limiteDisponivel"));
-                    cartao.setLimiteUsado(rs.getDouble("limiteUsado"));
-                    cartao.setFechamento(rs.getInt("fechamento"));
-                    cartao.setVencimento(rs.getInt("vencimento"));
-                }
-            }
-        } catch (SQLException e) {
-            AlertUtil.showErrorAlert("Erro", "Erro de SQL CartaoDAO", "Erro: " + e.getMessage());
-        }               
-        return cartao;
+        return cartoes;
     }
 }

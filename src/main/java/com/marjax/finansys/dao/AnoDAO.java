@@ -11,6 +11,8 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
@@ -124,5 +126,48 @@ public class AnoDAO {
             e.printStackTrace();
         }        
         return total;
+    }
+    
+    // Método para listar os anos no combobox
+    public List<Ano> buscarAnos() {
+        List<Ano> anos = new ArrayList<>();
+        String sql = "SELECT * FROM ano ORDER BY valor";
+
+        try (Connection conn = MySQLConnection.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql);
+             ResultSet rs = stmt.executeQuery()) {
+
+            while (rs.next()) {
+                Ano ano = new Ano();
+                ano.setCodigo(rs.getInt("codigo"));
+                ano.setValor(rs.getString("valor"));
+                anos.add(ano);
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace(); // Aqui você pode usar uma abordagem de logging ou lançar uma exceção customizada
+        }
+
+        return anos;
+    }
+    
+    // Método para buscar um mês
+    public Ano buscarAno(String valor) {
+        Ano ano = null;
+        String sql = "SELECT * FROM ano WHERE valor = ?";
+
+        try (Connection conn = MySQLConnection.getConnection(); PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setString(1, valor);
+            try (ResultSet rs = stmt.executeQuery()) {
+                if (rs.next()) {
+                    ano = new Ano();
+                    ano.setCodigo(rs.getInt("codigo"));
+                    ano.setValor(rs.getString("valor"));
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace(); // Aqui você pode usar uma abordagem de logging ou lançar uma exceção customizada
+        }
+        return ano;
     }
 }
