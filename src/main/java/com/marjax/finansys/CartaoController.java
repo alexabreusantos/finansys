@@ -8,6 +8,7 @@ import com.marjax.finansys.dao.CartaoDAO;
 import com.marjax.finansys.model.Cartao;
 import com.marjax.finansys.util.AlertUtil;
 import com.marjax.finansys.util.LocaleUtil;
+import java.io.IOException;
 import java.net.URL;
 import java.util.Optional;
 import java.util.ResourceBundle;
@@ -136,13 +137,9 @@ public class CartaoController implements Initializable {
 
     public void AtivarBotoes() {
         // Adicionar listener para ativar/desativar botão Excluir
-        cartaoTableView.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<Cartao>() {
-            @Override
-            public void changed(ObservableValue<? extends Cartao> observable, Cartao oldValue, Cartao newValue) {
-                excluirButton.setDisable(newValue == null);
-            }
-        }
-        );
+        cartaoTableView.getSelectionModel().selectedItemProperty().addListener((ObservableValue<? extends Cartao> observable, Cartao oldValue, Cartao newValue) -> {
+            excluirButton.setDisable(newValue == null);
+        });
     }
 
     @FXML
@@ -157,17 +154,13 @@ public class CartaoController implements Initializable {
             stage.setScene(new Scene(root));
             stage.setMaximized(false);
             stage.setResizable(false);
-
-            CartaoCadastrarController controller = fxmlLoader.getController();
-            controller.setCartaoDAO(dao);
-            controller.setCartaoController(this);
-
+            
             // Define o estágio secundário como modal e bloqueia a interação com outras janelas
             stage.initModality(Modality.WINDOW_MODAL);
             stage.initOwner(adicionarButton.getScene().getWindow());
+            stage.setOnHidden(event -> atualizarTableView());
             stage.showAndWait();
-        } catch (Exception e) {
-            e.printStackTrace();
+        } catch (IOException e) {
         }
     }
 
@@ -215,18 +208,16 @@ public class CartaoController implements Initializable {
             stage.setMaximized(false);
             stage.setResizable(false);
 
-            CartaoEditarController controller = fxmlLoader.getController();
-            controller.setCartaoDAO(dao);
-            controller.setCartaoController(this);
+            CartaoEditarController controller = fxmlLoader.getController();            
             controller.setCartao(cartao);
 
             // Define o estágio secundário como modal e bloqueia a interação com outras janelas
             stage.initModality(Modality.WINDOW_MODAL);
             stage.initOwner(cartaoTableView.getScene().getWindow());
+            stage.setOnHidden(event -> atualizarTableView());
             stage.showAndWait();
 
-        } catch (Exception e) {
-            e.printStackTrace();
+        } catch (IOException e) {
         }
     }
 }

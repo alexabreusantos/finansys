@@ -9,12 +9,11 @@ import com.marjax.finansys.model.Cartao;
 import com.marjax.finansys.model.Fatura;
 import com.marjax.finansys.util.AlertUtil;
 import java.sql.Connection;
+import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Timestamp;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
@@ -25,11 +24,11 @@ import javafx.collections.ObservableList;
 public class FaturaDAO {
 
     // Método para verificar se um responsável já existe
-    public boolean existe(Timestamp periodo, int cartao, int codigo) {
+    public boolean existe(Date periodo, int cartao, int codigo) {
         String sql = "SELECT COUNT(*) FROM fatura WHERE periodo = ? AND cartao = ? AND codigo = ?";
         try (Connection connection = MySQLConnection.getConnection(); PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
 
-            preparedStatement.setTimestamp(1, periodo);
+            preparedStatement.setDate(1, periodo);
             preparedStatement.setInt(2, cartao);
             preparedStatement.setInt(3, codigo);
 
@@ -52,7 +51,7 @@ public class FaturaDAO {
             while (rs.next()) {
                 Fatura fatura = new Fatura();
                 fatura.setCodigo(rs.getInt("codigo"));
-                fatura.setPeriodo(rs.getObject("periodo", Timestamp.class));
+                fatura.setPeriodo(rs.getDate("periodo"));
                 fatura.setValor(rs.getDouble("valor"));
                 fatura.setSituacao(rs.getString("situacao"));
 
@@ -95,7 +94,7 @@ public class FaturaDAO {
         String sql = "INSERT INTO fatura (periodo, valor, situacao, cartao) VALUES (?, ?, ?, ?)";
         try (Connection connection = MySQLConnection.getConnection(); PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
 
-            preparedStatement.setTimestamp(1, fatura.getPeriodo()); // Período da fatura
+            preparedStatement.setDate(1, fatura.getPeriodo()); // Período da fatura
             preparedStatement.setDouble(2, fatura.getValor()); // Valor da fatura
             preparedStatement.setString(3, fatura.getSituacao()); // Situação da fatura
             preparedStatement.setInt(4, fatura.getCartao().getCodigo()); // Código do cartão
@@ -132,7 +131,7 @@ public class FaturaDAO {
         }
         String sql = "UPDATE fatura SET periodo = ?, valor = ?, situacao = ?, cartao = ? WHERE codigo = ?";
         try (Connection connection = MySQLConnection.getConnection(); PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
-            preparedStatement.setTimestamp(1, fatura.getPeriodo());
+            preparedStatement.setDate(1, fatura.getPeriodo());
             preparedStatement.setDouble(2, fatura.getValor());
             preparedStatement.setString(3, fatura.getSituacao());
             preparedStatement.setInt(4, fatura.getCartao().getCodigo());

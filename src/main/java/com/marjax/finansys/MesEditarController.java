@@ -37,13 +37,13 @@ public class MesEditarController implements Initializable {
     
     private Mes mes;
 
-    private MesController controller;
-
     private MesDAO dao;
     
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-       // Adiciona um ouvinte para limitar a entrada a 4 dígitos
+        dao = new MesDAO();
+        
+        // Adiciona um ouvinte para limitar a entrada a 4 dígitos
         numeroTextField.textProperty().addListener((observable, oldValue, newValue) -> {
             // Remove todos os caracteres que não são dígitos
             newValue = newValue.replaceAll("[^\\d]", "");
@@ -64,14 +64,6 @@ public class MesEditarController implements Initializable {
         codigoTextField.setText(String.valueOf(mes.getCodigo()));
         nomeTextField.setText(mes.getNome());
         numeroTextField.setText(mes.getNumero());
-    }
-
-    public void setMesDAO(MesDAO dao) {
-        this.dao = dao;
-    }
-
-    public void setMesController(MesController controller) {
-        this.controller = controller;
     }
     
     @FXML
@@ -108,11 +100,7 @@ public class MesEditarController implements Initializable {
 
                 if (success) {
                     AlertUtil.showInformationAlert("Sucesso", null, "Categoria atualizada com sucesso.");
-                    // Atualize o TableView na janela principal
-                    if (controller != null) {
-                        controller.atualizarTableView();
-                    }
-                    fecharJanela();
+                    ((Stage) salvarButton.getScene().getWindow()).close();
                 } else {
                     AlertUtil.showErrorAlert("Erro", "Erro ao salvar", "Não foi possível atualizar o mês.");
                 }
@@ -120,10 +108,5 @@ public class MesEditarController implements Initializable {
         } else {
             AlertUtil.showErrorAlert("Erro", "Erro ao salvar", "Não foi possível salvar os dados.");
         }
-    }
-    
-    private void fecharJanela() {
-        Stage stage = (Stage) salvarButton.getScene().getWindow();
-        stage.close();
     }
 }

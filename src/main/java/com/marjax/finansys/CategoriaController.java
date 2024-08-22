@@ -7,6 +7,7 @@ package com.marjax.finansys;
 import com.marjax.finansys.dao.CategoriaDAO;
 import com.marjax.finansys.model.Categoria;
 import com.marjax.finansys.util.AlertUtil;
+import java.io.IOException;
 import java.net.URL;
 import java.util.Optional;
 import java.util.ResourceBundle;
@@ -144,13 +145,9 @@ public class CategoriaController implements Initializable {
 
     private void ativarBotoes() {
         // Adicionar listener para ativar/desativar botão Excluir
-        categoriaTableView.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<Categoria>() {
-            @Override
-            public void changed(ObservableValue<? extends Categoria> observable, Categoria oldValue, Categoria newValue) {
-                excluirButton.setDisable(newValue == null);
-            }
-        }
-        );
+        categoriaTableView.getSelectionModel().selectedItemProperty().addListener((ObservableValue<? extends Categoria> observable, Categoria oldValue, Categoria newValue) -> {
+            excluirButton.setDisable(newValue == null);
+        });
     }
 
     @FXML
@@ -165,17 +162,13 @@ public class CategoriaController implements Initializable {
             stage.setScene(new Scene(root));
             stage.setMaximized(false);
             stage.setResizable(false);
-
-            CategoriaCadastrarController controller = fxmlLoader.getController();
-            controller.setCategoriaDAO(dao);
-            controller.setCategoriaController(this);
-
+           
             // Define o estágio secundário como modal e bloqueia a interação com outras janelas
             stage.initModality(Modality.WINDOW_MODAL);
             stage.initOwner(adicionarButton.getScene().getWindow());
+            stage.setOnHidden(event -> atualizarTableView());
             stage.showAndWait();
-        } catch (Exception e) {
-            e.printStackTrace();
+        } catch (IOException e) {
         }
     }
 
@@ -191,17 +184,15 @@ public class CategoriaController implements Initializable {
             stage.setMaximized(false);
             stage.setResizable(false);
 
-            CategoriaEditarController controller = fxmlLoader.getController();
-            controller.setCategoriaDAO(dao);
-            controller.setCategoriaController(this);
+            CategoriaEditarController controller = fxmlLoader.getController();            
             controller.setCategoria(categoria);
 
             // Define o estágio secundário como modal e bloqueia a interação com outras janelas
             stage.initModality(Modality.WINDOW_MODAL);
             stage.initOwner(categoriaTableView.getScene().getWindow());
+            stage.setOnHidden(event -> atualizarTableView());
             stage.showAndWait();
-        } catch (Exception e) {
-            e.printStackTrace();
+        } catch (IOException e) {
         }
     }
 }

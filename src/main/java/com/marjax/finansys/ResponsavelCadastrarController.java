@@ -34,9 +34,7 @@ public class ResponsavelCadastrarController implements Initializable {
     private TextField nomeTextField;
 
     private ResponsavelDAO responsavelDAO;
-
-    private ResponsavelController responsavelController;
-
+    
     public ResponsavelCadastrarController() {
         responsavelDAO = new ResponsavelDAO();
     }
@@ -46,15 +44,7 @@ public class ResponsavelCadastrarController implements Initializable {
         cancelarButton.setOnAction(event -> cancelarCadastro());
         salvarButton.setOnAction(event -> salvarResponsavel());
     }
-
-    public void setResponsavelDAO(ResponsavelDAO responsavelDAO) {
-        this.responsavelDAO = responsavelDAO;
-    }
-
-    public void setResponsavelController(ResponsavelController responsavelController) {
-        this.responsavelController = responsavelController;
-    }
-
+    
     @FXML
     private void salvarResponsavel() {
         String nome = nomeTextField.getText().trim();
@@ -69,15 +59,8 @@ public class ResponsavelCadastrarController implements Initializable {
             // Tentar salvar o responsável
             responsavelDAO.salvar(responsavel);
 
-            // Atualize o TableView na janela principal
-            if (responsavelController != null) {
-                responsavelController.atualizarTableView();
-                responsavelController.atualizarTotalResponsavel();
-            }
-
             ((Stage) salvarButton.getScene().getWindow()).close();
         }
-
     }
 
     @FXML

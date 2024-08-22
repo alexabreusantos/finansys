@@ -21,20 +21,19 @@ import javafx.stage.Stage;
  * @author Alex de Abreu dos Santos <alexdeabreudossantos@gmail.com>
  */
 public class AnoCadastrarController implements Initializable {
-  
+
     @FXML
     private Button salvarButton;
-   
+
     @FXML
     private TextField anoTextField;
 
     private AnoDAO dao;
 
-    private AnoController controller;    
-    
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-         anoTextField.textProperty().addListener((observable, oldValue, newValue) -> {
+        dao = new AnoDAO();
+        anoTextField.textProperty().addListener((observable, oldValue, newValue) -> {
             // Remove todos os caracteres que não são dígitos
             newValue = newValue.replaceAll("[^\\d]", "");
 
@@ -46,21 +45,14 @@ public class AnoCadastrarController implements Initializable {
             anoTextField.setText(newValue);
         });
         salvarButton.setOnAction(event -> salvar());
-    }    
-    public void setAnoDAO(AnoDAO dao) {
-        this.dao = dao;
     }
-
-    public void setAnoController(AnoController controller) {
-        this.controller = controller;
-    }
-    
+   
     @FXML
     private void salvar() {
         String valor = anoTextField.getText().trim();
-        boolean[] hasError = { false };        
-        boolean anoPreechido = ValidationUtil.validateNonEmpty(anoTextField, "Ano", hasError);         
-        
+        boolean[] hasError = {false};
+        boolean anoPreechido = ValidationUtil.validateNonEmpty(anoTextField, "Ano", hasError);
+
         if (anoPreechido && !hasError[0]) {
 
             // Criar um objeto Responsavel
@@ -68,13 +60,7 @@ public class AnoCadastrarController implements Initializable {
             ano.setValor(valor);
             // Tentar salvar o responsável
             dao.salvar(ano);
-
-            // Atualize o TableView na janela principal
-            if (controller != null) {
-                controller.atualizarTableView();
-                controller.atualizarTotal();
-            }
-
+            
             ((Stage) salvarButton.getScene().getWindow()).close();
         }
     }

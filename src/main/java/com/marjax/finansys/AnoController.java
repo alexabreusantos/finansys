@@ -5,7 +5,6 @@
 package com.marjax.finansys;
 
 import com.marjax.finansys.dao.AnoDAO;
-import com.marjax.finansys.dao.CategoriaDAO;
 import com.marjax.finansys.model.Ano;
 import com.marjax.finansys.util.AlertUtil;
 import java.net.URL;
@@ -16,7 +15,6 @@ import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
-import javafx.event.EventType;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -139,14 +137,11 @@ public class AnoController implements Initializable {
             stage.setScene(new Scene(root));
             stage.setMaximized(false);
             stage.setResizable(false);
-
-            AnoCadastrarController controller = fxmlLoader.getController();
-            controller.setAnoDAO(dao);
-            controller.setAnoController(this);
-
+            
             // Define o estágio secundário como modal e bloqueia a interação com outras janelas
             stage.initModality(Modality.WINDOW_MODAL);
             stage.initOwner(adicionarButton.getScene().getWindow());
+            stage.setOnHidden(event -> atualizarTableView());
             stage.showAndWait();
         } catch (Exception e) {
             e.printStackTrace();
@@ -192,14 +187,13 @@ public class AnoController implements Initializable {
             stage.setMaximized(false);
             stage.setResizable(false);
 
-            AnoEditarController controller = fxmlLoader.getController();
-            controller.setAnoDAO(dao);
-            controller.setAnoController(this);
+            AnoEditarController controller = fxmlLoader.getController();            
             controller.setAno(ano);
 
             // Define o estágio secundário como modal e bloqueia a interação com outras janelas
             stage.initModality(Modality.WINDOW_MODAL);
             stage.initOwner(anoTableView.getScene().getWindow());
+            stage.setOnHidden(event -> atualizarTableView());
             stage.showAndWait();
         } catch (Exception e) {
             e.printStackTrace();

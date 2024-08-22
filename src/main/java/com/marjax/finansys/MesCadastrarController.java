@@ -33,10 +33,9 @@ public class MesCadastrarController implements Initializable {
 
     private MesDAO dao;
 
-    private MesController controller;
-
     @Override
     public void initialize(URL url, ResourceBundle rb) {
+        dao = new MesDAO();
         salvarButton.setOnAction(event -> salvar());
         // Adiciona um ouvinte para limitar a entrada a 4 dígitos
         numeroTextField.textProperty().addListener((observable, oldValue, newValue) -> {
@@ -50,14 +49,6 @@ public class MesCadastrarController implements Initializable {
 
             numeroTextField.setText(newValue);
         });
-    }
-
-    public void setMesDAO(MesDAO dao) {
-        this.dao = dao;
-    }
-
-    public void setMesController(MesController controller) {
-        this.controller = controller;
     }
 
     @FXML
@@ -90,12 +81,7 @@ public class MesCadastrarController implements Initializable {
             mes.setNumero(numeroTextField.getText().trim());
             // Tentar salvar o mes
             dao.salvar(mes);
-
-            // Atualize o TableView na janela principal
-            if (controller != null) {
-                controller.atualizarTableView();
-                controller.atualizarTotal();
-            }
+           
             ((Stage) salvarButton.getScene().getWindow()).close();
         }
     }

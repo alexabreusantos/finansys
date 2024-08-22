@@ -80,6 +80,24 @@ public class MesDAO {
         }
         return meses;
     }
+    
+    // Método para verificar se um cartao já existe
+    public boolean podeExcluirCartao(int codigo) {
+        String sql = "SELECT COUNT(*) FROM fatura WHERE cartao = ?";
+        try (Connection connection = MySQLConnection.getConnection(); PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
+            preparedStatement.setInt(1, codigo);
+            ResultSet rs = preparedStatement.executeQuery();
+
+            if (rs.next()) {
+                int count = rs.getInt(1);
+                System.out.println("Número de faturas associadas: " + count); // Adicionado para depuração
+                return count == 0;  // Retorna true se não há faturas associadas
+            }
+        } catch (SQLException e) {
+            AlertUtil.showErrorAlert("Erro", "Erro de SQL", "Erro: " + e.getMessage());
+        }
+        return false;
+    }
 
     // Método para excluir um mes
     public boolean excluir(int codigo) {

@@ -31,24 +31,15 @@ public class CategoriaCadastrarController implements Initializable {
     @FXML
     private TextField nomeTextField;
 
-    private CategoriaDAO dao;
-
-    private CategoriaController controller;
+    private CategoriaDAO dao;   
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
+        dao = new CategoriaDAO();
         cancelarButton.setOnAction(event -> cancelarCadastro());
         salvarButton.setOnAction(event -> Salvar());
     }
-
-    public void setCategoriaDAO(CategoriaDAO dao) {
-        this.dao = dao;
-    }
-
-    public void setCategoriaController(CategoriaController controller) {
-        this.controller = controller;
-    }
-
+  
     @FXML
     private void cancelarCadastro() {
         // get a handle to the stage
@@ -69,14 +60,7 @@ public class CategoriaCadastrarController implements Initializable {
             Categoria categoria = new Categoria();
             categoria.setNome(nome);
             // Tentar salvar o responsável
-            dao.salvar(categoria);
-
-            // Atualize o TableView na janela principal
-            if (controller != null) {
-                controller.atualizarTableView();
-                controller.atualizarTotalCategorias();
-            }
-
+            dao.salvar(categoria);            
             ((Stage) salvarButton.getScene().getWindow()).close();
         }
     }

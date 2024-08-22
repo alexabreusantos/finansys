@@ -8,9 +8,9 @@ import com.marjax.finansys.dao.FaturaDAO;
 import com.marjax.finansys.model.Fatura;
 import com.marjax.finansys.util.AlertUtil;
 import com.marjax.finansys.util.LocaleUtil;
+import java.io.IOException;
 import java.net.URL;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Optional;
 import java.util.ResourceBundle;
@@ -84,9 +84,9 @@ public class FaturaController implements Initializable {
         codigoColuna.setCellValueFactory(new PropertyValueFactory<>("codigo"));
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM/yyyy");
         periodoColuna.setCellValueFactory(cellData -> {
-            // Converte o Timestamp para LocalDateTime, formata e retorna como SimpleStringProperty
-            LocalDateTime localDateTime = cellData.getValue().getPeriodo().toLocalDateTime();
-            String formattedDate = localDateTime.format(formatter);
+            // Converte o Date para LocalDateTime, formata e retorna como SimpleStringProperty
+            LocalDate localDate = cellData.getValue().getPeriodo().toLocalDate();
+            String formattedDate = localDate.format(formatter);
             return new SimpleStringProperty(formattedDate);
         });
         valorColuna.setCellValueFactory(new PropertyValueFactory<>("valor"));
@@ -141,7 +141,7 @@ public class FaturaController implements Initializable {
                     return true; // Filtra pelo código da fatura
                 } else if (fatura.getSituacao().toLowerCase().contains(lowerCaseFilter)) {
                     return true; // Filtra pela situação
-                } else if (fatura.getPeriodo().toLocalDateTime().format(DateTimeFormatter.ofPattern("MM/yyyy")).contains(lowerCaseFilter)) {
+                } else if (fatura.getPeriodo().toLocalDate().format(DateTimeFormatter.ofPattern("MM/yyyy")).contains(lowerCaseFilter)) {
                     return true; // Filtra pelo período formatado
                 }
 
@@ -157,13 +157,9 @@ public class FaturaController implements Initializable {
 
     private void ativarBotoes() {
         // Adicionar listener para ativar/desativar botão Excluir
-        faturaTableView.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<Fatura>() {
-            @Override
-            public void changed(ObservableValue<? extends Fatura> observable, Fatura oldValue, Fatura newValue) {
-                excluirButton.setDisable(newValue == null);
-            }
-        }
-        );
+        faturaTableView.getSelectionModel().selectedItemProperty().addListener((ObservableValue<? extends Fatura> observable, Fatura oldValue, Fatura newValue) -> {
+            excluirButton.setDisable(newValue == null);
+        });
     }
 
     @FXML
@@ -177,24 +173,20 @@ public class FaturaController implements Initializable {
             stage.setScene(new Scene(root));
             stage.setMaximized(false);
             stage.setResizable(false);
-
-            FaturaCadastrarController controller = fxmlLoader.getController();
-            controller.setFaturaDAO(dao);
-            controller.setFaturaController(this);
-
+           
             // Define o estágio secundário como modal e bloqueia a interação com outras janelas
             stage.initModality(Modality.WINDOW_MODAL);
             stage.initOwner(adicionarButton.getScene().getWindow());
+            stage.setOnHidden(event -> atualizarTableView());
             stage.showAndWait();
-        } catch (Exception e) {
-            e.printStackTrace();
+        } catch (IOException e) {
         }
     }
 
     private void excluir() {
         Fatura fatura = faturaTableView.getSelectionModel().getSelectedItem();
         if (fatura != null) {
-            LocalDate localDate = fatura.getPeriodo().toLocalDateTime().toLocalDate();
+            LocalDate localDate = fatura.getPeriodo().toLocalDate();
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM/yyyy");
             String dataFormatada = localDate.format(formatter);
             // Mostrar popup de confirmação
@@ -224,7 +216,7 @@ public class FaturaController implements Initializable {
     private void abrirTelaEdicao(Fatura fatura) {
 
         try {
-            LocalDate localDate = fatura.getPeriodo().toLocalDateTime().toLocalDate();
+            LocalDate localDate = fatura.getPeriodo().toLocalDate();
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM/yyyy");
             String dataFormatada = localDate.format(formatter);
             
@@ -237,17 +229,15 @@ public class FaturaController implements Initializable {
             stage.setMaximized(false);
             stage.setResizable(false);
 
-            FaturaEditarController controller = fxmlLoader.getController();
-            controller.setFaturaDAO(dao);
-            controller.setFaturaController(this);
+            FaturaEditarController controller = fxmlLoader.getController();            
             controller.setFatura(fatura);
 
             // Define o estágio secundário como modal e bloqueia a interação com outras janelas
             stage.initModality(Modality.WINDOW_MODAL);
             stage.initOwner(faturaTableView.getScene().getWindow());
+            stage.setOnHidden(event -> atualizarTableView());
             stage.showAndWait();
-        } catch (Exception e) {
-            e.printStackTrace();
+        } catch (IOException e) {
         }
     }
 

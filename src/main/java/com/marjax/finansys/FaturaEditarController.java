@@ -12,27 +12,20 @@ import com.marjax.finansys.model.Cartao;
 import com.marjax.finansys.model.Fatura;
 import com.marjax.finansys.model.Mes;
 import com.marjax.finansys.util.AlertUtil;
-import com.marjax.finansys.util.ConverterTimeStamp;
+import com.marjax.finansys.util.ConverterDate;
 import com.marjax.finansys.util.PreencherComboBox;
 import com.marjax.finansys.util.ValidationUtil;
 import java.net.URL;
-import java.sql.Timestamp;
-import java.text.DateFormatSymbols;
+import java.sql.Date;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.time.format.TextStyle;
 import java.util.Locale;
 import java.util.ResourceBundle;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.RadioButton;
-import javafx.scene.control.Spinner;
-import javafx.scene.control.SpinnerValueFactory;
 import javafx.scene.control.TextField;
 import javafx.scene.control.ToggleGroup;
 import javafx.stage.Stage;
@@ -76,16 +69,6 @@ public class FaturaEditarController implements Initializable {
 
     private FaturaDAO dao = new FaturaDAO();
 
-    private FaturaController controller;
-
-    public void setFaturaDAO(FaturaDAO faturaDAO) {
-        this.faturaDAO = faturaDAO;
-    }
-
-    public void setFaturaController(FaturaController faturaController) {
-        this.faturaController = faturaController;
-    }
-
     public void setFatura(Fatura fatura) {
         this.fatura = fatura;
         codigoTextField.setText(String.valueOf(fatura.getCodigo()));
@@ -107,7 +90,7 @@ public class FaturaEditarController implements Initializable {
         }
         PreencherComboBox.ComboBoxMeses(mesComboBox);
         // Converter Timestamp para LocalDateTime         
-        LocalDateTime data = fatura.getPeriodo().toLocalDateTime();
+        LocalDate data = fatura.getPeriodo().toLocalDate();
         Locale locale = Locale.forLanguageTag("pt-BR");
         // Extrair o mês e o ano
         String mesNome = data.getMonth().getDisplayName(TextStyle.FULL, locale);
@@ -136,16 +119,17 @@ public class FaturaEditarController implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
+        dao = new FaturaDAO();
         salvarButton.setOnAction(event -> salvarEdicao());
     }
 
     @FXML
     private void salvarEdicao() {
         if (fatura != null) {
-            int codigo = Integer.parseInt(codigoTextField.getText());
-            Timestamp periodo = ConverterTimeStamp.formatarDataParaTimestamp(mesComboBox, anoComboBox);
+            int codigo = Integer.parseInt(codigoTextField.getText());            
             Double valor = 0.0;
             Cartao cartao = cartaoComboBox.getValue();
+            Date periodo = ConverterDate.formatarDataParaDate(mesComboBox, anoComboBox,cartao.getFechamento() );
             RadioButton selectedRadioButton = (RadioButton) situacao.getSelectedToggle();
 
             boolean[] hasError = {false};
@@ -188,13 +172,8 @@ public class FaturaEditarController implements Initializable {
                 boolean success = faturaDAO.atualizar(fatura);
 
                 if (success) {
-                    AlertUtil.showInformationAlert("Sucesso", null, "Fatura atualizada com sucesso.");
-
-                    // Atualize o TableView na janela principal
-                    if (faturaController != null) {
-                        faturaController.atualizarTableView();
-                    }
-                    fecharJanela();
+                    AlertUtil.showInformationAlert("Sucesso", null, "Fatura atualizada com sucesso.");                    
+                    ((Stage) salvarButton.getScene().getWindow()).close();//fecha janela
                 } else {
                     AlertUtil.showErrorAlert("Erro", "Erro ao salvar", "Não foi possível atualizar a fatura.");
                 }
@@ -202,10 +181,5 @@ public class FaturaEditarController implements Initializable {
         } else {
             AlertUtil.showErrorAlert("Erro", "Erro ao salvar", "Não foi possível salvar os dados.");
         }
-    }
-
-    private void fecharJanela() {
-        Stage stage = (Stage) salvarButton.getScene().getWindow();
-        stage.close();
     }
 }

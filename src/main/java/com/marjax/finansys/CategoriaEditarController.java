@@ -32,9 +32,7 @@ public class CategoriaEditarController implements Initializable {
     @FXML
     private TextField nomeTextField;    
     
-    private Categoria categoria;
-
-    private CategoriaController categoriaController;
+    private Categoria categoria;   
 
     private CategoriaDAO categoriaDAO;
 
@@ -43,17 +41,10 @@ public class CategoriaEditarController implements Initializable {
         codigoTextField.setText(String.valueOf(categoria.getCodigo()));
         nomeTextField.setText(categoria.getNome());
     }
-
-    public void setCategoriaDAO(CategoriaDAO categoriaDAO) {
-        this.categoriaDAO = categoriaDAO;
-    }
-
-    public void setCategoriaController(CategoriaController categoriaController) {
-        this.categoriaController = categoriaController;
-    }
-
+   
     @Override
-    public void initialize(URL url, ResourceBundle rb) {        
+    public void initialize(URL url, ResourceBundle rb) { 
+        categoriaDAO = new CategoriaDAO();
         salvarButton.setOnAction(event -> salvarEdicao());        
     }    
 
@@ -88,11 +79,7 @@ public class CategoriaEditarController implements Initializable {
 
                 if (success) {
                     AlertUtil.showInformationAlert("Sucesso", null, "Categoria atualizada com sucesso.");
-                    // Atualize o TableView na janela principal
-                    if (categoriaController != null) {
-                        categoriaController.atualizarTableView();
-                    }
-                    fecharJanela();
+                     ((Stage) salvarButton.getScene().getWindow()).close();//fecha janela
                 } else {
                     AlertUtil.showErrorAlert("Erro", "Erro ao salvar", "Não foi possível atualizar a categoria.");
                 }
@@ -100,10 +87,5 @@ public class CategoriaEditarController implements Initializable {
         } else {
             AlertUtil.showErrorAlert("Erro", "Erro ao salvar", "Não foi possível salvar os dados.");
         }
-    }
-
-    private void fecharJanela() {
-        Stage stage = (Stage) salvarButton.getScene().getWindow();
-        stage.close();
     }
 }

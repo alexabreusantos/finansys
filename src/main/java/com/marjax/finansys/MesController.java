@@ -91,7 +91,7 @@ public class MesController implements Initializable {
     }
 
     @FXML
-    public void abrirCadastro() {
+    private void abrirCadastro() {
 
         try {
             FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("view/mesCadastrar.fxml"));
@@ -102,14 +102,10 @@ public class MesController implements Initializable {
             stage.setScene(new Scene(root));
             stage.setMaximized(false);
             stage.setResizable(false);
-
-            MesCadastrarController controller = fxmlLoader.getController();
-            controller.setMesDAO(dao);
-            controller.setMesController(this);
-
             // Define o estágio secundário como modal e bloqueia a interação com outras janelas
             stage.initModality(Modality.WINDOW_MODAL);
             stage.initOwner(adicionarButton.getScene().getWindow());
+            stage.setOnHidden(event -> atualizarTableView());
             stage.showAndWait();
 
         } catch (Exception e) {
@@ -117,12 +113,12 @@ public class MesController implements Initializable {
         }
     }
 
-    public void atualizarTotal() {
+    private void atualizarTotal() {
         int total = dao.getTotal();
         totalCadastroLabel.setText(total + " meses cadastrados!");
     }
 
-    public void atualizarTableView() {
+    private void atualizarTableView() {
         listaMeses = FXCollections.observableArrayList(dao.getAllMeses());
 
         // Usar FilteredList para permitir a pesquisa
@@ -194,14 +190,13 @@ public class MesController implements Initializable {
             stage.setMaximized(false);
             stage.setResizable(false);
 
-            MesEditarController controller = fxmlLoader.getController();
-            controller.setMesDAO(dao);
-            controller.setMesController(this);
+            MesEditarController controller = fxmlLoader.getController();            
             controller.setMes(mes);
 
             // Define o estágio secundário como modal e bloqueia a interação com outras janelas
             stage.initModality(Modality.WINDOW_MODAL);
             stage.initOwner(mesTableView.getScene().getWindow());
+            stage.setOnHidden(event -> atualizarTableView());
             stage.showAndWait();
         } catch (Exception e) {
             e.printStackTrace();

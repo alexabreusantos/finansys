@@ -47,7 +47,6 @@ public class CartaoEditarController implements Initializable {
 
     private Cartao cartao;
 
-    private CartaoController controller;
 
     private CartaoDAO dao;
 
@@ -64,17 +63,10 @@ public class CartaoEditarController implements Initializable {
         PreencherComboBox.ComboBoxDias(vencimentoComboBox);
         vencimentoComboBox.setValue(cartao.getVencimento());
     }
-
-    public void setCartaoDAO(CartaoDAO cartaoDAO) {
-        this.dao = cartaoDAO;
-    }
-
-    public void setCartaoController(CartaoController cartaoController) {
-        this.controller = cartaoController;
-    }
-
+ 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
+        dao = new CartaoDAO();
         LocaleUtil.applyBrazilianCurrencyFormat(limiteTextField);
         salvarButton.setOnAction(event -> salvar());
     }
@@ -129,21 +121,11 @@ public class CartaoEditarController implements Initializable {
                 //System.out.println(valorConvertido);
                 
                 // Tentar salvar o responsável
-                dao.atualizar(cartao);
-                // Atualize o TableView na janela principal
-                if (controller != null) {
-                    controller.atualizarTableView();
-                    controller.atualizarTotalCartoes();
-                }
+                dao.atualizar(cartao);                
                 ((Stage) salvarButton.getScene().getWindow()).close();
             }
         } else {
             AlertUtil.showErrorAlert("Erro", "Erro ao salvar", "Não foi possível salvar os dados.");
         }
-    }
-
-    private void fecharJanela() {
-        Stage stage = (Stage) salvarButton.getScene().getWindow();
-        stage.close();
-    }
+    }    
 }

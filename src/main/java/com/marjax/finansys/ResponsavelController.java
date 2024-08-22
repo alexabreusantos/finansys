@@ -72,7 +72,7 @@ public class ResponsavelController implements Initializable {
 
         dao = new ResponsavelDAO();
         atualizarTableView();
-        adicionarButton.setOnAction(event -> AbrirJanelaCadastrarResponsavelAction());
+        adicionarButton.setOnAction(event -> abrirCadastrar());
         AtivarBotaoExcluir();
         excluirButton.setOnAction(event -> excluirResponsavelSelecionado());
 
@@ -80,7 +80,7 @@ public class ResponsavelController implements Initializable {
             if (event.getClickCount() == 2) { // Duplo clique
                 Responsavel selectedResponsavel = responsavelTableView.getSelectionModel().getSelectedItem();
                 if (selectedResponsavel != null) {
-                    abrirTelaEdicao(selectedResponsavel);
+                    abrirEditar(selectedResponsavel);
                 }
             }
         });
@@ -100,13 +100,13 @@ public class ResponsavelController implements Initializable {
         );
     }
 
-    public void atualizarTotalResponsavel() {
+    private void atualizarTotalResponsavel() {
         int total = dao.getTotalResponsaveis();
         totalCadastroLabel.setText(total + " responsáveis cadastrados!");
     }
 
     @FXML
-    public void AbrirJanelaCadastrarResponsavelAction() {
+    private void abrirCadastrar() {
 
         try {
             FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("view/responsavelCadastrar.fxml"));
@@ -118,20 +118,21 @@ public class ResponsavelController implements Initializable {
             stage.setMaximized(false);
             stage.setResizable(false);
 
-            ResponsavelCadastrarController controller = fxmlLoader.getController();
+            /*ResponsavelCadastrarController controller = fxmlLoader.getController();
             controller.setResponsavelDAO(dao);
-            controller.setResponsavelController(this);
+            controller.setResponsavelController(this);*/
 
             // Define o estágio secundário como modal e bloqueia a interação com outras janelas
             stage.initModality(Modality.WINDOW_MODAL);
             stage.initOwner(responsavelTableView.getScene().getWindow());
+            stage.setOnHidden(event -> atualizarTableView());
             stage.showAndWait();
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
-    public void atualizarTableView() {
+    private void atualizarTableView() {
         listaResponsaveis = FXCollections.observableArrayList(dao.getAllResponsaveis());
 
         // Usar FilteredList para permitir a pesquisa
@@ -153,7 +154,7 @@ public class ResponsavelController implements Initializable {
         responsavelTableView.setItems(filteredData);
     }
     
-    private void abrirTelaEdicao(Responsavel responsavel) {
+    private void abrirEditar(Responsavel responsavel) {
 
         try {
             FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("view/responsavelEditar.fxml"));
@@ -166,13 +167,16 @@ public class ResponsavelController implements Initializable {
             stage.setResizable(false);
 
             ResponsavelEditarController controller = fxmlLoader.getController();
-            controller.setResponsavelDAO(dao);
+            /*controller.setResponsavelDAO(dao);
             controller.setResponsavelController(this);
+            controller.setResponsavel(responsavel);*/
+            
             controller.setResponsavel(responsavel);
 
             // Define o estágio secundário como modal e bloqueia a interação com outras janelas
             stage.initModality(Modality.WINDOW_MODAL);
             stage.initOwner(responsavelTableView.getScene().getWindow());
+            stage.setOnHidden(event -> atualizarTableView());
             stage.showAndWait();
         } catch (Exception e) {
             e.printStackTrace();

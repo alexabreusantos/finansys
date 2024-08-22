@@ -47,10 +47,9 @@ public class CartaoCadastrarController implements Initializable {
 
     private CartaoDAO dao;
 
-    private CartaoController controller;
-
     @Override
     public void initialize(URL url, ResourceBundle rb) {
+        dao = new CartaoDAO();
         cancelarButton.setOnAction(event -> cancelarCadastro());
         PreencherComboBox.ComboBoxDias(fechamentoComboBox);
         PreencherComboBox.ComboBoxDias(vencimentoComboBox);
@@ -59,15 +58,7 @@ public class CartaoCadastrarController implements Initializable {
         
         salvarButton.setOnAction(event -> salvar());
     }
-
-    public void setCartaoDAO(CartaoDAO dao) {
-        this.dao = dao;
-    }
-
-    public void setCartaoController(CartaoController controller) {
-        this.controller = controller;
-    }
-
+   
     @FXML
     private void cancelarCadastro() {
         // get a handle to the stage
@@ -126,11 +117,7 @@ public class CartaoCadastrarController implements Initializable {
             //System.out.println(fechamento);
             // Tentar salvar o responsável
             dao.salvar(cartao);
-            // Atualize o TableView na janela principal
-            if (controller != null) {
-                controller.atualizarTableView();
-                controller.atualizarTotalCartoes();
-            }
+            
             ((Stage) salvarButton.getScene().getWindow()).close();
         }
     }

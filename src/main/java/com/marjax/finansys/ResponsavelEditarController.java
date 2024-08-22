@@ -33,29 +33,20 @@ public class ResponsavelEditarController implements Initializable {
     @FXML
     private TextField nomeTextField;
 
-    private Responsavel responsavel;
-
-    private ResponsavelController responsavelController;
+    private Responsavel responsavel;  
 
     private ResponsavelDAO responsavelDAO;    
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {        
-        salvarButton.setOnAction(event -> salvarEdicao());        
+        salvarButton.setOnAction(event -> salvarEdicao()); 
+        responsavelDAO = new ResponsavelDAO();
     }
 
     public void setResponsavel(Responsavel responsavel) {
         this.responsavel = responsavel;
         codigoTextField.setText(String.valueOf(responsavel.getCodigo()));
         nomeTextField.setText(responsavel.getNome());
-    }
-
-    public void setResponsavelDAO(ResponsavelDAO responsavelDAO) {
-        this.responsavelDAO = responsavelDAO;
-    }
-
-    public void setResponsavelController(ResponsavelController responsavelController) {
-        this.responsavelController = responsavelController;
     }
  
     @FXML
@@ -84,22 +75,13 @@ public class ResponsavelEditarController implements Initializable {
             boolean success = responsavelDAO.atualizarResponsavel(responsavel);
 
             if (success) {
-                AlertUtil.showInformationAlert("Sucesso", null, "Responsável atualizado com sucesso.");
-                // Atualize o TableView na janela principal
-                if (responsavelController != null) {
-                    responsavelController.atualizarTableView();
-                }
-                fecharJanela();
+                AlertUtil.showInformationAlert("Sucesso", null, "Responsável atualizado com sucesso.");                
+                ((Stage) salvarButton.getScene().getWindow()).close();// fecha janela
             } else {
                 AlertUtil.showErrorAlert("Erro", "Erro ao salvar", "Não foi possível atualizar o responsável.");
             }
         } else {
             AlertUtil.showErrorAlert("Erro", "Erro ao salvar", "Não foi possível salvar os dados.");
         }
-    }
-
-    private void fecharJanela() {
-        Stage stage = (Stage) salvarButton.getScene().getWindow();
-        stage.close();
     }
 }

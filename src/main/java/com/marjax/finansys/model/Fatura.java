@@ -4,35 +4,35 @@
  */
 package com.marjax.finansys.model;
 
+import java.sql.Date;
 import java.sql.Timestamp;
-import java.time.LocalDate;
-import java.util.Date;
+
 
 /**
  *
  * @author Alex de Abreu dos Santos <alexdeabreudossantos@gmail.com>
  */
 public class Fatura {
-    private int codigo;
-    private Timestamp periodo;
+    private Integer codigo;
+    private Date periodo;
     private Double valor;
     private String situacao;
     private Cartao cartao;
     
     // Getters e Setters
-    public int getCodigo() {
+    public Integer getCodigo() {
         return codigo;
     }
 
-    public void setCodigo(int codigo) {
+    public void setCodigo(Integer codigo) {
         this.codigo = codigo;
     }
 
-    public Timestamp getPeriodo() {
+    public Date getPeriodo() {
         return periodo;
     }
 
-    public void setPeriodo(Timestamp periodo) {
+    public void setPeriodo(Date periodo) {
         this.periodo = periodo;
     }
 

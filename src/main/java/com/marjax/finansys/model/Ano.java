@@ -9,14 +9,14 @@ package com.marjax.finansys.model;
  * @author Alex de Abreu dos Santos <alexdeabreudossantos@gmail.com>
  */
 public class Ano {
-    private int codigo;
+    private Integer codigo;
     private String valor;
 
-    public int getCodigo() {
+    public Integer getCodigo() {
         return codigo;
     }
 
-    public void setCodigo(int codigo) {
+    public void setCodigo(Integer codigo) {
         this.codigo = codigo;
     }
 

@@ -11,10 +11,11 @@ import com.marjax.finansys.model.Cartao;
 import com.marjax.finansys.model.Fatura;
 import com.marjax.finansys.model.Mes;
 import com.marjax.finansys.util.AlertUtil;
-import com.marjax.finansys.util.ConverterTimeStamp;
+import com.marjax.finansys.util.ConverterDate;
 import com.marjax.finansys.util.PreencherComboBox;
 import com.marjax.finansys.util.ValidationUtil;
 import java.net.URL;
+import java.sql.Date;
 import java.sql.Timestamp;
 import java.util.ResourceBundle;
 import javafx.fxml.FXML;
@@ -47,26 +48,18 @@ public class FaturaCadastrarController implements Initializable {
     @FXML
     private ComboBox<Cartao> cartaoComboBox;
 
-    private FaturaDAO dao = new FaturaDAO();
+    private FaturaDAO dao = new FaturaDAO();    
     
-    private FaturaController controller;
-
     @Override
     public void initialize(URL url, ResourceBundle rb) {
+        dao = new FaturaDAO();
+        
         PreencherComboBox.ComboBoxMeses(mesComboBox);
         PreencherComboBox.ComboBoxAnos(anoComboBox);
         PreencherComboBox.ComboBoxCartoes(cartaoComboBox);
 
         salvarButton.setOnAction((var event) -> Salvar());
-    }
-
-    public void setFaturaDAO(FaturaDAO dao) {
-        this.dao = dao;
-    }
-
-    public void setFaturaController(FaturaController controller) {
-        this.controller = controller;
-    }
+    }    
 
     @FXML
     private void Salvar() {
@@ -94,10 +87,10 @@ public class FaturaCadastrarController implements Initializable {
             Fatura fatura = new Fatura();            
             Cartao cartao = cartaoComboBox.getValue();    
 
-            // 2024-07-01 00:00:00   
+            // 2024-07-01
             RadioButton selectedRadioButton = (RadioButton) situacao.getSelectedToggle();
 
-            Timestamp periodo = ConverterTimeStamp.formatarDataParaTimestamp(mesComboBox, anoComboBox) ;
+            Date periodo = ConverterDate.formatarDataParaDate(mesComboBox, anoComboBox, cartao.getFechamento()) ;
             fatura.setPeriodo(periodo);
             fatura.setValor(0.0);
             fatura.setSituacao(selectedRadioButton.getText());
@@ -107,12 +100,7 @@ public class FaturaCadastrarController implements Initializable {
             if (dao.existe(fatura.getPeriodo(), fatura.getCartao().getCodigo(), fatura.getCodigo())) {
                 AlertUtil.showErrorAlert("Atenção", "Fatura já existente", "Já existe uma fatura para este cartão no período especificado.");
             } else {
-                dao.salvar(fatura); 
-                // Atualize o TableView na janela principal
-                if (controller != null) {
-                    controller.atualizarTableView();
-                    controller.atualizarTotalCartoes();
-                }
+                dao.salvar(fatura);                 
                 ((Stage) salvarButton.getScene().getWindow()).close();
             }
         }

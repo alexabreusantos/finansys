@@ -7,7 +7,7 @@ package com.marjax.finansys.util;
 import com.marjax.finansys.dao.MesDAO;
 import com.marjax.finansys.model.Ano;
 import com.marjax.finansys.model.Mes;
-import java.sql.Timestamp;
+import java.sql.Date;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import javafx.scene.control.ComboBox;
@@ -16,9 +16,9 @@ import javafx.scene.control.ComboBox;
  *
  * @author Alex de Abreu dos Santos <alexdeabreudossantos@gmail.com>
  */
-public class ConverterTimeStamp {
+public class ConverterDate {
 
-    public static Timestamp formatarDataParaTimestamp(ComboBox<Mes> mesComboBox, ComboBox<Ano> anoComboBox) {
+    public static Date formatarDataParaDate(ComboBox<Mes> mesComboBox, ComboBox<Ano> anoComboBox, int dia) {
         MesDAO dao = new MesDAO();
         Mes mesSelecionado = mesComboBox.getSelectionModel().getSelectedItem();
         Ano anoSelecionado = anoComboBox.getSelectionModel().getSelectedItem();
@@ -36,12 +36,12 @@ public class ConverterTimeStamp {
             return null;
         }
 
-        String dataStr = anoValor + "-" + mesNumero + "-01 00:00:00";
+        String dataStr = anoValor + "-" + mesNumero + "-" + dia;
 
-        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
         try {
             java.util.Date parsedDate = dateFormat.parse(dataStr);
-            return new Timestamp(parsedDate.getTime());
+            return new Date(parsedDate.getTime());
         } catch (ParseException e) {
             e.printStackTrace();
             AlertUtil.showErrorAlert("Erro", "Data Inválida", "Erro ao formatar a data: " + dataStr);              
