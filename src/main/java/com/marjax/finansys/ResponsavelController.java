@@ -90,14 +90,9 @@ public class ResponsavelController implements Initializable {
 
     private void AtivarBotaoExcluir() {
         // Adicionar listener para ativar/desativar botão Excluir
-        responsavelTableView.getSelectionModel().selectedItemProperty().addListener(
-                new ChangeListener<Responsavel>() {
-            @Override
-            public void changed(ObservableValue<? extends Responsavel> observable, Responsavel oldValue, Responsavel newValue) {
-                excluirButton.setDisable(newValue == null);
-            }
-        }
-        );
+        responsavelTableView.getSelectionModel().selectedItemProperty().addListener((ObservableValue<? extends Responsavel> observable, Responsavel oldValue, Responsavel newValue) -> {
+            excluirButton.setDisable(newValue == null);
+        });
     }
 
     private void atualizarTotalResponsavel() {
@@ -127,8 +122,7 @@ public class ResponsavelController implements Initializable {
             stage.initOwner(responsavelTableView.getScene().getWindow());
             stage.setOnHidden(event -> atualizarTableView());
             stage.showAndWait();
-        } catch (Exception e) {
-            e.printStackTrace();
+        } catch (IOException e) {
         }
     }
 
@@ -144,10 +138,9 @@ public class ResponsavelController implements Initializable {
                 // Se o campo de pesquisa estiver vazio, exibir todas as categorias
                 if (newValue == null || newValue.isEmpty()) {
                     return true;
-                }
-                // Comparar o nome da categoria com o texto da pesquisa para uma correspondência exata, ignorando maiúsculas/minúsculas
-                String filter = newValue.toLowerCase();
-                return responsavel.getNome().toLowerCase().equals(filter);
+                }                
+                String filter = newValue.toLowerCase();                
+                return responsavel.getNome().toLowerCase().contains(filter);
             });
         });
 
@@ -167,10 +160,6 @@ public class ResponsavelController implements Initializable {
             stage.setResizable(false);
 
             ResponsavelEditarController controller = fxmlLoader.getController();
-            /*controller.setResponsavelDAO(dao);
-            controller.setResponsavelController(this);
-            controller.setResponsavel(responsavel);*/
-            
             controller.setResponsavel(responsavel);
 
             // Define o estágio secundário como modal e bloqueia a interação com outras janelas

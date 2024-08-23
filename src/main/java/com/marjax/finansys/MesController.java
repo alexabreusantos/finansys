@@ -131,7 +131,7 @@ public class MesController implements Initializable {
                 if (newValue == null || newValue.isEmpty()) {
                     return true;
                 }
-                // Comparar o nome do mes com o texto da pesquisa para uma correspondência exata, ignorando maiúsculas/minúsculas
+                
                 String filter = newValue.toLowerCase();               
                 return mes.getNome().toLowerCase().contains(filter);
             });

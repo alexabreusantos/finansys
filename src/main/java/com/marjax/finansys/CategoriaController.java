@@ -11,7 +11,6 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.Optional;
 import java.util.ResourceBundle;
-import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -109,7 +108,7 @@ public class CategoriaController implements Initializable {
 
                 // Comparar o nome da categoria com o texto da pesquisa para uma correspondência exata, ignorando maiúsculas/minúsculas
                 String filter = newValue.toLowerCase();
-                return categoria.getNome().toLowerCase().equals(filter);
+                return categoria.getNome().toLowerCase().contains(filter);
             });
         });
 

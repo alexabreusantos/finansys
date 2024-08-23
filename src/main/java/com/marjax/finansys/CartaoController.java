@@ -128,7 +128,7 @@ public class CartaoController implements Initializable {
 
                 // Comparar o nome da categoria com o texto da pesquisa para uma correspondência exata, ignorando maiúsculas/minúsculas
                 String filter = newValue.toLowerCase();
-                return cartao.getNome().toLowerCase().equals(filter);
+                return cartao.getNome().toLowerCase().contains(filter);
             });
         });
 

@@ -1,62 +1,84 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import de.jensd.fx.glyphs.fontawesome.FontAwesomeIcon?>
-<?import javafx.geometry.Insets?>
-<?import javafx.scene.control.Button?>
-<?import javafx.scene.control.MenuButton?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.Menu?>
+<?import javafx.scene.control.MenuBar?>
 <?import javafx.scene.control.MenuItem?>
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.AnchorPane?>
-<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Pane?>
 
 <AnchorPane prefHeight="768.0" prefWidth="1366.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.marjax.finansys.MainController">
    <children>
-      <HBox prefHeight="36.0" prefWidth="1366.0" spacing="10.0" styleClass="hbox" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+      <Pane layoutX="22.0" layoutY="58.0" prefHeight="95.0" prefWidth="1322.0" styleClass="borda-pane" AnchorPane.leftAnchor="22.0" AnchorPane.rightAnchor="22.0" AnchorPane.topAnchor="58.0">
          <children>
-            <MenuButton focusTraversable="false" mnemonicParsing="false" text="Configurações">
-              <items>
-                <MenuItem fx:id="mesesMenuItem" mnemonicParsing="false" text="Meses">
-                     <graphic>
-                        <FontAwesomeIcon glyphName="SQUARE" />
-                     </graphic></MenuItem>
-                <MenuItem fx:id="anoMenuItem" mnemonicParsing="false" text="Anos">
+            <FontAwesomeIcon glyphName="SEARCH" layoutX="14.0" layoutY="30.0" size="1.5em" />
+            <TextField id="textoPesquisar" fx:id="pesquisarTextField" focusTraversable="false" layoutX="33.0" layoutY="12.0" prefHeight="25.0" prefWidth="315.0" promptText="Pesquisar..." />
+            <Label id="totalCadastroLabel" fx:id="totalCadastroLabel" layoutX="668.0" layoutY="39.0" text="Total">
+               <graphic>
+                  <FontAwesomeIcon glyphName="CUBES" />
+               </graphic>
+            </Label>
+         </children>
+      </Pane>
+      <MenuBar focusTraversable="false" layoutX="-10.0" layoutY="2.0" prefHeight="25.0" prefWidth="1366.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="2.0">
+        <menus>
+          <Menu mnemonicParsing="false" text="Arquivo">
+            <items>
+              <MenuItem mnemonicParsing="false" text="Close" />
+            </items>
+          </Menu>
+          <Menu mnemonicParsing="false" text="Configuração">
+            <items>
+              <MenuItem fx:id="anosMenuItem" mnemonicParsing="false" text="Anos">
                      <graphic>
                         <FontAwesomeIcon glyphName="CIRCLE" />
-                     </graphic></MenuItem>
+                     </graphic>
+                  </MenuItem>
+                  <MenuItem fx:id="mesesMenuItem" mnemonicParsing="false" text="Meses">
+                     <graphic>
+                        <FontAwesomeIcon glyphName="SQUARE" />
+                     </graphic>
+                  </MenuItem>
+            </items>
+          </Menu>
+            <Menu fx:id="gestaoMenu" mnemonicParsing="false" text="Gestão Financeira">
+              <items>
+                <MenuItem fx:id="cartaoMenuItem" mnemonicParsing="false" text="Cartões de Crédito">
+                     <graphic>
+                        <FontAwesomeIcon glyphName="CREDIT_CARD" />
+                     </graphic>
+                  </MenuItem>
+                  <MenuItem fx:id="categoriaMenuItem" mnemonicParsing="false" text="Categorias">
+                     <graphic>
+                        <FontAwesomeIcon glyphName="TH_LIST" />
+                     </graphic>
+                  </MenuItem>
+                  <MenuItem fx:id="faturaMenuItem" mnemonicParsing="false" text="Faturas">
+                     <graphic>
+                        <FontAwesomeIcon glyphName="FILE_TEXT" />
+                     </graphic>
+                  </MenuItem>
+                  <MenuItem fx:id="responsavelMenuItem" mnemonicParsing="false" text="Responsáveis">
+                     <graphic>
+                        <FontAwesomeIcon glyphName="USERS" />
+                     </graphic>
+                  </MenuItem>
               </items>
-               <graphic>
-                  <FontAwesomeIcon glyphName="GEAR" />
-               </graphic>
-            </MenuButton>
-            <Button fx:id="cartaoButton" mnemonicParsing="false" styleClass="btn-menu" text="Cartões de Crédito">
-               <graphic>
-                  <FontAwesomeIcon glyphName="CREDIT_CARD" />
-               </graphic>
-            </Button>
-            <Button fx:id="categoriaButton" layoutX="25.0" layoutY="15.0" mnemonicParsing="false" styleClass="btn-menu" text="Categorias">
-               <graphic>
-                  <FontAwesomeIcon glyphName="PIE_CHART" />
-               </graphic>
-            </Button>
-            <Button fx:id="faturaButton" layoutX="177.0" layoutY="15.0" mnemonicParsing="false" styleClass="btn-menu" text="Faturas">
-               <graphic>
-                  <FontAwesomeIcon glyphName="FILE_TEXT" />
-               </graphic>
-            </Button>
-            <Button fx:id="responsavelButton" layoutX="266.0" layoutY="15.0" mnemonicParsing="false" styleClass="btn-menu" text="Responsáveis">
-               <graphic>
-                  <FontAwesomeIcon glyphName="USER" />
-               </graphic>
-            </Button>
-         </children>
-         <padding>
-            <Insets left="15.0" top="5.0" />
-         </padding>
-      </HBox>
-      <AnchorPane layoutX="14.0" layoutY="133.0" prefHeight="478.0" prefWidth="1341.0" AnchorPane.leftAnchor="14.0" AnchorPane.rightAnchor="14.0">
+            </Menu>
+          <Menu mnemonicParsing="false" text="Sobre">
+            <items>
+              <MenuItem mnemonicParsing="false" text="About" />
+            </items>
+          </Menu>
+        </menus>
+      </MenuBar>
+      <AnchorPane layoutX="14.0" layoutY="180.0" prefHeight="478.0" prefWidth="1341.0" AnchorPane.leftAnchor="14.0" AnchorPane.rightAnchor="14.0">
          <children>
-            <TableView fx:id="compraTableView" layoutX="8.0" layoutY="14.0" prefHeight="446.0" prefWidth="1339.0" AnchorPane.leftAnchor="8.0" AnchorPane.rightAnchor="8.0">
+            <TableView fx:id="compraTableView" layoutX="8.0" layoutY="14.0" prefHeight="446.0" prefWidth="1339.0" styleClass="borda-pane" AnchorPane.leftAnchor="8.0" AnchorPane.rightAnchor="8.0">
               <columns>
                 <TableColumn fx:id="codigoColuna" editable="false" prefWidth="66.0" resizable="false" sortable="false" styleClass="texto-centro" text="Cód." />
                 <TableColumn fx:id="descricaoColuna" editable="false" prefWidth="276.0" resizable="false" sortable="false" styleClass="nome" text="Descrição" />

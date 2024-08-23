@@ -102,7 +102,7 @@ public class AnoController implements Initializable {
 
                 // Comparar o nome da categoria com o texto da pesquisa para uma correspondência exata, ignorando maiúsculas/minúsculas
                 String filter = newValue.toLowerCase();
-                return ano.getValor().toLowerCase().equals(filter);
+                return ano.getValor().toLowerCase().contains(filter);
             });
         });
 

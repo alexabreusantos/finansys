@@ -4,21 +4,26 @@ import com.marjax.finansys.dao.CompraDAO;
 import com.marjax.finansys.model.Cartao;
 import com.marjax.finansys.model.Compra;
 import com.marjax.finansys.util.LocaleUtil;
+import java.io.IOException;
 import java.net.URL;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ResourceBundle;
 import javafx.beans.property.SimpleStringProperty;
+import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.collections.transformation.FilteredList;
+import javafx.collections.transformation.SortedList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
+import javafx.scene.control.Menu;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
+import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
@@ -26,26 +31,23 @@ import javafx.stage.Stage;
 public class MainController implements Initializable {
 
     @FXML
+    TextField pesquisarTextField;
+
+    @FXML
     private MenuItem mesesMenuItem;
-
     @FXML
-    private MenuItem anoMenuItem;
-
+    private MenuItem anosMenuItem;
     @FXML
-    private Button cartaoButton;
-
+    private MenuItem cartaoMenuItem;
     @FXML
-    private Button categoriaButton;
-
+    private MenuItem categoriaMenuItem;
     @FXML
-    private Button faturaButton;
-
+    private MenuItem faturaMenuItem;
     @FXML
-    private Button responsavelButton;
+    private MenuItem responsavelMenuItem;
 
     @FXML
     private TableView<Compra> compraTableView;
-
     @FXML
     private TableColumn<Compra, Integer> codigoColuna;
     @FXML
@@ -67,24 +69,32 @@ public class MainController implements Initializable {
     @FXML
     private TableColumn<Compra, String> situacaoColuna;
 
-    private CompraDAO compraDAO;
+    private CompraDAO dao;
     Cartao cartao;
+
     private ObservableList<Compra> compras;
 
     private final String css = "/com/marjax/finansys/style/main.css";
 
     @Override
     public void initialize(URL arg0, ResourceBundle arg1) {
-        compraDAO = new CompraDAO();
+        dao = new CompraDAO();
         cartao = new Cartao();
-        mesesMenuItem.setOnAction(event -> abrirMeses());
-        anoMenuItem.setOnAction(event -> abrirAno());
-        cartaoButton.setOnAction(event -> abrirCartaoAction());
-        categoriaButton.setOnAction(event -> abrirCategoriaAction());
-        faturaButton.setOnAction(event -> abrirFaturaAction());
-        responsavelButton.setOnAction(event -> abrirResponsavelAction());
 
-        carregarTabela();
+        hoverMenu();
+
+        mesesMenuItem.setOnAction(event -> abrirMeses());
+        anosMenuItem.setOnAction(event -> abrirAno());
+        cartaoMenuItem.setOnAction(event -> abrirCartaoAction());
+        categoriaMenuItem.setOnAction(event -> abrirCategoriaAction());
+        faturaMenuItem.setOnAction(event -> abrirFaturaAction());
+        responsavelMenuItem.setOnAction(event -> abrirResponsavelAction());
+
+        configurarTabela();
+    }
+
+    private void hoverMenu() {
+
     }
 
     @FXML
@@ -102,9 +112,9 @@ public class MainController implements Initializable {
             // Define o estágio secundário como modal e bloqueia a interação com outras janelas
             stage.initModality(Modality.WINDOW_MODAL);
             stage.initOwner((Stage) mesesMenuItem.getParentPopup().getOwnerWindow());
+            stage.setOnHidden(event -> atualizarTabela());
             stage.showAndWait();
-        } catch (Exception e) {
-            e.printStackTrace();
+        } catch (IOException e) {
         }
     }
 
@@ -122,10 +132,10 @@ public class MainController implements Initializable {
             stage.setResizable(false);
             // Define o estágio secundário como modal e bloqueia a interação com outras janelas
             stage.initModality(Modality.WINDOW_MODAL);
-            stage.initOwner((Stage) anoMenuItem.getParentPopup().getOwnerWindow());
+            stage.initOwner((Stage) anosMenuItem.getParentPopup().getOwnerWindow());
+            stage.setOnHidden(event -> atualizarTabela());
             stage.showAndWait();
-        } catch (Exception e) {
-            e.printStackTrace();
+        } catch (IOException e) {
         }
     }
 
@@ -143,10 +153,10 @@ public class MainController implements Initializable {
             stage.setResizable(false);
             // Define o estágio secundário como modal e bloqueia a interação com outras janelas
             stage.initModality(Modality.WINDOW_MODAL);
-            stage.initOwner(cartaoButton.getScene().getWindow());
+            stage.initOwner((Stage) cartaoMenuItem.getParentPopup().getOwnerWindow());
+            stage.setOnHidden(event -> atualizarTabela());
             stage.showAndWait();
-        } catch (Exception e) {
-            e.printStackTrace();
+        } catch (IOException e) {
         }
     }
 
@@ -164,10 +174,10 @@ public class MainController implements Initializable {
             stage.setResizable(false);
             // Define o estágio secundário como modal e bloqueia a interação com outras janelas
             stage.initModality(Modality.WINDOW_MODAL);
-            stage.initOwner(categoriaButton.getScene().getWindow());
+            stage.initOwner((Stage) categoriaMenuItem.getParentPopup().getOwnerWindow());
+            stage.setOnHidden(event -> atualizarTabela());
             stage.showAndWait();
-        } catch (Exception e) {
-            e.printStackTrace();
+        } catch (IOException e) {
         }
     }
 
@@ -185,10 +195,10 @@ public class MainController implements Initializable {
             stage.setResizable(false);
             // Define o estágio secundário como modal e bloqueia a interação com outras janelas
             stage.initModality(Modality.WINDOW_MODAL);
-            stage.initOwner(faturaButton.getScene().getWindow());
+            stage.initOwner((Stage) faturaMenuItem.getParentPopup().getOwnerWindow());
+            stage.setOnHidden(event -> atualizarTabela());
             stage.showAndWait();
-        } catch (Exception e) {
-            e.printStackTrace();
+        } catch (IOException e) {
         }
     }
 
@@ -206,28 +216,27 @@ public class MainController implements Initializable {
             stage.setResizable(false);
             // Define o estágio secundário como modal e bloqueia a interação com outras janelas
             stage.initModality(Modality.WINDOW_MODAL);
-            stage.initOwner(responsavelButton.getScene().getWindow());
+            stage.initOwner((Stage) responsavelMenuItem.getParentPopup().getOwnerWindow());
             stage.setOnHidden(event -> atualizarTabela());
-            stage.showAndWait();            
-        } catch (Exception e) {
-            e.printStackTrace();
+            stage.showAndWait();
+        } catch (IOException e) {
         }
     }
 
-    private void carregarTabela() {
+    private void configurarTabela() {
         compraTableView.widthProperty().addListener((observable, oldValue, newValue) -> {
             double tableWidth = newValue.doubleValue();
 
-            codigoColuna.prefWidthProperty().setValue(tableWidth * 0.05);  
-            descricaoColuna.prefWidthProperty().setValue(tableWidth * 0.2);  
-            responsavelColuna.prefWidthProperty().setValue(tableWidth * 0.15);  
-            cartaoColuna.prefWidthProperty().setValue(tableWidth * 0.1);  
-            valorColuna.prefWidthProperty().setValue(tableWidth * 0.094);  
-            categoriaColuna.prefWidthProperty().setValue(tableWidth * 0.1);  
-            dataColuna.prefWidthProperty().setValue(tableWidth * 0.09);  
-            parcelaColuna.prefWidthProperty().setValue(tableWidth * 0.05);  
-            totalColuna.prefWidthProperty().setValue(tableWidth * 0.09);  
-            situacaoColuna.prefWidthProperty().setValue(tableWidth * 0.07);  
+            codigoColuna.prefWidthProperty().setValue(tableWidth * 0.05);
+            descricaoColuna.prefWidthProperty().setValue(tableWidth * 0.2);
+            responsavelColuna.prefWidthProperty().setValue(tableWidth * 0.15);
+            cartaoColuna.prefWidthProperty().setValue(tableWidth * 0.1);
+            valorColuna.prefWidthProperty().setValue(tableWidth * 0.094);
+            categoriaColuna.prefWidthProperty().setValue(tableWidth * 0.1);
+            dataColuna.prefWidthProperty().setValue(tableWidth * 0.09);
+            parcelaColuna.prefWidthProperty().setValue(tableWidth * 0.05);
+            totalColuna.prefWidthProperty().setValue(tableWidth * 0.09);
+            situacaoColuna.prefWidthProperty().setValue(tableWidth * 0.066);
         });
 
         // Configura as colunas do TableView
@@ -274,9 +283,44 @@ public class MainController implements Initializable {
         // Carrega as compras do banco de dados e preenche o TableView
         atualizarTabela();
     }
-    
-    private void atualizarTabela(){
-        compras = compraDAO.getAllCompras();
-        compraTableView.setItems(compras);
+
+    private void atualizarTabela() {
+        compras = FXCollections.observableArrayList(dao.getAllCompras());
+
+        // Usar FilteredList para permitir a pesquisa
+        FilteredList<Compra> filteredData = new FilteredList<>(compras, p -> true);
+
+        // Adicionar um listener ao campo de pesquisa
+        pesquisarTextField.textProperty().addListener((observable, oldValue, newValue) -> {
+            filteredData.setPredicate(compra -> {
+                // Se o campo de pesquisa estiver vazio, mostra todas as faturas
+                if (newValue == null || newValue.isEmpty()) {
+                    return true;
+                }
+
+                String lowerCaseFilter = newValue.toLowerCase();
+
+                if (compra.getDescricao().toLowerCase().contains(lowerCaseFilter)) {
+                    return true; // Filtra pela descrição
+                } else if (String.valueOf(compra.getResponsavel().getNome()).contains(lowerCaseFilter)) {
+                    return true; // Filtra pelo responsavel
+                } else if (compra.getFatura().getCartao().getNome().toLowerCase().contains(lowerCaseFilter)) {
+                    return true; // Filtra pelo nome do cartao
+                } else if (compra.getCategoria().getNome().toLowerCase().contains(lowerCaseFilter)) {
+                    return true; // Filtra pelo nome da categoria
+                } else if (compra.getSituacao().toLowerCase().contains(lowerCaseFilter)) {
+                    return true; // Filtra pela situação
+                } else if (compra.getDataCompra().toLocalDate().format(DateTimeFormatter.ofPattern("dd/MM/yyyy")).contains(lowerCaseFilter)) {
+                    return true; // Filtra pelo período formatado
+                }
+
+                return false; // Não corresponde a nenhum filtro
+            });
+        });
+
+        SortedList<Compra> sortedData = new SortedList<>(filteredData);
+        sortedData.comparatorProperty().bind(compraTableView.comparatorProperty());
+
+        compraTableView.setItems(sortedData);
     }
 }
