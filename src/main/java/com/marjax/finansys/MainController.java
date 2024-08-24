@@ -19,6 +19,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Label;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.TableColumn;
@@ -32,6 +33,8 @@ public class MainController implements Initializable {
 
     @FXML
     TextField pesquisarTextField;
+    @FXML
+    Label totalCadastroLabel;
 
     @FXML
     private MenuItem mesesMenuItem;
@@ -91,6 +94,7 @@ public class MainController implements Initializable {
         responsavelMenuItem.setOnAction(event -> abrirResponsavelAction());
 
         configurarTabela();
+        atualizarTotal();
     }
 
     private void hoverMenu() {
@@ -282,6 +286,11 @@ public class MainController implements Initializable {
 
         // Carrega as compras do banco de dados e preenche o TableView
         atualizarTabela();
+    }
+    
+     public void atualizarTotal() {
+        int total = dao.getTotal();
+        totalCadastroLabel.setText(total + " compras cadastradas!");
     }
 
     private void atualizarTabela() {

@@ -7,6 +7,7 @@ package com.marjax.finansys;
 import com.marjax.finansys.dao.AnoDAO;
 import com.marjax.finansys.model.Ano;
 import com.marjax.finansys.util.AlertUtil;
+import java.io.IOException;
 import java.net.URL;
 import java.util.Optional;
 import java.util.ResourceBundle;
@@ -83,7 +84,6 @@ public class AnoController implements Initializable {
                 }
             }
         });
-
     }
 
     public void atualizarTableView() {
@@ -105,19 +105,14 @@ public class AnoController implements Initializable {
                 return ano.getValor().toLowerCase().contains(filter);
             });
         });
-
         anoTableView.setItems(filteredData);
     }
 
     private void ativarBotoes() {
         // Adicionar listener para ativar/desativar botão Excluir
-        anoTableView.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<Ano>() {
-            @Override
-            public void changed(ObservableValue<? extends Ano> observable, Ano oldValue, Ano newValue) {
-                excluirButton.setDisable(newValue == null);
-            }
-        }
-        );
+        anoTableView.getSelectionModel().selectedItemProperty().addListener((ObservableValue<? extends Ano> observable, Ano oldValue, Ano newValue) -> {
+            excluirButton.setDisable(newValue == null);
+        });
     }
 
     public void atualizarTotal() {
@@ -143,8 +138,7 @@ public class AnoController implements Initializable {
             stage.initOwner(adicionarButton.getScene().getWindow());
             stage.setOnHidden(event -> atualizarTableView());
             stage.showAndWait();
-        } catch (Exception e) {
-            e.printStackTrace();
+        } catch (IOException e) {
         }
     }
 
@@ -195,8 +189,7 @@ public class AnoController implements Initializable {
             stage.initOwner(anoTableView.getScene().getWindow());
             stage.setOnHidden(event -> atualizarTableView());
             stage.showAndWait();
-        } catch (Exception e) {
-            e.printStackTrace();
+        } catch (IOException e) {
         }
     }
 

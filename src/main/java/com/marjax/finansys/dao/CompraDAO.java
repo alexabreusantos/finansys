@@ -13,6 +13,7 @@ import com.marjax.finansys.model.Responsavel;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
@@ -76,5 +77,22 @@ public class CompraDAO {
         }
 
         return compras;
+    }
+    
+    // Método para saber a quantidade de compras cadastradas 
+    public int getTotal() {
+        int total = 0;
+        String sql = "SELECT COUNT(*) AS total FROM compra";
+        
+        try (Connection conn = MySQLConnection.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql);
+             ResultSet rs = stmt.executeQuery()) {
+            
+            if (rs.next()) {
+                total = rs.getInt("total");
+            }
+        } catch (SQLException e) {
+        }        
+        return total;
     }
 }

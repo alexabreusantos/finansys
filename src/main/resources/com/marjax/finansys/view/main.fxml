@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import de.jensd.fx.glyphs.fontawesome.FontAwesomeIcon?>
+<?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.Menu?>
 <?import javafx.scene.control.MenuBar?>
@@ -9,21 +10,9 @@
 <?import javafx.scene.control.TableView?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.AnchorPane?>
-<?import javafx.scene.layout.Pane?>
 
 <AnchorPane prefHeight="768.0" prefWidth="1366.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.marjax.finansys.MainController">
    <children>
-      <Pane layoutX="22.0" layoutY="58.0" prefHeight="95.0" prefWidth="1322.0" styleClass="borda-pane" AnchorPane.leftAnchor="22.0" AnchorPane.rightAnchor="22.0" AnchorPane.topAnchor="58.0">
-         <children>
-            <FontAwesomeIcon glyphName="SEARCH" layoutX="14.0" layoutY="30.0" size="1.5em" />
-            <TextField id="textoPesquisar" fx:id="pesquisarTextField" focusTraversable="false" layoutX="33.0" layoutY="12.0" prefHeight="25.0" prefWidth="315.0" promptText="Pesquisar..." />
-            <Label id="totalCadastroLabel" fx:id="totalCadastroLabel" layoutX="668.0" layoutY="39.0" text="Total">
-               <graphic>
-                  <FontAwesomeIcon glyphName="CUBES" />
-               </graphic>
-            </Label>
-         </children>
-      </Pane>
       <MenuBar focusTraversable="false" layoutX="-10.0" layoutY="2.0" prefHeight="25.0" prefWidth="1366.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="2.0">
         <menus>
           <Menu mnemonicParsing="false" text="Arquivo">
@@ -76,9 +65,25 @@
           </Menu>
         </menus>
       </MenuBar>
-      <AnchorPane layoutX="14.0" layoutY="180.0" prefHeight="478.0" prefWidth="1341.0" AnchorPane.leftAnchor="14.0" AnchorPane.rightAnchor="14.0">
+      <AnchorPane layoutX="14.0" layoutY="43.0" prefHeight="62.0" prefWidth="1322.0" styleClass="borda-pane" AnchorPane.leftAnchor="14.0" AnchorPane.rightAnchor="14.0" AnchorPane.topAnchor="50.0">
          <children>
-            <TableView fx:id="compraTableView" layoutX="8.0" layoutY="14.0" prefHeight="446.0" prefWidth="1339.0" styleClass="borda-pane" AnchorPane.leftAnchor="8.0" AnchorPane.rightAnchor="8.0">
+            <FontAwesomeIcon glyphName="SEARCH" layoutX="14.0" layoutY="37.0" size="1.5em" />
+            <TextField id="textoPesquisar" fx:id="pesquisarTextField" focusTraversable="false" layoutX="37.0" layoutY="19.0" prefHeight="25.0" prefWidth="315.0" promptText="Pesquisar..." style="-fx-border-color: d3d3d3;" />
+            <Label id="totalCadastroLabel" fx:id="totalCadastroLabel1" layoutX="1164.0" layoutY="23.0" text="2 compras cadastradas!" AnchorPane.bottomAnchor="22.0" AnchorPane.rightAnchor="14.0">
+               <graphic>
+                  <FontAwesomeIcon glyphName="CUBES" />
+               </graphic>
+            </Label>
+         </children>
+      </AnchorPane>
+      <AnchorPane layoutX="14.0" layoutY="133.0" prefHeight="525.0" prefWidth="1338.0" styleClass="borda-pane" AnchorPane.leftAnchor="14.0" AnchorPane.rightAnchor="14.0">
+         <children>
+            <Label layoutX="14.0" layoutY="21.0" text="Filtrar">
+               <graphic>
+                  <FontAwesomeIcon glyphName="FILTER" />
+               </graphic>
+            </Label>
+            <TableView fx:id="compraTableView" layoutX="8.0" layoutY="119.0" prefHeight="392.0" prefWidth="1322.0" AnchorPane.leftAnchor="8.0" AnchorPane.rightAnchor="8.0">
               <columns>
                 <TableColumn fx:id="codigoColuna" editable="false" prefWidth="66.0" resizable="false" sortable="false" styleClass="texto-centro" text="Cód." />
                 <TableColumn fx:id="descricaoColuna" editable="false" prefWidth="276.0" resizable="false" sortable="false" styleClass="nome" text="Descrição" />
@@ -92,6 +97,16 @@
                   <TableColumn fx:id="situacaoColuna" editable="false" prefWidth="92.0" resizable="false" sortable="false" styleClass="nome" text="Situação" />
               </columns>
             </TableView>
+            <ComboBox layoutX="14.0" layoutY="46.0" prefWidth="150.0" />
+         </children>
+      </AnchorPane>
+      <AnchorPane layoutX="22.0" layoutY="692.0" prefHeight="62.0" prefWidth="1322.0" styleClass="borda-pane" AnchorPane.bottomAnchor="14.0" AnchorPane.leftAnchor="14.0" AnchorPane.rightAnchor="14.0">
+         <children>
+            <Label id="totalCadastroLabel" fx:id="totalCadastroLabel" layoutX="1164.0" layoutY="23.0" text="2 compras cadastradas!" AnchorPane.bottomAnchor="22.0" AnchorPane.rightAnchor="14.0">
+               <graphic>
+                  <FontAwesomeIcon glyphName="CIRCLE" />
+               </graphic>
+            </Label>
          </children>
       </AnchorPane>      
    </children>
