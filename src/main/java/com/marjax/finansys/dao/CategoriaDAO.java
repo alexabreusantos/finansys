@@ -11,6 +11,8 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
@@ -127,5 +129,24 @@ public class CategoriaDAO {
             e.printStackTrace();
         }        
         return total;
+    }
+    
+    // metodo para listar os nomes das categorias no combobox    
+    public List<Categoria> listarCategoriasComboBox() {
+        List<Categoria> categorias = new ArrayList<>();
+        String sql = "SELECT * FROM categoria ORDER BY nome";
+
+        try (Connection conn = MySQLConnection.getConnection(); PreparedStatement stmt = conn.prepareStatement(sql); ResultSet rs = stmt.executeQuery()) {
+
+            while (rs.next()) {
+                Categoria categoria = new Categoria();
+                categoria.setCodigo(rs.getInt("codigo"));
+                categoria.setNome(rs.getString("nome"));                
+                categorias.add(categoria);
+            }
+        } catch (Exception e) {
+            e.printStackTrace(); // Aqui você pode usar uma abordagem de logging ou lançar uma exceção customizada
+        }
+        return categorias;
     }
 }

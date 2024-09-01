@@ -24,13 +24,12 @@ import javafx.collections.ObservableList;
 public class FaturaDAO {
 
     // Método para verificar se um responsável já existe
-    public boolean existe(Date periodo, int cartao, int codigo) {
-        String sql = "SELECT COUNT(*) FROM fatura WHERE periodo = ? AND cartao = ? AND codigo = ?";
+    public boolean existe(Date periodo, int cartao) {
+        String sql = "SELECT COUNT(*) FROM fatura WHERE periodo = ? AND cartao = ?";
         try (Connection connection = MySQLConnection.getConnection(); PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
 
-            preparedStatement.setDate(1, periodo);
+            preparedStatement.setDate(1, new java.sql.Date(periodo.getTime()));
             preparedStatement.setInt(2, cartao);
-            preparedStatement.setInt(3, codigo);
 
             try (ResultSet rs = preparedStatement.executeQuery()) {
                 if (rs.next()) {
@@ -38,7 +37,8 @@ public class FaturaDAO {
                 }
             }
         } catch (SQLException e) {
-            //AlertUtil.showErrorAlert("Erro", "Erro de SQL", "Erro: " + e.getMessage());
+            // Aqui você pode usar um método utilitário para mostrar um alerta de erro
+            AlertUtil.showErrorAlert("Erro", "Erro de SQL", "Erro: " + e.getMessage());
         }
         return false;
     }
@@ -84,13 +84,13 @@ public class FaturaDAO {
         return total;
     }
 
-    // Método para salvar 
+    // Método para salvar no banco
     public void salvar(Fatura fatura) {
 
-        if (existe(fatura.getPeriodo(), fatura.getCartao().getCodigo(), fatura.getCodigo())) {
+        if (existe(fatura.getPeriodo(), fatura.getCartao().getCodigo())) {
             return;
         }
-        
+
         String sql = "INSERT INTO fatura (periodo, valor, situacao, cartao) VALUES (?, ?, ?, ?)";
         try (Connection connection = MySQLConnection.getConnection(); PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
 
@@ -126,7 +126,7 @@ public class FaturaDAO {
     // Método para atualizar a fatura
     public boolean atualizar(Fatura fatura) {
 
-        if (existe(fatura.getPeriodo(), fatura.getCartao().getCodigo(), fatura.getCodigo())) {
+        if (existe(fatura.getPeriodo(), fatura.getCartao().getCodigo())) {
             return false; // Nome já existe no banco de dados
         }
         String sql = "UPDATE fatura SET periodo = ?, valor = ?, situacao = ?, cartao = ? WHERE codigo = ?";

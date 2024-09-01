@@ -78,21 +78,30 @@ public class CompraDAO {
 
         return compras;
     }
-    
+
     // Método para saber a quantidade de compras cadastradas 
     public int getTotal() {
         int total = 0;
         String sql = "SELECT COUNT(*) AS total FROM compra";
-        
-        try (Connection conn = MySQLConnection.getConnection();
-             PreparedStatement stmt = conn.prepareStatement(sql);
-             ResultSet rs = stmt.executeQuery()) {
-            
+
+        try (Connection conn = MySQLConnection.getConnection(); PreparedStatement stmt = conn.prepareStatement(sql); ResultSet rs = stmt.executeQuery()) {
+
             if (rs.next()) {
                 total = rs.getInt("total");
             }
         } catch (SQLException e) {
-        }        
+        }
         return total;
+    }
+
+    // Método para atualizar a situação de acordo com o checkbox marcado
+    public void atualizarSituacao(Compra compra) {
+        String sql = "UPDATE compra SET situacao = ? WHERE codigo = ?";
+        try (Connection connection = MySQLConnection.getConnection(); PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
+            preparedStatement.setString(1, compra.getSituacao());
+            preparedStatement.setInt(2, compra.getCodigo()); // Utiliza o código da compra
+            preparedStatement.executeUpdate();
+        } catch (Exception e) {
+        }
     }
 }

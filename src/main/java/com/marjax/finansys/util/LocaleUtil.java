@@ -47,6 +47,17 @@ public class LocaleUtil {
         limiteLabel.setText(limiteFormatado);
     }
     
+    public static void moedaBrasilLabel(double limite, Label limiteLabel) {
+        // Configura o formato para moeda brasileira
+        NumberFormat formatoMoeda = NumberFormat.getCurrencyInstance(Locale.forLanguageTag("pt-BR"));
+
+        // Formata o valor do limite
+        String limiteFormatado = formatoMoeda.format(limite);
+
+        // Define o valor formatado no Label
+        limiteLabel.setText(limiteFormatado);
+    }
+    
     public static void applyBrazilianCurrencyFormat(TextField textField) {
         Locale locale = Locale.forLanguageTag("pt-BR");
         

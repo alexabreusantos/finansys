@@ -5,7 +5,7 @@
 package com.marjax.finansys.model;
 
 import java.sql.Date;
-import java.sql.Timestamp;
+import java.util.Objects;
 
 
 /**
@@ -18,6 +18,8 @@ public class Fatura {
     private Double valor;
     private String situacao;
     private Cartao cartao;
+    
+    
     
     // Getters e Setters
     public Integer getCodigo() {

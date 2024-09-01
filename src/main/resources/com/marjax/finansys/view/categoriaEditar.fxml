@@ -7,12 +7,12 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.Pane?>
 
-<AnchorPane id="AnchorPane" prefHeight="142.0" prefWidth="321.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.marjax.finansys.CategoriaEditarController">
+<AnchorPane id="AnchorPane" prefHeight="142.0" prefWidth="321.0" xmlns="http://javafx.com/javafx/22" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.marjax.finansys.CategoriaEditarController">
    <children>
       <Pane fx:id="editarPane" layoutX="10.0" layoutY="10.0" prefHeight="122.0" prefWidth="302.0" styleClass="borda-pane">
          <children>
             <Label layoutX="11.0" layoutY="14.0" text="Código" />
-            <TextField fx:id="codigoTextField" disable="true" editable="false" focusTraversable="false" layoutX="11.0" layoutY="38.0" prefHeight="25.0" prefWidth="71.0" styleClass="campo-nome" />
+            <TextField fx:id="codigoTextField" disable="true" editable="false" focusTraversable="false" layoutX="11.0" layoutY="38.0" prefHeight="25.0" prefWidth="71.0" styleClass="borda-pane" />
             <Label layoutX="94.0" layoutY="14.0" text="Nome" />
             <TextField fx:id="nomeTextField" focusTraversable="false" layoutX="94.0" layoutY="38.0" prefHeight="25.0" prefWidth="198.0" promptText="Nome da categoria" styleClass="campo-nome" />
             <Button fx:id="salvarButton" layoutX="120.0" layoutY="83.0" mnemonicParsing="false" text="Salvar">

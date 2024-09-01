@@ -4,22 +4,16 @@
  */
 package com.marjax.finansys;
 
-import com.marjax.finansys.dao.AnoDAO;
 import com.marjax.finansys.dao.FaturaDAO;
-import com.marjax.finansys.dao.MesDAO;
-import com.marjax.finansys.model.Ano;
 import com.marjax.finansys.model.Cartao;
 import com.marjax.finansys.model.Fatura;
-import com.marjax.finansys.model.Mes;
 import com.marjax.finansys.util.AlertUtil;
 import com.marjax.finansys.util.ConverterDate;
 import com.marjax.finansys.util.PreencherComboBox;
 import com.marjax.finansys.util.ValidationUtil;
 import java.net.URL;
 import java.sql.Date;
-import java.time.LocalDate;
-import java.time.format.TextStyle;
-import java.util.Locale;
+import java.text.SimpleDateFormat;
 import java.util.ResourceBundle;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -40,9 +34,7 @@ public class FaturaEditarController implements Initializable {
     private Fatura fatura;
 
     private FaturaController faturaController;
-
-    private FaturaDAO faturaDAO;
-
+    
     @FXML
     private Button salvarButton;
 
@@ -50,10 +42,10 @@ public class FaturaEditarController implements Initializable {
     private TextField codigoTextField;
 
     @FXML
-    private ComboBox<Mes> mesComboBox;
+    private ComboBox<String> mesComboBox;
 
     @FXML
-    private ComboBox<Ano> anoComboBox;
+    private ComboBox<Integer> anoComboBox;
 
     @FXML
     private ToggleGroup situacao;
@@ -88,33 +80,18 @@ public class FaturaEditarController implements Initializable {
                 break;
             }
         }
-        PreencherComboBox.ComboBoxMeses(mesComboBox);
-        // Converter Timestamp para LocalDateTime         
-        LocalDate data = fatura.getPeriodo().toLocalDate();
-        Locale locale = Locale.forLanguageTag("pt-BR");
-        // Extrair o mês e o ano
-        String mesNome = data.getMonth().getDisplayName(TextStyle.FULL, locale);
-        MesDAO mesDAO = new MesDAO();
-        Mes mesSelecionado = mesDAO.buscarMes(mesNome);
-        // Percorre os itens do ComboBox para encontrar o mes correspondente
-        for (Mes mes : mesComboBox.getItems()) {
-            if (mes.getNome().equals(mesSelecionado.getNome())) {
-                mesComboBox.setValue(mes);
-                break;
-            }
-        }
+        PreencherComboBox.preencherMeses(mesComboBox);
+        String mesNome = ConverterDate.nomeMes(fatura.getPeriodo());
+        mesComboBox.setValue(mesNome);
 
-        PreencherComboBox.ComboBoxAnos(anoComboBox);
-        String anoValor = String.valueOf(data.getYear());
-        AnoDAO anoDAO = new AnoDAO();
-        Ano anoSelecionado = anoDAO.buscarAno(anoValor);
+        PreencherComboBox.preencherAnos(anoComboBox); 
+        SimpleDateFormat anoPeriodo = new SimpleDateFormat("yyyy");
+        String anoValor = anoPeriodo.format(fatura.getPeriodo());
+        Integer anoSelecionado = Integer.valueOf(anoValor);
+        anoComboBox.setValue(anoSelecionado);
+       
         // Percorre os itens do ComboBox para encontrar o ano correspondente
-        for (Ano ano : anoComboBox.getItems()) {
-            if (ano.getValor().equals(anoSelecionado.getValor())) {
-                anoComboBox.setValue(ano);
-                break;
-            }
-        }
+        
     }
 
     @Override
@@ -151,7 +128,7 @@ public class FaturaEditarController implements Initializable {
             }
 
             // Verificar se o nome já existe no banco de dados
-            if (dao.existe(fatura.getPeriodo(), fatura.getCartao().getCodigo(), fatura.getCodigo())) {
+            if (dao.existe(fatura.getPeriodo(), fatura.getCartao().getCodigo())) {
                 AlertUtil.showWarningAlert("Fatura já existente", "A fatura já está em uso.", "Por favor, informe dados diferente.");
                 return;
             }
@@ -169,7 +146,7 @@ public class FaturaEditarController implements Initializable {
                 }
 
                 // Atualizar o responsável no banco de dados
-                boolean success = faturaDAO.atualizar(fatura);
+                boolean success = dao.atualizar(fatura);
 
                 if (success) {
                     AlertUtil.showInformationAlert("Sucesso", null, "Fatura atualizada com sucesso.");                    

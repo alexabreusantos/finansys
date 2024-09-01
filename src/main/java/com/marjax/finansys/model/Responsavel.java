@@ -4,6 +4,8 @@
  */
 package com.marjax.finansys.model;
 
+import java.util.Objects;
+
 
 /**
  *
@@ -13,6 +15,19 @@ public class Responsavel {
     
     private Integer codigo;    
     private String nome;
+    
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Responsavel resp = (Responsavel) o;
+        return codigo == resp.codigo; // Comparação pelo identificador único
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(codigo);
+    }
 
     public Integer getCodigo() {
         return codigo;

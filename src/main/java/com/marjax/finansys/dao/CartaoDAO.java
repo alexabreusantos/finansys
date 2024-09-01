@@ -160,7 +160,6 @@ public class CartaoDAO {
                 total = rs.getInt("total");
             }
         } catch (SQLException e) {
-            e.printStackTrace();
         }
         return total;
     }
@@ -185,7 +184,7 @@ public class CartaoDAO {
             }
 
         } catch (Exception e) {
-            e.printStackTrace(); // Aqui você pode usar uma abordagem de logging ou lançar uma exceção customizada
+            // Aqui você pode usar uma abordagem de logging ou lançar uma exceção customizada            
         }
 
         return cartoes;

@@ -4,10 +4,7 @@
  */
 package com.marjax.finansys.util;
 
-import com.marjax.finansys.model.Ano;
 import com.marjax.finansys.model.Cartao;
-import com.marjax.finansys.model.Mes;
-import java.util.regex.Pattern;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.ComboBox;
@@ -94,7 +91,7 @@ public class ValidationUtil {
     }
 
     // Valida se o ComboBox Mes da Fatura não está com a seleção padrão
-    public static boolean validateComboBoxMes(ComboBox<Mes> comboBox, String fieldName, boolean[] hasError) {
+    public static boolean validateComboBoxMes(ComboBox<String> comboBox, String fieldName, boolean[] hasError) {
         // Verifica se o ComboBox está vazio ou se o valor selecionado é nulo
         if (comboBox.getValue() == null) {
             if (!hasError[0]) {
@@ -108,7 +105,7 @@ public class ValidationUtil {
     }
 
     // Valida se o ComboBox Ano da Fatura não está com a seleção padrão
-    public static boolean validateComboBoxAno(ComboBox<Ano> comboBox, String fieldName, boolean[] hasError) {
+    public static boolean validateComboBoxAno(ComboBox<Integer> comboBox, String fieldName, boolean[] hasError) {
         // Verifica se o ComboBox está vazio ou se o valor selecionado é nulo
         if (comboBox.getValue() == null) {
             if (!hasError[0]) {

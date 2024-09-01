@@ -4,15 +4,29 @@
  */
 package com.marjax.finansys.model;
 
+import java.util.Objects;
+
 /**
  *
  * @author Alex de Abreu dos Santos <alexdeabreudossantos@gmail.com>
  */
 public class Categoria {
     
-    private Integer codigo;    
-    
+    private Integer codigo;     
     private String nome;
+    
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Categoria cat = (Categoria) o;
+        return codigo == cat.codigo; // Comparação pelo identificador único
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(codigo);
+    }
 
     public Integer getCodigo() {
         return codigo;
