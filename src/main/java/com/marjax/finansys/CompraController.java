@@ -38,6 +38,7 @@ import javafx.scene.control.TablePosition;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.layout.AnchorPane;
 
 /**
  * FXML Controller class
@@ -78,6 +79,14 @@ public class CompraController implements Initializable {
     private Label totalFaturaLabel;
     @FXML
     private Label totalAlimentacaoCartaoLabel;
+    @FXML
+    private Label primeiroFiltroLabelSituacao;
+    @FXML
+    private Label segundoFiltroLabelSituacao;
+    @FXML
+    private Label terceiroFiltroLabelSituacao;
+    @FXML
+    private Label totalFiltrosLabelSituacao;
 
     @FXML
     private ComboBox<Responsavel> totalPessoaComboBox;
@@ -99,11 +108,27 @@ public class CompraController implements Initializable {
     private ComboBox<String> alimentacaoPessoasComboBox;
     @FXML
     private ComboBox<String> totalFaturaCartaoComboBox;
+    @FXML
+    private ComboBox<String> filtroComboBoxSituacao;
+    @FXML
+    private ComboBox<String> primeiroFiltroComboBoxSituacao;
+    @FXML
+    private ComboBox<String> segundoFiltroComboBoxSituacao;
+    @FXML
+    private ComboBox<String> terceiroFiltroComboBoxSituacao;
 
     @FXML
     private FontAwesomeIcon iconePrimeiro;
     @FXML
     private FontAwesomeIcon iconeSegundo;
+    @FXML
+    private FontAwesomeIcon iconePrimeiroSituacao;
+    @FXML
+    private FontAwesomeIcon iconeSegundoSituacao;
+    @FXML
+    private FontAwesomeIcon iconeTerceiroSituacao;
+    @FXML
+    private AnchorPane alimentacaoTotalPane;
 
     @FXML
     private TableView<Compra> compraTableView;
@@ -203,7 +228,7 @@ public class CompraController implements Initializable {
         // Calcula a metade do total da categoria Alimentação
         double alimentacaoValor = totalAlimentacao / quantidade;
 
-        totalFaturaLabel.setText("Total Fatura de " + responsavelSelecionado + " dividindo a Alimentação por " + quantidade + " pessoa(s):");
+        totalFaturaLabel.setText("Total Fatura de " + responsavelSelecionado + " dividindo a Alimentação com " + quantidade + " pessoa(s):");
 
         double totalResponsavel = compraTableView.getItems().stream()
                 .filter(compra -> compra.getResponsavel().getNome().equals(responsavelSelecionado)) // Filtra as compras pelo responsável
@@ -316,7 +341,7 @@ public class CompraController implements Initializable {
             alimentacaoPessoasComboBox.setDisable(true);
             PreencherComboBox.comboBoxPessoas(alimentacaoPessoasComboBox);
         }
-    }    
+    }
 
     private void filtrarECalcularTotal() {
         String primeiroFiltro = primeiroFiltroComboBox.getSelectionModel().getSelectedItem();
@@ -528,10 +553,185 @@ public class CompraController implements Initializable {
             }
         });
 
+        filtroComboBoxSituacao.valueProperty().addListener((observable, oldValue, newValue) -> {
+            if (newValue != null) {
+                switch (newValue) {
+                    case "Selecione":
+                        primeiroFiltroComboBoxSituacao.setDisable(true);
+                        segundoFiltroComboBoxSituacao.setDisable(true);
+                        terceiroFiltroComboBoxSituacao.setDisable(true);
+                        primeiroFiltroLabelSituacao.setVisible(false);
+                        segundoFiltroLabelSituacao.setVisible(false);
+                        terceiroFiltroLabelSituacao.setVisible(false);
+                        totalFiltrosLabelSituacao.setVisible(false);
+                        break;
+                    case "Pessoa e Situação":
+                        primeiroFiltroComboBoxSituacao.setDisable(false);
+                        PreencherComboBox.comboBoxPessoaSituacao(primeiroFiltroComboBoxSituacao);
+                        primeiroFiltroLabelSituacao.setVisible(true);
+                        primeiroFiltroLabelSituacao.setText("Pessoa");
+                        mudarIcone(iconePrimeiroSituacao, "USER");
+
+                        // Inicialmente oculta o segundo ComboBox e o Label
+                        segundoFiltroComboBoxSituacao.setDisable(true);
+                        segundoFiltroLabelSituacao.setVisible(false);
+                        terceiroFiltroComboBoxSituacao.setDisable(true);
+                        terceiroFiltroLabelSituacao.setVisible(false);
+                        totalFiltrosLabelSituacao.setVisible(false);
+                        break;
+                    case "Cartão e Situação":
+                        primeiroFiltroComboBoxSituacao.setDisable(false);
+                        PreencherComboBox.comboBoxCartaoString(primeiroFiltroComboBoxSituacao);
+                        primeiroFiltroLabelSituacao.setVisible(true);
+                        primeiroFiltroLabelSituacao.setText("Cartão");
+                        mudarIcone(iconePrimeiroSituacao, "CREDIT_CARD");
+
+                        // Inicialmente oculta o segundo ComboBox e o Label
+                        segundoFiltroComboBoxSituacao.setDisable(true);
+                        segundoFiltroLabelSituacao.setVisible(false);
+                        terceiroFiltroComboBoxSituacao.setDisable(true);
+                        terceiroFiltroLabelSituacao.setVisible(false);
+                        totalFiltrosLabelSituacao.setVisible(false);
+                        break;
+                    case "Pessoa, Cartão e Situação":
+                        primeiroFiltroComboBoxSituacao.setDisable(false);
+                        PreencherComboBox.comboBoxPessoaSituacao(primeiroFiltroComboBoxSituacao);
+                        primeiroFiltroLabelSituacao.setVisible(true);
+                        primeiroFiltroLabelSituacao.setText("Pessoa");
+                        mudarIcone(iconePrimeiroSituacao, "USER");
+
+                        // Inicialmente oculta o segundo ComboBox e o Label
+                        segundoFiltroComboBoxSituacao.setDisable(true);
+                        segundoFiltroLabelSituacao.setVisible(false);
+                        terceiroFiltroComboBoxSituacao.setDisable(true);
+                        terceiroFiltroLabelSituacao.setVisible(false);
+                        totalFiltrosLabelSituacao.setVisible(false);
+                        break;
+                    default:
+                        throw new AssertionError("Valor inesperado: " + newValue);
+                }
+            }
+        });
+
+        primeiroFiltroComboBoxSituacao.valueProperty().addListener((observable, oldValue, newValue) -> {
+            // Lógica para mostrar/ocultar o segundo ComboBox com base na seleção
+            String filtroSelecionado = filtroComboBoxSituacao.getValue();
+            if (filtroSelecionado != null) {
+                switch (filtroSelecionado) {
+                    case "Pessoa e Situação":
+                        if ("Selecione".equals(newValue)) {
+                            segundoFiltroComboBoxSituacao.setDisable(true);
+                            segundoFiltroLabelSituacao.setVisible(false);
+                            terceiroFiltroComboBoxSituacao.setDisable(true);
+                            terceiroFiltroLabelSituacao.setVisible(false);
+                            totalFiltrosLabelSituacao.setVisible(false);
+                        } else {
+                            segundoFiltroComboBoxSituacao.setDisable(false);
+                            segundoFiltroLabelSituacao.setVisible(true);
+                            segundoFiltroLabelSituacao.setText("Situação");
+                            mudarIcone(iconeSegundoSituacao, "CHECK_SQUARE");
+                            PreencherComboBox.comboBoxSituacao(segundoFiltroComboBoxSituacao);
+                        }
+                        break;
+                    case "Cartão e Situação":
+                        if ("Selecione".equals(newValue)) {
+                            segundoFiltroComboBoxSituacao.setDisable(true);
+                            segundoFiltroLabelSituacao.setVisible(false);
+                            terceiroFiltroComboBoxSituacao.setDisable(true);
+                            terceiroFiltroLabelSituacao.setVisible(false);
+                            totalFiltrosLabelSituacao.setVisible(false);
+                        } else {
+                            segundoFiltroComboBoxSituacao.setDisable(false);
+                            segundoFiltroLabelSituacao.setVisible(true);
+                            segundoFiltroLabelSituacao.setText("Situação");
+                            mudarIcone(iconeSegundoSituacao, "CHECK_SQUARE");
+                            PreencherComboBox.comboBoxSituacao(segundoFiltroComboBoxSituacao);
+                        }
+                        break;
+                    case "Pessoa, Cartão e Situação":
+                        if ("Selecione".equals(newValue)) {
+                            segundoFiltroComboBoxSituacao.setDisable(true);
+                            segundoFiltroLabelSituacao.setVisible(false);
+                            terceiroFiltroComboBoxSituacao.setDisable(true);
+                            terceiroFiltroLabelSituacao.setVisible(false);
+                            totalFiltrosLabelSituacao.setVisible(false);
+                        } else {
+                            segundoFiltroComboBoxSituacao.setDisable(false);
+                            segundoFiltroLabelSituacao.setVisible(true);
+                            segundoFiltroLabelSituacao.setText("Cartão");
+                            mudarIcone(iconeSegundo, "CREDIT_CARD");
+                            PreencherComboBox.comboBoxCartaoString(segundoFiltroComboBoxSituacao);
+                        }
+                        break;
+                    default:
+                        throw new AssertionError("Valor inesperado: " + filtroSelecionado);
+                }
+            }
+        });
+
+        segundoFiltroComboBoxSituacao.valueProperty().addListener((observable, oldValue, newValue) -> {
+            // Lógica para mostrar/ocultar o segundo ComboBox com base na seleção
+            String filtroSelecionado = filtroComboBoxSituacao.getValue();
+            if (filtroSelecionado != null) {
+                switch (filtroSelecionado) {
+                    case "Pessoa e Situação":
+                        if ("Selecione".equals(newValue)) {
+                            totalFiltrosLabelSituacao.setVisible(false);
+                        } else {
+                            totalFiltrosLabelSituacao.setVisible(true);
+                            filtroCalculoSituacao();
+                        }
+                        break;
+                    case "Cartão e Situação":
+                        if ("Selecione".equals(newValue)) {
+                            totalFiltrosLabelSituacao.setVisible(false);
+                        } else {
+                            totalFiltrosLabelSituacao.setVisible(true);
+                        }
+                        break;
+                    case "Pessoa, Cartão e Situação":
+                        if ("Selecione".equals(newValue)) {
+                            terceiroFiltroComboBoxSituacao.setDisable(true);
+                            terceiroFiltroLabelSituacao.setVisible(false);
+                            terceiroFiltroLabelSituacao.setText("Situação");
+                            totalFiltrosLabelSituacao.setVisible(false);
+                        } else {
+                            terceiroFiltroComboBoxSituacao.setDisable(false);
+                            terceiroFiltroLabelSituacao.setVisible(true);
+                            terceiroFiltroLabelSituacao.setText("Situação");
+                            totalFiltrosLabelSituacao.setVisible(false);
+                            mudarIcone(iconeSegundo, "CHECK_SQUARE");
+                            PreencherComboBox.comboBoxSituacao(terceiroFiltroComboBoxSituacao);
+                        }
+                        break;
+                    default:
+                        throw new AssertionError("Valor inesperado: " + filtroSelecionado);
+                }
+            }
+        });
+
+        terceiroFiltroComboBoxSituacao.valueProperty().addListener((observable, oldValue, newValue) -> {
+            // Lógica para mostrar/ocultar o segundo ComboBox com base na seleção
+            String filtroSelecionado = filtroComboBoxSituacao.getValue();
+            if (filtroSelecionado != null) {
+                switch (filtroSelecionado) {
+                    case "Pessoa, Cartão e Situação":
+                        if ("Selecione".equals(newValue)) {
+                            totalFiltrosLabelSituacao.setVisible(false);
+                        } else {
+                            totalFiltrosLabelSituacao.setVisible(true);
+                        }
+                        break;
+                    default:
+                        throw new AssertionError("Valor inesperado: " + filtroSelecionado);
+                }
+            }
+        });
+
         totalFaturaCartaoComboBox.valueProperty().addListener((obs, oldValue, newValue) -> {
             if (newValue != null) {
                 newValue = totalFaturaCartaoComboBox.getSelectionModel().getSelectedItem();
-                atualizarValorFaturaPorCartao(newValue);                
+                atualizarValorFaturaPorCartao(newValue);
             }
         });
 
@@ -682,6 +882,7 @@ public class CompraController implements Initializable {
         LocaleUtil.moedaBrasilColuna(totalColuna);
         situacaoColuna.setCellValueFactory(new PropertyValueFactory<>("situacao"));
         situacaoColuna.setCellFactory(col -> new SituacaoTableCell(dao));
+        //situacaoColuna.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getSituacao()));
 
         // Carrega as compras do banco de dados e preenche o TableView
         atualizarTabela();
@@ -749,6 +950,7 @@ public class CompraController implements Initializable {
         PreencherComboBox.comboBoxQuantidadePessoas(quantidadePessoasComboBox);
         PreencherComboBox.comboBoxCartaoString(totalFaturaCartaoComboBox);
         PreencherComboBox.comboBoxPessoas(alimentacaoPessoasComboBox);
+        PreencherComboBox.comboBoxPessoaCartaoSituacao(filtroComboBoxSituacao);
     }
 
     private void clickComboBox() {
@@ -757,6 +959,14 @@ public class CompraController implements Initializable {
         quantidadePessoasComboBox.setOnAction(event -> exibirComboBoxAlimentacaoPessoa());
         colocarButton.setOnAction(e -> colocarResponsavel());
         removerButton.setOnAction(event -> removerResponsavel());
+
+        segundoFiltroComboBoxSituacao.setOnAction(event -> {
+            filtroCalculoSituacao();
+        });
+        
+        terceiroFiltroComboBoxSituacao.setOnAction(event -> {
+            filtroCalculoSituacao();
+        });
     }
 
     private void enableLabelAlimentacao() {
@@ -764,6 +974,7 @@ public class CompraController implements Initializable {
         totalFaturaCartaoLabel.setVisible(true);
         totalFaturaLabel.setVisible(true);
         totalFaturaCartaoComboBox.setVisible(true);
+        alimentacaoTotalPane.setVisible(true);
     }
 
     private void disableLabelAlimentacao() {
@@ -771,5 +982,80 @@ public class CompraController implements Initializable {
         totalFaturaCartaoLabel.setVisible(false);
         totalFaturaLabel.setVisible(false);
         totalFaturaCartaoComboBox.setVisible(false);
+        alimentacaoTotalPane.setVisible(false);
+    }
+
+    private void filtroCalculoSituacao() {
+        String filtroSituacao = filtroComboBoxSituacao.getSelectionModel().getSelectedItem();
+        String primeiroFiltro = primeiroFiltroComboBoxSituacao.getSelectionModel().getSelectedItem();
+        String segundoFiltro = segundoFiltroComboBoxSituacao.getSelectionModel().getSelectedItem();
+        String terceiroFiltro = terceiroFiltroComboBoxSituacao.getSelectionModel().getSelectedItem();
+
+        switch (filtroSituacao) {
+            case "Pessoa e Situação":
+                if (primeiroFiltro != null && segundoFiltro != null) {
+                    // Filtrar a tabela com base nos critérios selecionados
+                    double total = compraTableView.getItems().stream()
+                            .filter(compra -> compra.getResponsavel().getNome().equals(primeiroFiltro)
+                            && compra.getSituacao().equals(segundoFiltro))
+                            .mapToDouble(Compra::getValor)
+                            .sum();
+
+                    // Se o total for maior que 0, exibe o label e mostra o valor total
+                    if (total > 0) {
+                        LocaleUtil.moedaBrasilLabel(total, totalFiltrosLabelSituacao);
+                    } else {
+                        LocaleUtil.moedaBrasilLabel(total, totalFiltrosLabelSituacao);
+                    }
+                } else {
+                    // Se um dos filtros não estiver selecionado, esconde o Label
+                    totalFiltrosLabelSituacao.setVisible(false);
+                }
+                break;
+            case "Cartão e Situação":
+                if (primeiroFiltro != null && segundoFiltro != null) {
+                    // Filtrar a tabela com base nos critérios selecionados
+                    double total = compraTableView.getItems().stream()
+                            .filter(compra -> compra.getFatura().getCartao().getNome().equals(primeiroFiltro)
+                            && compra.getSituacao().equals(segundoFiltro))
+                            .mapToDouble(Compra::getValor)
+                            .sum();
+
+                    // Se o total for maior que 0, exibe o label e mostra o valor total
+                    if (total > 0) {
+                        LocaleUtil.moedaBrasilLabel(total, totalFiltrosLabelSituacao);
+                    } else {
+                        LocaleUtil.moedaBrasilLabel(total, totalFiltrosLabelSituacao);
+                    }
+                } else {
+                    // Se um dos filtros não estiver selecionado, esconde o Label
+                    totalFiltrosLabelSituacao.setVisible(false);
+                }
+                break;
+            case "Pessoa, Cartão e Situação":
+                if (primeiroFiltro != null && segundoFiltro != null && terceiroFiltro != null) {
+                    // Filtrar a tabela com base nos critérios selecionados
+                    double total = compraTableView.getItems().stream()
+                            .filter(compra -> compra.getResponsavel().getNome().equals(primeiroFiltro)
+                            && compra.getFatura().getCartao().getNome().equals(segundoFiltro)
+                            && compra.getSituacao().equals(terceiroFiltro))
+                            .mapToDouble(Compra::getValor)
+                            .sum();
+
+                    // Se o total for maior que 0, exibe o label e mostra o valor total
+                    if (total > 0) {
+                        LocaleUtil.moedaBrasilLabel(total, totalFiltrosLabelSituacao);                        
+                    } else {
+                        LocaleUtil.moedaBrasilLabel(total, totalFiltrosLabelSituacao);                        
+                    }
+                } else {
+                    // Se um dos filtros não estiver selecionado, esconde o Label
+                    totalFiltrosLabelSituacao.setVisible(false);
+                }
+                break;
+            default:
+                throw new AssertionError();
+        }
+
     }
 }

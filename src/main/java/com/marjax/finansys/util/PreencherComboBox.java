@@ -13,6 +13,7 @@ import com.marjax.finansys.model.Responsavel;
 import java.time.Month;
 import java.time.Year;
 import java.time.format.TextStyle;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 import java.util.stream.Collectors;
@@ -201,14 +202,21 @@ public class PreencherComboBox {
     }
 
     public static void comboBoxFiltro(ComboBox comboBox) {
-        // Cria uma lista observável com as opções desejadas
-        ObservableList<String> statusOptions = FXCollections.observableArrayList("Selecione", "Pessoa e Cartão", "Pessoa e Categoria", "Cartão e Categoria");
+        // Cria uma lista observável com as opções desejadas        
+        String[] opcoes = {"Pessoa e Cartão", "Pessoa e Categoria", "Cartão e Categoria"};
+        comboBox.getItems().add("Selecione");
 
-        // Define a lista de opções no ComboBox
-        comboBox.setItems(statusOptions);
+        comboBox.getItems().addAll(opcoes);
 
-        // Define a opção padrão como 'Selecione'
-        comboBox.getSelectionModel().selectFirst();
+        // Define um CellFactory para exibir o nome do responsável no ComboBox
+        comboBox.setCellFactory(lv -> new ListCell<String>() {
+            @Override
+            protected void updateItem(String item, boolean empty) {
+                super.updateItem(item, empty);
+                setText(empty ? null : item);
+            }
+        });
+
     }
 
     public static void comboBoxPessoas(ComboBox<String> comboBox) {
@@ -223,6 +231,37 @@ public class PreencherComboBox {
             if (!"Sem Responsável".equals(responsavel.getNome())) {
                 comboBox.getItems().add(responsavel.getNome());
             }
+        }
+
+        // Define um CellFactory para exibir o nome do responsável no ComboBox
+        comboBox.setCellFactory(lv -> new ListCell<String>() {
+            @Override
+            protected void updateItem(String item, boolean empty) {
+                super.updateItem(item, empty);
+                setText(empty ? null : item);
+            }
+        });
+
+        // Define como o nome do responsável deve ser exibido quando o item é selecionado
+        comboBox.setButtonCell(new ListCell<String>() {
+            @Override
+            protected void updateItem(String item, boolean empty) {
+                super.updateItem(item, empty);
+                setText(empty ? null : item);
+            }
+        });
+    }
+
+    public static void comboBoxPessoaSituacao(ComboBox<String> comboBox) {
+        ResponsavelDAO dao = new ResponsavelDAO();
+        comboBox.getItems().clear();
+
+        // Adiciona a opção "Selecione" como o primeiro item
+        comboBox.getItems().add("Selecione");
+
+        // Adiciona os nomes dos responsáveis ao ComboBox
+        for (Responsavel responsavel : dao.listarResponsaveisComboBox()) {           
+            comboBox.getItems().add(responsavel.getNome());
         }
 
         // Define um CellFactory para exibir o nome do responsável no ComboBox
@@ -330,7 +369,7 @@ public class PreencherComboBox {
 
         // Adiciona os outros responsáveis
         responsaveis.addAll(dao.alimentacaoResponsaveis());
-        
+
         // Remove itens com nome "Sem Responsável" da lista
         responsaveis.removeIf(nome -> "Sem Responsável".equals(nome));
 
@@ -363,5 +402,16 @@ public class PreencherComboBox {
         });
 
         return responsaveis;
+    }
+
+    public static void comboBoxPessoaCartaoSituacao(ComboBox comboBox) {
+        // Cria uma lista observável com as opções desejadas
+        ObservableList<String> statusOptions = FXCollections.observableArrayList("Selecione", "Pessoa e Situação", "Cartão e Situação", "Pessoa, Cartão e Situação");
+
+        // Define a lista de opções no ComboBox
+        comboBox.setItems(statusOptions);
+
+        // Define a opção padrão como 'Selecione'
+        comboBox.getSelectionModel().selectFirst();
     }
 }
