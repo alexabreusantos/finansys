@@ -165,7 +165,7 @@ public class CartaoDAO {
     }
 
     // Método para listar os nomes dos cartões no combobox
-    public List<Cartao> buscarCartoes() {
+    public List<Cartao> listarCartoes() {
         List<Cartao> cartoes = new ArrayList<>();
         String sql = "SELECT * FROM cartao ORDER BY nome";
 
@@ -188,5 +188,22 @@ public class CartaoDAO {
         }
 
         return cartoes;
+    }
+
+    public Integer buscaCodigoCartao(String nome) {
+        Integer codigo = null;  // Inicialize como null para indicar que nenhum resultado foi encontrado
+        String sql = "SELECT codigo FROM cartao WHERE nome = ?";
+        try (Connection conn = MySQLConnection.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+            
+            stmt.setString(1, nome);
+            
+            try (ResultSet rs = stmt.executeQuery()) {
+                if (rs.next()) {
+                    codigo = rs.getInt("codigo");
+                }
+            }
+        } catch (SQLException e) {}
+        return codigo;
     }
 }

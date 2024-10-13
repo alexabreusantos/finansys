@@ -13,12 +13,12 @@ import javafx.scene.control.TableCell;
  *
  * @author Alex de Abreu dos Santos <alexdeabreudossantos@gmail.com>
  */
-public class SituacaoTableCell extends TableCell<Compra, String> {
+public class SituacaoTableCellCompra extends TableCell<Compra, String> {
 
     private final CheckBox checkBox;
     private CompraDAO compraDAO; // Adicione sua DAO aqui
 
-    public SituacaoTableCell(CompraDAO compraDAO) {
+    public SituacaoTableCellCompra(CompraDAO compraDAO) {
         this.compraDAO = compraDAO;
         this.checkBox = new CheckBox();
 
@@ -40,6 +40,7 @@ public class SituacaoTableCell extends TableCell<Compra, String> {
 
         setGraphic(checkBox);
     }
+    
 
     @Override
     protected void updateItem(String situacao, boolean empty) {

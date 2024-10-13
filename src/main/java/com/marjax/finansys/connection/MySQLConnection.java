@@ -4,6 +4,7 @@
  */
 package com.marjax.finansys.connection;
 
+import com.marjax.finansys.util.AlertUtil;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
@@ -21,12 +22,11 @@ public class MySQLConnection {
         Connection connection = null;
         try {
             Class.forName("com.mysql.cj.jdbc.Driver");
-            connection = DriverManager.getConnection(URL, USER, PASSWORD);
-            System.out.println("Conexão estabelecida com sucesso!");
-        } catch (ClassNotFoundException e) {
-            System.out.println("Driver JDBC não encontrado: " + e.getMessage());
-        } catch (SQLException e) {
-            System.out.println("Erro ao estabelecer a conexão: " + e.getMessage());
+            connection = DriverManager.getConnection(URL, USER, PASSWORD); 
+        } catch (ClassNotFoundException e) {            
+            AlertUtil.showErrorAlert("Erro de Driver JDBC", "Driver JDBC não encontrado.", e.getMessage());
+        } catch (SQLException e) {            
+            AlertUtil.showErrorAlert("Erro de conexão", "Erro ao estabelecer a conexão com o banco de dados.", e.getMessage());
         }
         return connection;
     }    

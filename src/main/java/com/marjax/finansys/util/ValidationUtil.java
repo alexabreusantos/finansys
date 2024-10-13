@@ -5,9 +5,13 @@
 package com.marjax.finansys.util;
 
 import com.marjax.finansys.model.Cartao;
+import com.marjax.finansys.model.Categoria;
+import com.marjax.finansys.model.Fatura;
+import com.marjax.finansys.model.Responsavel;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.ComboBox;
+import javafx.scene.control.DatePicker;
 import javafx.scene.control.TextField;
 
 /**
@@ -117,7 +121,7 @@ public class ValidationUtil {
         }
         return true;
     }
-    
+
     // Valida se o ComboBox Ano da Fatura não está com a seleção padrão
     public static boolean validateComboBoxCartao(ComboBox<Cartao> comboBox, String fieldName, boolean[] hasError) {
         // Verifica se o ComboBox está vazio ou se o valor selecionado é nulo
@@ -139,5 +143,54 @@ public class ValidationUtil {
         alert.setHeaderText(null);
         alert.setContentText(message);
         alert.showAndWait();
+    }
+    // Valida se o ComboBox não está com a seleção padrão
+
+    public static boolean validateComboBoxCategoria(ComboBox<Categoria> comboBox, String fieldName, boolean[] hasError) {
+        if (comboBox.getValue() == null || "Selecione".equals(comboBox.getValue())) {
+            if (!hasError[0]) {
+                comboBox.requestFocus(); // Adiciona foco ao primeiro ComboBox inválido encontrado
+            }
+            showValidationError("Por favor, selecione um valor para " + fieldName + ".");
+            hasError[0] = true;
+            return false;
+        }
+        return true;
+    }
+
+    public static boolean validateComboBoxResponsavel(ComboBox<Responsavel> comboBox, String fieldName, boolean[] hasError) {
+        if (comboBox.getValue() == null || "Selecione".equals(comboBox.getValue())) {
+            if (!hasError[0]) {
+                comboBox.requestFocus(); // Adiciona foco ao primeiro ComboBox inválido encontrado
+            }
+            showValidationError("Por favor, selecione um valor para " + fieldName + ".");
+            hasError[0] = true;
+            return false;
+        }
+        return true;
+    }
+
+    public static boolean validateComboBoxFatura(ComboBox<Fatura> comboBox, String fieldName, boolean[] hasError) {
+        if (comboBox.getValue() == null || "Selecione".equals(comboBox.getValue())) {
+            if (!hasError[0]) {
+                comboBox.requestFocus(); // Adiciona foco ao primeiro ComboBox inválido encontrado
+            }
+            showValidationError("Por favor, selecione um valor para " + fieldName + ".");
+            hasError[0] = true;
+            return false;
+        }
+        return true;
+    }
+
+    public static boolean validateData(DatePicker date, String fieldName, boolean[] hasError) {
+        if (date.getValue() == null || "Selecione".equals(date.getValue())) {
+            if (!hasError[0]) {
+                date.requestFocus(); // Adiciona foco ao primeiro ComboBox inválido encontrado
+            }
+            showValidationError("Por favor, selecione um valor para " + fieldName + ".");
+            hasError[0] = true;
+            return false;
+        }
+        return true;
     }
 }

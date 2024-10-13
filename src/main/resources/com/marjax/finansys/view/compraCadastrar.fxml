@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import de.jensd.fx.glyphs.fontawesome.FontAwesomeIcon?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.DatePicker?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.RadioButton?>
+<?import javafx.scene.control.Spinner?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.control.ToggleGroup?>
+<?import javafx.scene.layout.AnchorPane?>
+
+<AnchorPane id="AnchorPane" prefHeight="260.0" prefWidth="818.0" xmlns="http://javafx.com/javafx/22" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.marjax.finansys.CompraCadastrarController">
+   <children>
+      <AnchorPane layoutX="12.0" layoutY="10.0" prefHeight="240.0" prefWidth="797.0" styleClass="borda-pane">
+         <children>
+            <Label focusTraversable="false" layoutX="14.0" layoutY="14.0" text="Descrição" />
+            <TextField fx:id="descricaoTextField" layoutX="14.0" layoutY="33.0" prefHeight="25.0" prefWidth="429.0" styleClass="campo-nome" />
+            <Label focusTraversable="false" layoutX="463.0" layoutY="12.0" text="Valor" />
+            <TextField fx:id="valorTextField" layoutX="463.0" layoutY="33.0" prefHeight="25.0" prefWidth="158.0" styleClass="campo-nome" />
+            <Label focusTraversable="false" layoutX="633.0" layoutY="12.0" text="Data" />
+            <DatePicker fx:id="dataDatePicker" layoutX="633.0" layoutY="33.0" prefHeight="25.0" prefWidth="149.0" promptText="Selecione" />
+            <Label focusTraversable="false" layoutX="14.0" layoutY="80.0" text="Categoria" />
+            <ComboBox fx:id="categoriaComboBox" layoutX="14.0" layoutY="101.0" prefHeight="25.0" prefWidth="175.0" promptText="Selecione" />
+            <Button fx:id="adicionarCategoriaButton" focusTraversable="false" layoutX="192.0" layoutY="101.0" mnemonicParsing="false" prefHeight="25.0">
+               <graphic>
+                  <FontAwesomeIcon glyphName="PLUS" />
+               </graphic>
+            </Button>
+            <Label focusTraversable="false" layoutX="235.0" layoutY="79.0" text="Responsável" />
+            <ComboBox fx:id="responsavelComboBox" layoutX="235.0" layoutY="101.0" prefHeight="25.0" prefWidth="175.0" promptText="Selecione" />
+            <Button fx:id="adicionarResponsavelButton" focusTraversable="false" layoutX="414.0" layoutY="101.0" mnemonicParsing="false" prefHeight="25.0">
+               <graphic>
+                  <FontAwesomeIcon fx:id="adicionarCategoriaButton1" glyphName="PLUS" />
+               </graphic>
+            </Button>
+            <Label focusTraversable="false" layoutX="465.0" layoutY="79.0" text="Tipo de Compra" />
+            <RadioButton fx:id="mensalRadioButton" focusTraversable="false" layoutX="465.0" layoutY="101.0" mnemonicParsing="false" text="Mensal">
+               <toggleGroup>
+                  <ToggleGroup fx:id="tipoCompra" />
+               </toggleGroup></RadioButton>
+            <RadioButton fx:id="unicaRadioButton" focusTraversable="false" layoutX="532.0" layoutY="101.0" mnemonicParsing="false" selected="true" text="Única" toggleGroup="$tipoCompra" />
+            <RadioButton fx:id="parceladaRadioButton" focusTraversable="false" layoutX="590.0" layoutY="101.0" mnemonicParsing="false" text="Parcelada" toggleGroup="$tipoCompra" />
+            <Label fx:id="quantidadeParcelaLabel" disable="true" focusTraversable="false" layoutX="678.0" layoutY="79.0" text="Quantidade Parcela" />
+            <Spinner fx:id="quantidadeParcelaSpinner" disable="true" focusTraversable="false" layoutX="678.0" layoutY="101.0" prefHeight="25.0" prefWidth="104.0" />
+            <Label focusTraversable="false" layoutX="14.0" layoutY="145.0" text="Cartão" />
+            <ComboBox fx:id="cartaoComboBox" layoutX="14.0" layoutY="167.0" prefHeight="25.0" prefWidth="175.0" promptText="Selecione" />
+            <Button fx:id="adicionarCartaoButton" focusTraversable="false" layoutX="192.0" layoutY="167.0" mnemonicParsing="false" prefHeight="25.0">
+               <graphic>
+                  <FontAwesomeIcon fx:id="adicionarCategoriaButton11" glyphName="PLUS" />
+               </graphic>
+            </Button>
+            <Label fx:id="faturaLabel" disable="true" focusTraversable="false" layoutX="235.0" layoutY="144.0" text="Fatura" />
+            <ComboBox fx:id="faturaComboBox" disable="true" layoutX="235.0" layoutY="166.0" prefHeight="25.0" prefWidth="175.0" promptText="Selecione" />
+            <Button fx:id="adicionarFaturaButton" disable="true" focusTraversable="false" layoutX="414.0" layoutY="166.0" mnemonicParsing="false" prefHeight="25.0">
+               <graphic>
+                  <FontAwesomeIcon fx:id="adicionarCategoriaButton111" glyphName="PLUS" />
+               </graphic>
+            </Button>
+            <Label focusTraversable="false" layoutX="465.0" layoutY="147.0" text="Situação" />
+            <RadioButton fx:id="pagaRadioButton" focusTraversable="false" layoutX="469.0" layoutY="171.0" mnemonicParsing="false" text="Paga">
+               <toggleGroup>
+                  <ToggleGroup fx:id="situacao" />
+               </toggleGroup>
+            </RadioButton>
+            <RadioButton fx:id="pendenteRadioButton" focusTraversable="false" layoutX="532.0" layoutY="171.0" mnemonicParsing="false" selected="true" text="Pendente" toggleGroup="$situacao" />
+            <Button fx:id="salvarButton" layoutX="678.0" layoutY="166.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="104.0" text="Salvar">
+               <graphic>
+                  <FontAwesomeIcon glyphName="SAVE" />
+               </graphic>
+            </Button>
+         </children>
+      </AnchorPane>
+   </children>
+</AnchorPane>

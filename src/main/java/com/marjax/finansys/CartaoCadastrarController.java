@@ -7,7 +7,6 @@ package com.marjax.finansys;
 import com.marjax.finansys.dao.CartaoDAO;
 import com.marjax.finansys.model.Cartao;
 import com.marjax.finansys.util.LocaleUtil;
-import com.marjax.finansys.util.MaskFieldUtil;
 import com.marjax.finansys.util.PreencherComboBox;
 import com.marjax.finansys.util.ValidationUtil;
 import com.marjax.finansys.util.ValorConverter;

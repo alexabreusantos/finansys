@@ -10,7 +10,7 @@
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane prefHeight="530.0" prefWidth="919.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.marjax.finansys.CartaoController">
+<AnchorPane prefHeight="530.0" prefWidth="919.0" xmlns="http://javafx.com/javafx/22" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.marjax.finansys.CartaoController">
    
     <children>
       <Pane layoutX="14.0" layoutY="14.0" prefHeight="59.0" prefWidth="894.0" styleClass="borda-pane">
@@ -26,7 +26,7 @@
                </font>
             </Label>
          </children></Pane>
-      <TableView id="cartaoTableView" fx:id="cartaoTableView" layoutX="12.0" layoutY="95.0" prefHeight="350.0" prefWidth="894.0">
+      <TableView id="cartaoTableView" fx:id="cartaoTableView" focusTraversable="false" layoutX="12.0" layoutY="95.0" prefHeight="350.0" prefWidth="894.0">
          <columns>
             <TableColumn id="codigoColuna" fx:id="codigoColuna" editable="false" prefWidth="59.0" resizable="false" sortable="false" style="-fx-alignment: CENTER;" text="Cód." />
             <TableColumn id="nomeColuna" fx:id="nomeColuna" editable="false" prefWidth="244.0" resizable="false" sortable="false" styleClass="nome" text="Nome" />
@@ -37,7 +37,7 @@
                   <TableColumn fx:id="limiteUsadoColuna" editable="false" prefWidth="125.0" resizable="false" sortable="false" styleClass="espaco-coluna" text="Usado" />
                </columns>
             </TableColumn>
-            <TableColumn prefWidth="75.0" text="Dia">
+            <TableColumn prefWidth="75.0" sortable="false" text="Dia">
                <columns>
                   <TableColumn fx:id="fechamentoColuna" editable="false" minWidth="0.0" prefWidth="108.0" resizable="false" sortable="false" styleClass="texto-centro" text="Fechamento" />
                   <TableColumn fx:id="vencimentoColuna" editable="false" minWidth="0.0" prefWidth="105.0" resizable="false" sortable="false" styleClass="texto-centro" text="Vencimento" />

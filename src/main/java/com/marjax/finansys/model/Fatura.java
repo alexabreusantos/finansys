@@ -17,9 +17,7 @@ public class Fatura {
     private Date periodo;
     private Double valor;
     private String situacao;
-    private Cartao cartao;
-    
-    
+    private Cartao cartao;   
     
     // Getters e Setters
     public Integer getCodigo() {

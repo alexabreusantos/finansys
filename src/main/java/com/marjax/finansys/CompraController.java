@@ -6,6 +6,7 @@ package com.marjax.finansys;
 
 import com.marjax.finansys.dao.CartaoDAO;
 import com.marjax.finansys.dao.CompraDAO;
+import com.marjax.finansys.dao.FaturaDAO;
 import com.marjax.finansys.model.Cartao;
 import com.marjax.finansys.model.Categoria;
 import com.marjax.finansys.model.Compra;
@@ -14,14 +15,21 @@ import com.marjax.finansys.model.Responsavel;
 import com.marjax.finansys.util.AlertUtil;
 import com.marjax.finansys.util.LocaleUtil;
 import com.marjax.finansys.util.PreencherComboBox;
-import com.marjax.finansys.util.SituacaoTableCell;
+import com.marjax.finansys.util.SituacaoTableCellCompra;
 import de.jensd.fx.glyphs.fontawesome.FontAwesomeIcon;
+import java.io.IOException;
 import java.net.URL;
+import java.sql.Date;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.time.LocalDate;
+import java.time.YearMonth;
 import java.time.format.DateTimeFormatter;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.ResourceBundle;
 import javafx.beans.property.SimpleStringProperty;
-import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
@@ -29,7 +37,10 @@ import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
 import javafx.collections.transformation.SortedList;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
@@ -39,6 +50,8 @@ import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.AnchorPane;
+import javafx.stage.Modality;
+import javafx.stage.Stage;
 
 /**
  * FXML Controller class
@@ -116,6 +129,10 @@ public class CompraController implements Initializable {
     private ComboBox<String> segundoFiltroComboBoxSituacao;
     @FXML
     private ComboBox<String> terceiroFiltroComboBoxSituacao;
+    @FXML
+    private ComboBox<String> mesFaturaComboBox;
+    @FXML
+    private ComboBox<Integer> anoFaturaComboBox;
 
     @FXML
     private FontAwesomeIcon iconePrimeiro;
@@ -125,8 +142,6 @@ public class CompraController implements Initializable {
     private FontAwesomeIcon iconePrimeiroSituacao;
     @FXML
     private FontAwesomeIcon iconeSegundoSituacao;
-    @FXML
-    private FontAwesomeIcon iconeTerceiroSituacao;
     @FXML
     private AnchorPane alimentacaoTotalPane;
 
@@ -162,10 +177,15 @@ public class CompraController implements Initializable {
     private Button colocarButton;
     @FXML
     private Button removerButton;
+    @FXML
+    private Button adicionarButton;
+    @FXML
+    private Button excluirButton;
 
     private CompraDAO dao;
     private CartaoDAO cartaoDAO;
-    Cartao cartao;
+    private Cartao cartao;
+    private FaturaDAO faturaDAO;
 
     private ObservableList<Compra> compras = FXCollections.observableArrayList();
     //private ObservableList<String> responsavelList = FXCollections.observableArrayList();
@@ -178,13 +198,26 @@ public class CompraController implements Initializable {
         novaInstanciaDAO();
         carregaComboBox();
         clickComboBox();
-
-        // Chame o método uma vez para inicializar o valor
+        //carregarComprasPorPeriodo();
+        parametroPesquisaCompra();
+        //verificarCompraParcelada();
+        carregarComprasPorPeriodo();
         atualizarSomaTotal();
         configurarTabela();
-        atualizarTotal();
         labelVisible();
         listinerComboBox();
+
+        YearMonth proximoMes = YearMonth.now().plusMonths(1);
+        java.sql.Date periodo = Date.valueOf(proximoMes.atDay(1));
+
+        boolean faturaExiste = faturaDAO.verificarFaturaExistente(7, periodo);
+
+        if (faturaExiste) {
+                      
+
+        } else {
+            
+        }
 
         responsavelAlimentacaoColuna.setCellValueFactory(cellData -> new javafx.beans.property.SimpleStringProperty(cellData.getValue()));
 
@@ -195,11 +228,6 @@ public class CompraController implements Initializable {
         alimentacaoTableView.setOnMouseClicked(event -> {
             if (event.getClickCount() == 1 || event.getClickCount() == 2) { // Verifica se é um clique único
                 TablePosition<String, ?> pos = alimentacaoTableView.getSelectionModel().getSelectedCells().get(0);
-                int row = pos.getRow();
-
-                // Obtém o valor da célula clicada
-                /*String valorClicado = alimentacaoTableView.getItems().get(row);
-                valorTotalFaturaLabel.setText(valorClicado);*/
                 enableLabelAlimentacao();
 
             } else {
@@ -216,6 +244,7 @@ public class CompraController implements Initializable {
             }
         });
 
+        adicionarButton.setOnAction(event -> abrirCadastrar());
     }
 
     private void atualizarValorTotalFaturaLabel(String responsavelSelecionado) {
@@ -433,7 +462,7 @@ public class CompraController implements Initializable {
 
         // Adiciona um listener ao ComboBox Cartao para detectar alterações
         totalCartaoComboBox.valueProperty().addListener((observable, oldValue, newValue) -> {
-            calcularTotalPorCartao(newValue.getNome());
+            calcularTotalPorCartao(newValue);
         });
 
         // Adiciona um listener ao ComboBox Categoria para detectar alterações
@@ -736,7 +765,6 @@ public class CompraController implements Initializable {
         });
 
         alimentacaoPessoasComboBox.valueProperty().addListener((obs, oldValue, newValue) -> ativarBotaoMais());
-
     }
 
     private void calcularTotalPorResponsavel(Responsavel responsavelSelecionado) {
@@ -768,8 +796,8 @@ public class CompraController implements Initializable {
         LocaleUtil.moedaBrasilLabel(total, totalCategoriaLabel);
     }
 
-    private void calcularTotalPorCartao(String nomeCartaoSelecionado) {
-        if (nomeCartaoSelecionado == null || "Selecione".equals(nomeCartaoSelecionado)) {
+    private void calcularTotalPorCartao(Cartao cartao) {
+        if (cartao == null || "Selecione".equals(cartao.getNome())) {
             totalCartaoLabel.setVisible(false); // Oculta o Label
             return;
         }
@@ -780,7 +808,7 @@ public class CompraController implements Initializable {
         for (Compra compra : compraTableView.getItems()) {
             // Obtém o objeto Fatura associado à compra
             Fatura fatura = compra.getFatura();
-            if (fatura != null && fatura.getCartao().getNome().equals(nomeCartaoSelecionado)) {
+            if (fatura != null && fatura.getCartao().getNome().equals(cartao.getNome())) {
                 // Adiciona o valor da compra ao total se o nome do cartão coincidir
                 total += compra.getValor();
             }
@@ -813,6 +841,7 @@ public class CompraController implements Initializable {
         dao = new CompraDAO();
         cartaoDAO = new CartaoDAO();
         cartao = new Cartao();
+        faturaDAO = new FaturaDAO();
     }
 
     private void labelVisible() {
@@ -881,20 +910,37 @@ public class CompraController implements Initializable {
         totalColuna.setCellValueFactory(new PropertyValueFactory<>("valorTotal"));
         LocaleUtil.moedaBrasilColuna(totalColuna);
         situacaoColuna.setCellValueFactory(new PropertyValueFactory<>("situacao"));
-        situacaoColuna.setCellFactory(col -> new SituacaoTableCell(dao));
-        //situacaoColuna.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getSituacao()));
+        situacaoColuna.setCellFactory(col -> new SituacaoTableCellCompra(dao));
 
-        // Carrega as compras do banco de dados e preenche o TableView
-        atualizarTabela();
     }
 
-    private void atualizarTotal() {
-        int total = dao.getTotal();
-        totalCadastroLabel.setText(total + " compras cadastradas!");
+    private void calcularColunaValorTotal() {
+        // Usando um Map para armazenar a soma dos valores por nome de cartão
+        Map<String, Double> somaPorCartao = new HashMap<>();
+
+        // Percorre todos os itens da TableView
+        for (Compra compra : compraTableView.getItems()) {
+            // Obtém o objeto Fatura associado à compra
+            Fatura fatura = compra.getFatura();
+            if (fatura != null) {
+                String nomeCartao = fatura.getCartao().getNome();
+                double valorCompra = compra.getValorTotal();
+                // Atualiza a soma total para o nome de cartão correspondente
+                somaPorCartao.put(nomeCartao, somaPorCartao.getOrDefault(nomeCartao, 0.0) + valorCompra);
+            }
+        }
+        // Exibe a soma dos valores para cada cartão
+        for (Map.Entry<String, Double> entrada : somaPorCartao.entrySet()) {
+            String nomeCartao = entrada.getKey();
+            Double soma = entrada.getValue();
+        }
     }
 
-    private void atualizarTabela() {
-        compras = FXCollections.observableArrayList(dao.getAllCompras());
+    // Método para carregar compras de acordo com o período da fatura
+    private void carregarComprasPorPeriodo() {
+        String periodoCompra = parametroPesquisaCompra();
+
+        compras = FXCollections.observableArrayList(dao.listarComprasPorPeriodo(periodoCompra));
 
         // Usar FilteredList para permitir a pesquisa
         FilteredList<Compra> filteredData = new FilteredList<>(compras, p -> true);
@@ -906,7 +952,6 @@ public class CompraController implements Initializable {
                 if (newValue == null || newValue.isEmpty()) {
                     return true;
                 }
-
                 String lowerCaseFilter = newValue.toLowerCase();
 
                 if (compra.getDescricao().toLowerCase().contains(lowerCaseFilter)) {
@@ -922,7 +967,6 @@ public class CompraController implements Initializable {
                 } else if (compra.getDataCompra().toLocalDate().format(DateTimeFormatter.ofPattern("dd/MM/yyyy")).contains(lowerCaseFilter)) {
                     return true; // Filtra pelo período formatado
                 }
-
                 return false; // Não corresponde a nenhum filtro
             });
         });
@@ -932,13 +976,17 @@ public class CompraController implements Initializable {
 
         compraTableView.setItems(sortedData);
         atualizarSomaTotal();
+        atualizarValorFatura();
+        calcularColunaValorTotal();
+        reloadComboBox();
     }
 
     // Método para calcular e atualizar a soma total
     private void atualizarSomaTotal() {
-
         double somaTotal = compraTableView.getItems().stream().mapToDouble(Compra::getValor).sum();
         LocaleUtil.moedaBrasilLabel(somaTotal, totalGeralLabel);
+        int total = compraTableView.getItems().size();
+        totalCadastroLabel.setText("Total de compras no lançamento selecionado: " + total);
     }
 
     private void carregaComboBox() {
@@ -951,6 +999,8 @@ public class CompraController implements Initializable {
         PreencherComboBox.comboBoxCartaoString(totalFaturaCartaoComboBox);
         PreencherComboBox.comboBoxPessoas(alimentacaoPessoasComboBox);
         PreencherComboBox.comboBoxPessoaCartaoSituacao(filtroComboBoxSituacao);
+        PreencherComboBox.preencherMeses(mesFaturaComboBox);
+        PreencherComboBox.preencherAnosComFaturas(anoFaturaComboBox);
     }
 
     private void clickComboBox() {
@@ -963,9 +1013,19 @@ public class CompraController implements Initializable {
         segundoFiltroComboBoxSituacao.setOnAction(event -> {
             filtroCalculoSituacao();
         });
-        
+
         terceiroFiltroComboBoxSituacao.setOnAction(event -> {
             filtroCalculoSituacao();
+        });
+
+        mesFaturaComboBox.getSelectionModel().selectedItemProperty().addListener((ObservableValue<? extends String> obs, String oldFatura, String newFatura) -> {
+            parametroPesquisaCompra();
+            carregarComprasPorPeriodo();
+        });
+
+        anoFaturaComboBox.getSelectionModel().selectedItemProperty().addListener((ObservableValue<? extends Integer> obs, Integer oldAno, Integer newAno) -> {
+            parametroPesquisaCompra();
+            carregarComprasPorPeriodo();
         });
     }
 
@@ -1044,9 +1104,9 @@ public class CompraController implements Initializable {
 
                     // Se o total for maior que 0, exibe o label e mostra o valor total
                     if (total > 0) {
-                        LocaleUtil.moedaBrasilLabel(total, totalFiltrosLabelSituacao);                        
+                        LocaleUtil.moedaBrasilLabel(total, totalFiltrosLabelSituacao);
                     } else {
-                        LocaleUtil.moedaBrasilLabel(total, totalFiltrosLabelSituacao);                        
+                        LocaleUtil.moedaBrasilLabel(total, totalFiltrosLabelSituacao);
                     }
                 } else {
                     // Se um dos filtros não estiver selecionado, esconde o Label
@@ -1056,6 +1116,118 @@ public class CompraController implements Initializable {
             default:
                 throw new AssertionError();
         }
-
     }
+
+    private void abrirCadastrar() {
+        try {
+            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("view/compraCadastrar.fxml"));
+            Parent root = fxmlLoader.load();
+            Stage stage = new Stage();
+            root.getStylesheets().add(css);
+            stage.setTitle("Cadastrar Compra");
+            stage.setScene(new Scene(root));
+            stage.setMaximized(false);
+            stage.setResizable(false);
+
+            // Define o estágio secundário como modal e bloqueia a interação com outras janelas
+            stage.initModality(Modality.WINDOW_MODAL);
+            stage.initOwner(adicionarButton.getScene().getWindow());
+            stage.setOnHidden(event -> carregarComprasPorPeriodo());
+            stage.showAndWait();
+        } catch (IOException e) {
+        }
+    }
+
+    private void reloadComboBox() {
+        PreencherComboBox.ComboBoxCartoes(totalCartaoComboBox);
+        PreencherComboBox.comboBoxPessoaCartaoSituacao(filtroComboBoxSituacao);
+        PreencherComboBox.comboBoxResponsaveis(totalPessoaComboBox);
+        PreencherComboBox.comboBoxCategorias(totalCategoriaComboBox);
+        PreencherComboBox.comboBoxSituacao(totalSituacaoComboBox);
+        filtroComboBox.setValue("Selecione");
+        PreencherComboBox.comboBoxQuantidadePessoas(quantidadePessoasComboBox);
+        alimentacaoList.clear();
+        alimentacaoTableView.setDisable(true);
+    }
+
+    private void atualizarValorFatura() {
+        // Usando um Map para armazenar a soma dos valores por nome de cartão
+        Map<String, Double> somaPorCartao = new HashMap<>();
+
+        String periodoSelecionado = parametroPesquisaCompra(); // Exemplo: "2024-09"
+
+        Date periodoExibido = null; // Variável para armazenar o período como java.sql.Date
+
+        try {
+            // Converte a String "2024-09" para um objeto java.sql.Date
+            SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM");
+            java.util.Date utilDate = dateFormat.parse(periodoSelecionado); // Converte para java.util.Date
+            periodoExibido = new Date(utilDate.getTime()); // Converte para java.sql.Date
+        } catch (ParseException e) {
+            return; // Sai do método se ocorrer erro de conversão
+        }
+
+        // Percorre todos os itens da TableView
+        for (Compra compra : compraTableView.getItems()) {
+            // Obtém o objeto Fatura associado à compra
+            Fatura fatura = compra.getFatura();
+            if (fatura != null) {
+                String nomeCartao = fatura.getCartao().getNome();
+                double valorCompra = compra.getValor();
+
+                // Atualiza a soma total para o nome de cartão correspondente
+                somaPorCartao.put(nomeCartao, somaPorCartao.getOrDefault(nomeCartao, 0.0) + valorCompra);
+
+                // Opcional: se precisar atualizar o períodoExibido com base na primeira fatura
+                Date periodo = fatura.getPeriodo();
+                if (periodoExibido == null) {
+                    periodoExibido = periodo; // Armazena o período na primeira iteração
+                }
+            }
+        }
+
+        // Exibe a soma dos valores para cada cartão e atualiza a fatura no banco de dados
+        for (Map.Entry<String, Double> entrada : somaPorCartao.entrySet()) {
+            String nomeCartao = entrada.getKey();
+            Double soma = entrada.getValue();
+
+            // Busca o código do cartão no banco de dados
+            int codigoCartao = cartaoDAO.buscaCodigoCartao(nomeCartao);
+
+            // Busca a fatura pelo código do cartão e período
+            Fatura novaFatura = faturaDAO.buscarFaturaPorCartao(codigoCartao, periodoExibido);
+
+            // Atualiza o valor da fatura no banco de dados
+            if (novaFatura != null) {
+                faturaDAO.atualizarValor(soma, novaFatura.getCodigo());
+            }
+        }
+    }
+
+    private String parametroPesquisaCompra() {
+        Map<String, String> mesesMap = new HashMap<>();
+        mesesMap.put("Janeiro", "01");
+        mesesMap.put("Fevereiro", "02");
+        mesesMap.put("Março", "03");
+        mesesMap.put("Abril", "04");
+        mesesMap.put("Maio", "05");
+        mesesMap.put("Junho", "06");
+        mesesMap.put("Julho", "07");
+        mesesMap.put("Agosto", "08");
+        mesesMap.put("Setembro", "09");
+        mesesMap.put("Outubro", "10");
+        mesesMap.put("Novembro", "11");
+        mesesMap.put("Dezembro", "12");
+
+        // Pegando o valor selecionado do ComboBox
+        int ano = anoFaturaComboBox.getValue(); // Exemplo: 2024
+        String mesSelecionado = mesFaturaComboBox.getValue(); // Exemplo: "Setembro"
+        String mesNumero = mesesMap.get(mesSelecionado); // Resultado: "09"
+
+        // Criando a string no formato "2024-09"
+        String periodoSelecionado = ano + "-" + mesNumero;
+
+        return periodoSelecionado;
+    }
+
 }

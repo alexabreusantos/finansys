@@ -23,6 +23,14 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Other/CascadeStyleSheet.css to ed
     -fx-effect: dropshadow(one-pass-box, rgba(0, 0, 0, 0.2), 4, 0, 0, 2);
 }
 
+.fundo-texto{
+    -fx-background-color: black;
+    -fx-color: white;
+    -fx-padding: 5px 8px 5px 8px;
+    -fx-background-radius: 3px;
+    -fx-text-fill: white;
+}
+
 .btn-menu{
    -fx-background-color: -fx-my-menu-color; 
 }

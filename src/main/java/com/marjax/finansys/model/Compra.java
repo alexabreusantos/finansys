@@ -23,6 +23,7 @@ public class Compra {
     private Date dataCompra;
     private Double valorTotal;
     private String situacao;
+    private String tipoCompra;
 
     public Integer getCodigo() {
         return codigo;
@@ -110,5 +111,13 @@ public class Compra {
 
     public void setSituacao(String situacao) {
         this.situacao = situacao;
+    }
+    
+    public String getTipoCompra() {
+        return tipoCompra;
+    }
+
+    public void setTipoCompra(String tipoCompra) {
+        this.tipoCompra = tipoCompra;
     }
 }

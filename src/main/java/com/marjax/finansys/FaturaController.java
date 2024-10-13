@@ -8,12 +8,14 @@ import com.marjax.finansys.dao.FaturaDAO;
 import com.marjax.finansys.model.Fatura;
 import com.marjax.finansys.util.AlertUtil;
 import com.marjax.finansys.util.LocaleUtil;
+import com.marjax.finansys.util.SituacaoTableCellFatura;
 import java.io.IOException;
 import java.net.URL;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.Optional;
 import java.util.ResourceBundle;
+import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
@@ -67,6 +69,12 @@ public class FaturaController implements Initializable {
     private TableColumn<Fatura, String> cartaoColuna;
 
     @FXML
+    private TableColumn<Fatura, Integer> fechamentoColuna;
+
+    @FXML
+    private TableColumn<Fatura, Integer> vencimentoColuna;
+
+    @FXML
     private Button adicionarButton;
 
     @FXML
@@ -79,7 +87,8 @@ public class FaturaController implements Initializable {
     private final String css = "/com/marjax/finansys/style/main.css";
 
     @Override
-    public void initialize(URL url, ResourceBundle rb) {
+    public void initialize(URL url, ResourceBundle rb) {        
+
         codigoColuna.setCellValueFactory(new PropertyValueFactory<>("codigo"));
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM/yyyy");
         periodoColuna.setCellValueFactory(cellData -> {
@@ -91,10 +100,17 @@ public class FaturaController implements Initializable {
         valorColuna.setCellValueFactory(new PropertyValueFactory<>("valor"));
         LocaleUtil.moedaBrasilColuna(valorColuna);
         situacaoColuna.setCellValueFactory(new PropertyValueFactory<>("situacao"));
+        situacaoColuna.setCellFactory(col -> new SituacaoTableCellFatura(dao));
         cartaoColuna.setCellValueFactory(cellData -> {
             return new SimpleStringProperty(cellData.getValue().getCartao().getNome());
         });
-        
+        fechamentoColuna.setCellValueFactory(cellData -> {
+            return new SimpleObjectProperty(cellData.getValue().getCartao().getFechamento());
+        });
+        vencimentoColuna.setCellValueFactory(cellData -> {
+            return new SimpleObjectProperty(cellData.getValue().getCartao().getVencimento());
+        });
+
         faturaTableView.setOnMouseClicked(event -> {
             if (event.getClickCount() == 2) { // Duplo clique
                 Fatura selectedFatura = faturaTableView.getSelectionModel().getSelectedItem();
@@ -172,14 +188,13 @@ public class FaturaController implements Initializable {
             stage.setScene(new Scene(root));
             stage.setMaximized(false);
             stage.setResizable(false);
-           
+
             // Define o estágio secundário como modal e bloqueia a interação com outras janelas
             stage.initModality(Modality.WINDOW_MODAL);
             stage.initOwner(adicionarButton.getScene().getWindow());
             stage.setOnHidden(event -> atualizarTableView());
             stage.showAndWait();
-        } catch (IOException e) {
-        }
+        } catch (IOException e) {}
     }
 
     private void excluir() {
@@ -211,24 +226,24 @@ public class FaturaController implements Initializable {
             AlertUtil.showWarningAlert("Aviso", null, "Nenhuma fatura selecionada.");
         }
     }
-    
+
     private void abrirTelaEdicao(Fatura fatura) {
 
         try {
             LocalDate localDate = fatura.getPeriodo().toLocalDate();
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM/yyyy");
             String dataFormatada = localDate.format(formatter);
-            
+
             FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("view/faturaEditar.fxml"));
             Parent root = fxmlLoader.load();
             Stage stage = new Stage();
             root.getStylesheets().add(css);
-            stage.setTitle("Editar fatura do cartão " + fatura.getCartao().getNome() +" do Período " + dataFormatada);
+            stage.setTitle("Editar fatura do cartão " + fatura.getCartao().getNome() + " do Período " + dataFormatada);
             stage.setScene(new Scene(root));
             stage.setMaximized(false);
             stage.setResizable(false);
 
-            FaturaEditarController controller = fxmlLoader.getController();            
+            FaturaEditarController controller = fxmlLoader.getController();
             controller.setFatura(fatura);
 
             // Define o estágio secundário como modal e bloqueia a interação com outras janelas

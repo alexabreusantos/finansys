@@ -33,8 +33,6 @@ public class FaturaEditarController implements Initializable {
 
     private Fatura fatura;
 
-    private FaturaController faturaController;
-    
     @FXML
     private Button salvarButton;
 
@@ -67,7 +65,8 @@ public class FaturaEditarController implements Initializable {
 
         if ("Paga".equals(fatura.getSituacao())) {
             pagaRadioButton.setSelected(true);
-        } else {
+        }
+        if ("Pendente".equals(fatura.getSituacao())) {
             pendenteRadioButton.setSelected(true);
         }
 
@@ -84,30 +83,31 @@ public class FaturaEditarController implements Initializable {
         String mesNome = ConverterDate.nomeMes(fatura.getPeriodo());
         mesComboBox.setValue(mesNome);
 
-        PreencherComboBox.preencherAnos(anoComboBox); 
+        PreencherComboBox.preencherAnos(anoComboBox);
         SimpleDateFormat anoPeriodo = new SimpleDateFormat("yyyy");
         String anoValor = anoPeriodo.format(fatura.getPeriodo());
         Integer anoSelecionado = Integer.valueOf(anoValor);
         anoComboBox.setValue(anoSelecionado);
-       
+
         // Percorre os itens do ComboBox para encontrar o ano correspondente
-        
     }
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         dao = new FaturaDAO();
         salvarButton.setOnAction(event -> salvarEdicao());
+
+        pagaRadioButton.setToggleGroup(situacao);
+        pendenteRadioButton.setToggleGroup(situacao);
     }
 
     @FXML
     private void salvarEdicao() {
         if (fatura != null) {
-            int codigo = Integer.parseInt(codigoTextField.getText());            
+            int codigo = Integer.parseInt(codigoTextField.getText());
             Double valor = 0.0;
             Cartao cartao = cartaoComboBox.getValue();
-            Date periodo = ConverterDate.formatarDataParaDate(mesComboBox, anoComboBox,cartao.getFechamento() );
-            RadioButton selectedRadioButton = (RadioButton) situacao.getSelectedToggle();
+            Date periodo = ConverterDate.formatarDataParaDate(mesComboBox, anoComboBox, cartao.getFechamento());
 
             boolean[] hasError = {false};
             // Valida os ComboBoxes na ordem desejada
@@ -128,7 +128,7 @@ public class FaturaEditarController implements Initializable {
             }
 
             // Verificar se o nome já existe no banco de dados
-            if (dao.existe(fatura.getPeriodo(), fatura.getCartao().getCodigo())) {
+            if (dao.existe(fatura)) {
                 AlertUtil.showWarningAlert("Fatura já existente", "A fatura já está em uso.", "Por favor, informe dados diferente.");
                 return;
             }
@@ -136,7 +136,12 @@ public class FaturaEditarController implements Initializable {
             if (validaMes && validaAno && validaCartao && !hasError[0]) {
                 fatura.setPeriodo(periodo);
                 fatura.setValor(valor);
-                fatura.setSituacao(selectedRadioButton.getText());
+                RadioButton selectedRadioButton = (RadioButton) situacao.getSelectedToggle();
+                if (selectedRadioButton != null) {
+                    String selectedText = selectedRadioButton.getText();
+                    fatura.setSituacao(selectedText);
+                }
+
                 fatura.setCartao(cartao);
                 try {
                     fatura.setCodigo(codigo);
@@ -149,7 +154,7 @@ public class FaturaEditarController implements Initializable {
                 boolean success = dao.atualizar(fatura);
 
                 if (success) {
-                    AlertUtil.showInformationAlert("Sucesso", null, "Fatura atualizada com sucesso.");                    
+                    AlertUtil.showInformationAlert("Sucesso", null, "Fatura atualizada com sucesso.");
                     ((Stage) salvarButton.getScene().getWindow()).close();//fecha janela
                 } else {
                     AlertUtil.showErrorAlert("Erro", "Erro ao salvar", "Não foi possível atualizar a fatura.");

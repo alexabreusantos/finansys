@@ -10,36 +10,82 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane id="AnchorPane" prefHeight="768.0" prefWidth="1366.0" xmlns="http://javafx.com/javafx/22" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.marjax.finansys.CompraController">
+<AnchorPane id="AnchorPane" prefHeight="630.0" prefWidth="1330.0" xmlns="http://javafx.com/javafx/22" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.marjax.finansys.CompraController">
    <children>
-      <AnchorPane layoutX="14.0" layoutY="14.0" prefHeight="62.0" prefWidth="1338.0" styleClass="borda-pane">
+      <AnchorPane layoutX="8.0" layoutY="8.0" prefHeight="68.0" prefWidth="1318.0" styleClass="borda-pane">
          <children>
-            <FontAwesomeIcon glyphName="SEARCH" layoutX="14.0" layoutY="37.0" size="1.5em" />
-            <TextField id="textoPesquisar" fx:id="pesquisarTextField" focusTraversable="false" layoutX="37.0" layoutY="19.0" prefHeight="25.0" prefWidth="315.0" promptText="Pesquisar..." style="-fx-border-color: d3d3d3;" />
-            <Label id="totalCadastroLabel" fx:id="totalCadastroLabel" layoutX="1164.0" layoutY="23.0" text="2 compras cadastradas!" AnchorPane.bottomAnchor="22.0" AnchorPane.rightAnchor="14.0">
+            <Label focusTraversable="false" layoutX="14.0" layoutY="8.0" text="Lançamentos">
+               <font>
+                  <Font name="System Bold" size="12.0" />
+               </font>
                <graphic>
-                  <FontAwesomeIcon glyphName="DATABASE" />
+                  <FontAwesomeIcon glyphName="CALENDAR" />
                </graphic>
+            </Label>
+            <ComboBox fx:id="mesFaturaComboBox" focusTraversable="false" layoutX="140.0" layoutY="30.0" prefWidth="150.0" />
+            <ComboBox fx:id="anoFaturaComboBox" focusTraversable="false" layoutX="14.0" layoutY="30.0" prefHeight="25.0" prefWidth="119.0" />
+            <FontAwesomeIcon glyphName="SEARCH" layoutX="317.0" layoutY="49.0" size="1.5em" />
+            <TextField id="textoPesquisar" fx:id="pesquisarTextField" focusTraversable="false" layoutX="341.0" layoutY="30.0" prefHeight="27.0" prefWidth="230.0" promptText="Pesquisar..." style="-fx-border-color: d3d3d3;" />
+            <Label id="totalCadastroLabel" fx:id="dataLabel" layoutX="588.0" layoutY="8.0" text="Filtros">
+               <graphic>
+                  <FontAwesomeIcon glyphName="FILTER" />
+               </graphic>
+               <font>
+                  <Font name="System Bold" size="12.0" />
+               </font>
+            </Label>
+            <ComboBox fx:id="filtroComboBoxSituacao" focusTraversable="false" layoutX="588.0" layoutY="30.0" prefHeight="25.0" prefWidth="179.0" promptText="Selecione" />
+            <Label id="totalCadastroLabel" fx:id="primeiroFiltroLabelSituacao" focusTraversable="false" layoutX="778.0" layoutY="8.0" text="Pessoa" visible="false">
+               <graphic>
+                  <FontAwesomeIcon fx:id="iconePrimeiroSituacao" glyphName="USER" />
+               </graphic>
+               <font>
+                  <Font name="System Bold" size="12.0" />
+               </font>
+            </Label>
+            <ComboBox fx:id="primeiroFiltroComboBoxSituacao" disable="true" focusTraversable="false" layoutX="778.0" layoutY="30.0" prefHeight="25.0" prefWidth="158.0" promptText="Selecione" />
+            <Label id="totalCadastroLabel" fx:id="segundoFiltroLabelSituacao" focusTraversable="false" layoutX="948.0" layoutY="8.0" text="Situação" visible="false">
+               <graphic>
+                  <FontAwesomeIcon fx:id="iconeSegundoSituacao" glyphName="CHECK_SQUARE" />
+               </graphic>
+               <font>
+                  <Font name="System Bold" size="12.0" />
+               </font>
+            </Label>
+            <ComboBox fx:id="segundoFiltroComboBoxSituacao" disable="true" focusTraversable="false" layoutX="948.0" layoutY="30.0" prefHeight="25.0" prefWidth="123.0" promptText="Selecione" />
+            <Label id="totalCadastroLabel" fx:id="terceiroFiltroLabelSituacao" focusTraversable="false" layoutX="1084.0" layoutY="8.0" text="Situação" visible="false">
+               <graphic>
+                  <FontAwesomeIcon fx:id="iconeTerceiroSituacao" glyphName="CHECK_SQUARE" />
+               </graphic>
+               <font>
+                  <Font name="System Bold" size="12.0" />
+               </font>
+            </Label>
+            <ComboBox fx:id="terceiroFiltroComboBoxSituacao" disable="true" focusTraversable="false" layoutX="1084.0" layoutY="30.0" prefHeight="25.0" prefWidth="123.0" promptText="Selecione" />
+            <Label id="totalCadastroLabel" fx:id="totalFiltrosLabelSituacao" focusTraversable="false" layoutX="1224.0" layoutY="30.0" styleClass="fundo-texto" text="R$ 150,00" visible="false">
+               <font>
+                  <Font name="System Bold" size="12.0" />
+               </font>
             </Label>
          </children>
       </AnchorPane>
-      <AnchorPane layoutX="17.0" layoutY="99.0" prefHeight="512.0" prefWidth="1338.0" styleClass="borda-pane">
+      <AnchorPane layoutX="8.0" layoutY="82.0" prefHeight="480.0" prefWidth="1318.0" styleClass="borda-pane">
          <children>
-            <TableView fx:id="compraTableView" layoutX="8.0" layoutY="136.0" prefHeight="360.0" prefWidth="1068.0" AnchorPane.leftAnchor="8.0" AnchorPane.rightAnchor="262.0">
+            <TableView fx:id="compraTableView" focusTraversable="false" layoutX="8.0" layoutY="135.0" prefHeight="337.0" prefWidth="1045.0" AnchorPane.leftAnchor="8.0" AnchorPane.rightAnchor="270.0">
                <columns>
-                  <TableColumn fx:id="codigoColuna" editable="false" prefWidth="66.0" resizable="false" sortable="false" styleClass="texto-centro" text="Cód." />
-                  <TableColumn fx:id="descricaoColuna" editable="false" prefWidth="186.0" resizable="false" sortable="false" styleClass="nome" text="Descrição" />
-                  <TableColumn fx:id="responsavelColuna" editable="false" prefWidth="162.0" resizable="false" sortable="false" styleClass="nome" text="Responsável" />
-                  <TableColumn fx:id="cartaoColuna" editable="false" prefWidth="115.0" resizable="false" sortable="false" styleClass="nome" text="Cartão" />
-                  <TableColumn fx:id="valorColuna" editable="false" prefWidth="96.0" resizable="false" sortable="false" styleClass="nome" text="Valor" />
-                  <TableColumn fx:id="parcelaColuna" editable="false" prefWidth="64.0" resizable="false" sortable="false" styleClass="texto-centro" text="Parcela" />
-                  <TableColumn fx:id="categoriaColuna" editable="false" prefWidth="144.0" resizable="false" sortable="false" styleClass="nome" text="Categoria" />
-                  <TableColumn fx:id="dataColuna" editable="false" prefWidth="78.0" resizable="false" sortable="false" styleClass="texto-centro" text="Data" />
-                  <TableColumn fx:id="totalColuna" editable="false" minWidth="0.0" prefWidth="96.0" resizable="false" sortable="false" styleClass="nome" text="Valor Total" />
-                  <TableColumn fx:id="situacaoColuna" editable="false" prefWidth="57.0" resizable="false" sortable="false" styleClass="texto-centro" text="Status" />
+                  <TableColumn fx:id="codigoColuna" editable="false" prefWidth="54.0" resizable="false" sortable="false" styleClass="texto-centro" text="Cód." />
+                  <TableColumn fx:id="descricaoColuna" editable="false" prefWidth="200.0" resizable="false" sortable="false" styleClass="nome" text="Descrição" />
+                  <TableColumn fx:id="responsavelColuna" editable="false" prefWidth="142.0" resizable="false" sortable="false" styleClass="nome" text="Responsável" />
+                  <TableColumn fx:id="cartaoColuna" editable="false" prefWidth="124.0" resizable="false" sortable="false" styleClass="nome" text="Cartão" />
+                  <TableColumn fx:id="valorColuna" editable="false" prefWidth="97.0" resizable="false" sortable="false" styleClass="nome" text="Valor" />
+                  <TableColumn fx:id="parcelaColuna" editable="false" prefWidth="58.0" resizable="false" sortable="false" styleClass="texto-centro" text="Parcela" />
+                  <TableColumn fx:id="categoriaColuna" editable="false" prefWidth="126.0" resizable="false" sortable="false" styleClass="nome" text="Categoria" />
+                  <TableColumn fx:id="dataColuna" editable="false" prefWidth="81.0" resizable="false" sortable="false" styleClass="texto-centro" text="Data" />
+                  <TableColumn fx:id="totalColuna" editable="false" minWidth="0.0" prefWidth="99.0" resizable="false" sortable="false" styleClass="nome" text="Valor Total" />
+                  <TableColumn fx:id="situacaoColuna" editable="false" prefWidth="55.0" resizable="false" sortable="false" styleClass="texto-centro" text="Status" />
                </columns>
             </TableView>
-            <TableView fx:id="alimentacaoTableView" disable="true" focusTraversable="false" layoutX="1085.0" layoutY="136.0" prefHeight="167.0" prefWidth="246.0">
+            <TableView fx:id="alimentacaoTableView" disable="true" focusTraversable="false" layoutX="1062.0" layoutY="135.0" prefHeight="110.0" prefWidth="246.0">
               <columns>
                 <TableColumn fx:id="responsavelAlimentacaoColuna" prefWidth="244.0" styleClass="nome" text="Responsável" />
               </columns>
@@ -50,7 +96,7 @@
                </graphic>
             </Label>
             <ComboBox fx:id="totalPessoaComboBox" focusTraversable="false" layoutX="14.0" layoutY="48.0" prefHeight="25.0" prefWidth="133.0" promptText="Selecione" />
-            <Label fx:id="totalPessoaLabel" focusTraversable="false" layoutX="17.0" layoutY="83.0" text="0" visible="false">
+            <Label fx:id="totalPessoaLabel" focusTraversable="false" layoutX="17.0" layoutY="83.0" styleClass="fundo-texto" text="0" visible="false">
                <font>
                   <Font name="System Bold" size="14.0" />
                </font>
@@ -61,7 +107,7 @@
                </graphic>
             </Label>
             <ComboBox fx:id="totalCartaoComboBox" focusTraversable="false" layoutX="154.0" layoutY="48.0" prefHeight="25.0" prefWidth="145.0" promptText="Selecione" />
-            <Label fx:id="totalCartaoLabel" focusTraversable="false" layoutX="157.0" layoutY="83.0" text="0" visible="false">
+            <Label fx:id="totalCartaoLabel" focusTraversable="false" layoutX="157.0" layoutY="83.0" styleClass="fundo-texto" text="0" visible="false">
                <font>
                   <Font name="System Bold" size="14.0" />
                </font>
@@ -72,7 +118,7 @@
                </graphic>
             </Label>
             <ComboBox fx:id="totalCategoriaComboBox" focusTraversable="false" layoutX="307.0" layoutY="47.0" prefHeight="25.0" prefWidth="145.0" promptText="Selecione" />
-            <Label fx:id="totalCategoriaLabel" focusTraversable="false" layoutX="311.0" layoutY="82.0" text="0" visible="false">
+            <Label fx:id="totalCategoriaLabel" focusTraversable="false" layoutX="311.0" layoutY="83.0" styleClass="fundo-texto" text="0" visible="false">
                <font>
                   <Font name="System Bold" size="14.0" />
                </font>
@@ -83,7 +129,7 @@
                </graphic>
             </Label>
             <ComboBox fx:id="totalSituacaoComboBox" focusTraversable="false" layoutX="461.0" layoutY="47.0" prefHeight="25.0" prefWidth="119.0" promptText="Selecione" />
-            <Label fx:id="totalSituacaoLabel" focusTraversable="false" layoutX="464.0" layoutY="81.0" text="0" visible="false">
+            <Label fx:id="totalSituacaoLabel" focusTraversable="false" layoutX="464.0" layoutY="83.0" styleClass="fundo-texto" text="0" visible="false">
                <font>
                   <Font name="System Bold" size="14.0" />
                </font>
@@ -106,50 +152,50 @@
                </graphic>
             </Label>
             <ComboBox fx:id="segundoFiltroComboBox" disable="true" focusTraversable="false" layoutX="884.0" layoutY="48.0" prefHeight="25.0" prefWidth="133.0" promptText="Selecione" />
-            <Label fx:id="totalFiltrosLabel" focusTraversable="false" layoutX="597.0" layoutY="91.0" text="0" visible="false">
+            <Label fx:id="totalFiltrosLabel" focusTraversable="false" layoutX="597.0" layoutY="83.0" styleClass="fundo-texto" text="0" visible="false">
                <font>
                   <Font name="System Bold" size="14.0" />
                </font>
             </Label>
-            <Label layoutX="1084.0" layoutY="24.0" text="Nº de Pessoas">
+            <Label layoutX="1062.0" layoutY="24.0" text="Nº de Pessoas">
                <graphic>
                   <FontAwesomeIcon glyphName="USERS" />
                </graphic>
             </Label>
-            <ComboBox fx:id="quantidadePessoasComboBox" focusTraversable="false" layoutX="1084.0" layoutY="48.0" prefHeight="25.0" prefWidth="101.0" promptText="Selecione" />
-            <Label fx:id="escolhaPessoaLabel" disable="true" focusTraversable="false" layoutX="1197.0" layoutY="24.0" text="Escolha das Pessoas">
+            <ComboBox fx:id="quantidadePessoasComboBox" focusTraversable="false" layoutX="1062.0" layoutY="48.0" prefHeight="25.0" prefWidth="101.0" promptText="Selecione" />
+            <Label fx:id="escolhaPessoaLabel" disable="true" focusTraversable="false" layoutX="1173.0" layoutY="24.0" text="Escolha das Pessoas">
                <graphic>
                   <FontAwesomeIcon glyphName="USERS" />
                </graphic>
             </Label>
-            <ComboBox fx:id="alimentacaoPessoasComboBox" disable="true" focusTraversable="false" layoutX="1197.0" layoutY="48.0" prefHeight="25.0" prefWidth="133.0" promptText="Selecione" />
+            <ComboBox fx:id="alimentacaoPessoasComboBox" disable="true" focusTraversable="false" layoutX="1173.0" layoutY="48.0" prefHeight="25.0" prefWidth="126.0" promptText="Selecione" />
             <Label fx:id="nomePessoaLabel1" layoutX="1088.0" layoutY="93.0" text="Cálculo de Alimentação">
                <font>
                   <Font name="System Bold" size="12.0" />
                </font>
             </Label>
-            <Button fx:id="colocarButton" disable="true" layoutX="1267.0" layoutY="89.0" mnemonicParsing="false">
+            <Button fx:id="colocarButton" disable="true" layoutX="1244.0" layoutY="90.0" mnemonicParsing="false">
                <graphic>
                   <FontAwesomeIcon glyphName="PLUS" />
                </graphic>
             </Button>
-            <Button fx:id="removerButton" disable="true" focusTraversable="false" layoutX="1301.0" layoutY="89.0" mnemonicParsing="false">
+            <Button fx:id="removerButton" disable="true" focusTraversable="false" layoutX="1278.0" layoutY="90.0" mnemonicParsing="false">
                <graphic>
                   <FontAwesomeIcon glyphName="MINUS" />
                </graphic>
             </Button>
-            <AnchorPane fx:id="alimentacaoTotalPane" layoutX="1086.0" layoutY="310.0" prefHeight="185.0" prefWidth="246.0" styleClass="borda-pane" visible="false">
+            <AnchorPane fx:id="alimentacaoTotalPane" layoutX="1062.0" layoutY="252.0" prefHeight="218.0" prefWidth="246.0" styleClass="borda-pane" visible="false">
                <children>
-                  <Label fx:id="totalFaturaLabel" focusTraversable="false" layoutX="8.0" layoutY="2.0" prefHeight="41.0" prefWidth="230.0" text="Total Fatura de Alex dividindo a Alimentação por 1 pessoa:" visible="false" wrapText="true" />
-                  <Label fx:id="valorTotalFaturaLabel" focusTraversable="false" layoutX="8.0" layoutY="45.0" text="R$ 450,00" visible="false">
+                  <Label fx:id="totalFaturaLabel" focusTraversable="false" layoutX="8.0" layoutY="14.0" prefHeight="41.0" prefWidth="230.0" text="Total Fatura de Alex dividindo a Alimentação por 1 pessoa:" visible="false" wrapText="true" />
+                  <Label fx:id="valorTotalFaturaLabel" focusTraversable="false" layoutX="8.0" layoutY="64.0" styleClass="fundo-texto" text="R$ 450,00" visible="false">
                      <font>
                         <Font name="System Bold" size="12.0" />
                      </font>
                   </Label>
-                  <Label fx:id="totalFaturaCartaoLabel" focusTraversable="false" layoutX="8.0" layoutY="84.0" text="Total Fatura por Cartão:" visible="false" wrapText="true" />
-                  <ComboBox fx:id="totalFaturaCartaoComboBox" focusTraversable="false" layoutX="8.0" layoutY="105.0" prefHeight="25.0" prefWidth="145.0" promptText="Selecione" visible="false" />
-                  <Label fx:id="totalAlimentacaoCartaoLabel" focusTraversable="false" layoutX="8.0" layoutY="137.0" text="Total Alimentação por Cartão:" visible="false" />
-                  <Label fx:id="valorFaturaCartaoLabel" focusTraversable="false" layoutX="8.0" layoutY="160.0" text="R$ 00,00" visible="false">
+                  <Label fx:id="totalFaturaCartaoLabel" focusTraversable="false" layoutX="8.0" layoutY="109.0" text="Total Fatura por Cartão:" visible="false" wrapText="true" />
+                  <ComboBox fx:id="totalFaturaCartaoComboBox" focusTraversable="false" layoutX="8.0" layoutY="130.0" prefHeight="25.0" prefWidth="145.0" promptText="Selecione" visible="false" />
+                  <Label fx:id="totalAlimentacaoCartaoLabel" focusTraversable="false" layoutX="8.0" layoutY="162.0" text="Total Alimentação por Cartão:" visible="false" />
+                  <Label fx:id="valorFaturaCartaoLabel" focusTraversable="false" layoutX="8.0" layoutY="187.0" styleClass="fundo-texto" text="R$ 00,00" visible="false">
                      <font>
                         <Font name="System Bold" size="12.0" />
                      </font>
@@ -158,58 +204,32 @@
             </AnchorPane>
          </children>
       </AnchorPane>
-      <AnchorPane layoutX="14.0" layoutY="656.0" prefHeight="98.0" prefWidth="1338.0" styleClass="borda-pane">
+      <AnchorPane layoutX="8.0" layoutY="572.0" prefHeight="50.0" prefWidth="1318.0" styleClass="borda-pane">
          <children>
-            <Label id="totalCadastroLabel" fx:id="dataLabel" layoutX="14.0" layoutY="14.0" text="Filtros">
-               <graphic>
-                  <FontAwesomeIcon glyphName="FILTER" />
-               </graphic>
-               <font>
-                  <Font name="System Bold" size="12.0" />
-               </font>
-            </Label>
-            <Label layoutX="1168.0" layoutY="72.0" text="Total Geral:">
+            <Label layoutX="1127.0" layoutY="14.0" text="Total Geral:">
                <graphic>
                   <FontAwesomeIcon glyphName="TH_LARGE" />
                </graphic>
             </Label>
-            <Label fx:id="totalGeralLabel" layoutX="1247.0" layoutY="70.0" text="R$ 3.500,00">
+            <Label fx:id="totalGeralLabel" layoutX="1206.0" layoutY="14.0" text="R$ 3.500,00">
                <font>
                   <Font name="System Bold" size="14.0" />
                </font>
             </Label>
-            <ComboBox fx:id="filtroComboBoxSituacao" focusTraversable="false" layoutX="14.0" layoutY="35.0" prefHeight="25.0" prefWidth="179.0" promptText="Selecione" />
-            <Label id="totalCadastroLabel" fx:id="primeiroFiltroLabelSituacao" focusTraversable="false" layoutX="200.0" layoutY="14.0" text="Pessoa" visible="false">
+            <Button fx:id="adicionarButton" focusTraversable="false" layoutX="14.0" layoutY="12.0" mnemonicParsing="false" prefHeight="20.0" prefWidth="93.0" text="Adicionar">
                <graphic>
-                  <FontAwesomeIcon fx:id="iconePrimeiroSituacao" glyphName="USER" />
+                  <FontAwesomeIcon glyphName="PLUS" />
                </graphic>
-               <font>
-                  <Font name="System Bold" size="12.0" />
-               </font>
-            </Label>
-            <ComboBox fx:id="primeiroFiltroComboBoxSituacao" disable="true" focusTraversable="false" layoutX="200.0" layoutY="35.0" prefHeight="25.0" prefWidth="158.0" promptText="Selecione" />
-            <Label id="totalCadastroLabel" fx:id="segundoFiltroLabelSituacao" focusTraversable="false" layoutX="367.0" layoutY="14.0" text="Situação" visible="false">
+            </Button>
+            <Button fx:id="excluirButton" disable="true" focusTraversable="false" layoutX="122.0" layoutY="12.0" mnemonicParsing="false" text="Excluir">
                <graphic>
-                  <FontAwesomeIcon fx:id="iconeSegundoSituacao" glyphName="CHECK_SQUARE" />
+                  <FontAwesomeIcon glyphName="TRASH" />
                </graphic>
-               <font>
-                  <Font name="System Bold" size="12.0" />
-               </font>
-            </Label>
-            <ComboBox fx:id="segundoFiltroComboBoxSituacao" disable="true" focusTraversable="false" layoutX="367.0" layoutY="35.0" prefHeight="25.0" prefWidth="123.0" promptText="Selecione" />
-            <Label id="totalCadastroLabel" fx:id="terceiroFiltroLabelSituacao" focusTraversable="false" layoutX="500.0" layoutY="14.0" text="Situação" visible="false">
+            </Button>
+            <Label id="totalCadastroLabel" fx:id="totalCadastroLabel" layoutX="915.0" layoutY="14.0" text="2 compras cadastradas!" AnchorPane.bottomAnchor="19.0" AnchorPane.rightAnchor="260.0">
                <graphic>
-                  <FontAwesomeIcon fx:id="iconeTerceiroSituacao" glyphName="CHECK_SQUARE" />
+                  <FontAwesomeIcon glyphName="DATABASE" />
                </graphic>
-               <font>
-                  <Font name="System Bold" size="12.0" />
-               </font>
-            </Label>
-            <ComboBox fx:id="terceiroFiltroComboBoxSituacao" disable="true" focusTraversable="false" layoutX="500.0" layoutY="35.0" prefHeight="25.0" prefWidth="123.0" promptText="Selecione" />
-            <Label id="totalCadastroLabel" fx:id="totalFiltrosLabelSituacao" focusTraversable="false" layoutX="14.0" layoutY="71.0" text="R$ 150,00" visible="false">
-               <font>
-                  <Font name="System Bold" size="12.0" />
-               </font>
             </Label>
          </children>
       </AnchorPane>

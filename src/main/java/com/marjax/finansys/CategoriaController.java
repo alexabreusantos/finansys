@@ -149,15 +149,14 @@ public class CategoriaController implements Initializable {
         });
     }
 
-    @FXML
-    public void abrirCadastrarCategoriaAction() {
+    private void abrirCadastrarCategoriaAction() {
 
         try {
             FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("view/categoriaCadastrar.fxml"));
             Parent root = fxmlLoader.load();
             Stage stage = new Stage();
             root.getStylesheets().add(css);
-            stage.setTitle("Cadastrar Responsável");
+            stage.setTitle("Cadastrar Categoria");
             stage.setScene(new Scene(root));
             stage.setMaximized(false);
             stage.setResizable(false);

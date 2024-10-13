@@ -6,12 +6,17 @@ package com.marjax.finansys.util;
 
 import com.marjax.finansys.model.Cartao;
 import java.text.NumberFormat;
+import java.time.LocalDate;
 import java.util.Locale;
 import javafx.beans.value.ObservableValue;
+import javafx.scene.control.DateCell;
+import javafx.scene.control.DatePicker;
 import javafx.scene.control.Label;
 import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TextField;
+import javafx.scene.control.Tooltip;
+import javafx.util.Callback;
 
 /**
  *
@@ -92,5 +97,30 @@ public class LocaleUtil {
             // Move o cursor para o final do texto
             textField.positionCaret(formattedValue.length());
         });
+    }
+    
+    public static  Callback<DatePicker, DateCell> getDayCellFactory() {
+        return new Callback<DatePicker, DateCell>() {
+            @Override
+            public DateCell call(final DatePicker datePicker) {
+                return new DateCell() {
+                    @Override
+                    public void updateItem(LocalDate item, boolean empty) {
+                        super.updateItem(item, empty);
+
+                        // Desabilitar datas futuras
+                        if (item.isAfter(LocalDate.now())) {
+                            setDisable(true);
+                            setStyle("-fx-background-color: #ffc0cb;"); // Exemplo de cor para dias desativados
+                        }
+
+                        // Exibir tooltip nas datas desativadas
+                        if (item.isAfter(LocalDate.now())) {
+                            setTooltip(new Tooltip("Não é possível selecionar uma data futura."));
+                        }
+                    }
+                };
+            }
+        };
     }
 }

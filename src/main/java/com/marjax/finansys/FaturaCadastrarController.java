@@ -46,18 +46,33 @@ public class FaturaCadastrarController implements Initializable {
 
     private FaturaDAO dao = new FaturaDAO();
 
+    private Cartao cartaoSelecionado;
+
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         dao = new FaturaDAO();
 
         PreencherComboBox.preencherMeses(mesComboBox);
         PreencherComboBox.preencherAnos(anoComboBox);
+        PreencherComboBox.agendarAtualizacaoAnos(anoComboBox);
         PreencherComboBox.ComboBoxCartoes(cartaoComboBox);
 
         salvarButton.setOnAction((var event) -> Salvar());
     }
 
-    @FXML
+    // Método para receber o cartão selecionado
+    public void setCartaoSelecionado(Cartao cartao) {
+        // Preenche a lista de cartões no ComboBox, se necessário
+       // PreencherComboBox.comboBoxFaturaCartao(cartaoComboBox);
+
+        // Verifica se o cartão não é nulo e o seleciona no ComboBox
+        if (cartao != null) {
+            cartaoComboBox.getSelectionModel().select(cartao);
+        }
+    }
+
+    
+  
     private void Salvar() {
 
         boolean[] hasError = {false};
@@ -86,19 +101,17 @@ public class FaturaCadastrarController implements Initializable {
             // 2024-07-01
             RadioButton selectedRadioButton = (RadioButton) situacao.getSelectedToggle();
 
-            Date periodo = ConverterDate.formatarDataParaDate(mesComboBox, anoComboBox, cartao.getFechamento()) ;
+            Date periodo = ConverterDate.formatarDataParaDate(mesComboBox, anoComboBox, cartao.getFechamento());
             fatura.setPeriodo(periodo);
             fatura.setValor(0.0);
             fatura.setSituacao(selectedRadioButton.getText());
             fatura.setCartao(cartao);
 
-            System.out.println("Período: " + fatura.getPeriodo());
-
             // Verificar se a fatura já existe
-            if (dao.existe(fatura.getPeriodo(), fatura.getCartao().getCodigo())) {
+            if (dao.existe(fatura)) {
                 AlertUtil.showErrorAlert("Atenção", "Fatura já existente", "Já existe uma fatura para este cartão no período especificado.");
             } else {
-                //dao.salvar(fatura);
+                dao.salvar(fatura);
                 ((Stage) salvarButton.getScene().getWindow()).close();
             }
         }
